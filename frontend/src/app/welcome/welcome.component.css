@@ -1,0 +1,23 @@
+.container {
+    position: relative;
+    background-color: #F8E8CF;
+    width: 100%;
+    max-width: 2560px;
+    }
+
+    .container img {
+    width: 100%;
+    height: auto;
+    }
+
+    .container .btn {
+    position: absolute;
+    top: 64%;
+    left: 45%;
+    font-size: 30px;
+    padding: 12px 24px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+    }
