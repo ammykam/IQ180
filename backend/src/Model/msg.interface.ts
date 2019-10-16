@@ -1,6 +1,6 @@
 export interface NameMessage{
     event: 'name'
-    payload: string[]
+    payload: string
 }
 export interface AvatarMessage{
     event: 'avatar'
@@ -12,11 +12,11 @@ export interface TimerMessage{
 }
 export interface ResetMessage{
     event: 'reset'
-    payload: boolean;
+    payload: boolean
 }
 export interface ProblemMessage{
     event: 'problem'
-    payload: number[];
+    payload: number[]
 }
 export interface AnswerMessage {
     event: 'answer'
@@ -24,11 +24,11 @@ export interface AnswerMessage {
 }
 export interface ScoreMessage{
     event: 'score'
-    payload: number;
+    payload: number
 }
 export interface RoundMessage{
     event: 'round'
-    payload: number;
+    payload: number
 }
 
 // export interface msg{

@@ -12,20 +12,47 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
 
   @SubscribeMessage('name')
   name(client: Socket, payload: string): void {
-    this.server.emit('serverToClient',newPayload);
+    this.server.emit('nameToClient',payload);
   }
-
+  @SubscribeMessage('avatar')
+  avatar(client: Socket, payload: string): void {
+    this.server.emit('avatarToClient',payload);
+  }
+  @SubscribeMessage('time')
+  time(client: Socket, payload: string): void {
+    let newPayload: string = this.appService.timeCheck(payload);
+    this.server.emit('timeToClient',newPayload);
+  }
   @SubscribeMessage('reset')
   reset(client: Socket, payload: boolean): void {
-    let newPayload: msg = this.appService.smart(payload);
-    this.server.emit('serverToClient',newPayload);
+    let newPayload: boolean = this.appService.reset(payload);
+    this.server.emit('resetToClient',newPayload);
   }
-
+  @SubscribeMessage('problem')
+  problem(client: Socket, payload: number[]): void {
+    let newPayload: number[] = this.appService.generate(payload);
+    this.server.emit('problemToClient',newPayload);
+  }
   @SubscribeMessage('answer')
-  answer(client: Socket, payload: AnswerMessage['payload']): void {
-    let newPayload: msg = this.appService.smart(payload);
-    this.server.emit('serverToClient',newPayload);
+  answer(client: Socket, payload: string): void {
+    let newPayload: string = this.appService.check(payload);
+    this.server.emit('answerToClient',newPayload);
   }
+  @SubscribeMessage('score')
+  score(client: Socket, payload: number): void {
+    let newPayload: number = this.appService.score(payload);
+    this.server.emit('scoreToClient',newPayload);
+  }
+  @SubscribeMessage('round')
+  round(client: Socket, payload: string): void {
+    let newPayload: string = this.appService.timeCheck(payload);
+    this.server.emit('roundToClient',newPayload);
+  }
+  // @SubscribeMessage('answer')
+  // answer(client: Socket, payload: AnswerMessage['payload']): void {
+  //   let newPayload: msg = this.appService.smart(payload);
+  //   this.server.emit('serverToClient',newPayload);
+  // }
 
   afterInit(server:Server){
     this.logger.log('Server IQ180 initiates');

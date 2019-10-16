@@ -1,28 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import { msg } from './Model/msg.interface';
 
 @Injectable()
 export class AppService {
   
-  smart(msg: boolean): msg{
-    if(msg){
-
-    }
+  reset(msg: boolean): boolean{
     return;
   }
-  round(msg: number): msg{
+  round(msg: number): number{
     return;
   }
-  check(msg: string): msg{
+  check(msg: string): string{
     return;
   }
-  timeCheck(msg: msg): msg{
+  timeCheck(msg: string): string{
     return;
   }
-  compareTime(msg: msg): msg{
+  compareTime(msg: string): string{
     return;
   }
-  generate(msg: msg): msg{
+  generate(msg: number[]): number[]{
+    return;
+  }
+  score(msg:number): number{
     return;
   }
 
