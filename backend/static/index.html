@@ -30,17 +30,33 @@
                         <br>
                         <textarea id="textarea" class="form-control" v-model="text" placeholder="Enter message..."></textarea>
                         <br>
-                        <button id="send" class="btn" @click.prevent="sendMessage">Send</button>
+                        <button id="send" class="btn" @click.prevent="sendProfile">Send</button>
                         <button id="ready" class="btn" @click.prevent="readyMessage">Ready</button>
                         <button id ="start" class="btn" @click.prevent="startMessage">Start</button>
+                        <!-- onclick="style.display='none'" -->
                     </div>
                 </div>
-                <div class ="row">
-                    <button type="button" @click.prevent="reset">RESET</button>
-                </div>
+            </div>
+            <div>
+                <h1>ONLINE USER</h1>
+                <!-- <p>{{users}}</p> -->
+                <ul>
+                    <li v-for="user in users">{{user.name}} : {{user.avatar}} : {{user.ready}}</li>
+                </ul>
+                <h1>READY USER</h1>
+                <ul>
+                    <li v-for="readyUser in readyUsers">{{readyUser.name}} : {{readyUser.avatar}}</li>
+                </ul>
+                <h1>WHO PLAYS FIRST</h1>
+                <ul>
+                    <li v-for="orderUser in orderUsers">
+                        <p v-for="user in orderUser">{{user.name}} : {{user.state}}</p>
+                    </li>
+                </ul>
             </div>
     </div>
 
     <script src="main.js"></script>
+
 </body>
 </html>

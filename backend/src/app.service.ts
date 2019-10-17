@@ -5,17 +5,27 @@ export class AppService {
 
   start(Players: Player[]): Player[] {
     const problem: number[] = [];
+
+    //console.log('players before filter: '+Players.length)
+
+    //random first player
     const index: number = this.getRandomInt(0,Players.length-1);
     const firstPlayer: Player = Players[index];
     firstPlayer.state = true;
+
+    //prepare sequence of player to play
+    //also set round to 1 for the first round
     const newPlayers: Player[] = [];
     Players[index].round = 1;
     newPlayers.push(Players[index]);
-    Players = Players.filter(obj => obj !== Players[index]);
-    for(let i = 0; i++; i<Players.length){
+    Players = Players.filter(obj => obj != Players[index]);
+    //console.log('players old array:' + Players.length)
+    for(let i = 0;i<Players.length; i++){
       Players[i].round = 1;
       newPlayers.push(Players[i]);
     }
+
+    //console.log(newPlayers)
     return newPlayers;
   }
 

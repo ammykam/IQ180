@@ -7,12 +7,12 @@ const app = new Vue({
         name: '',
         text: '',
         messages: [],
+        users:[],
+        readyUsers:[],
+        orderUsers:[],
         socket: null
     },
     methods: {
-        reset(){
-            this.socket.emit('reset',true)
-        },
         sendMessage() {
             if(this.validateInput()){
                 // const message  = {
@@ -27,7 +27,7 @@ const app = new Vue({
 
         sendProfile() {
             this.socket.emit('createUser',{
-                name: this.username, 
+                name: this.name, 
                 avatar: this.text,
             })
             this.text=''
@@ -44,8 +44,11 @@ const app = new Vue({
             this.socket.emit('readyUser',true)
         },
         startMessage(){
-            console.log('start work')
+            //console.log('start work')
             this.socket.emit('start',true)
+        },
+        orderMessage(message){
+            this.orderUsers.push(message)
         }
     },
     created(){
@@ -53,6 +56,22 @@ const app = new Vue({
         this.socket.on('msgToClient', (message)=>{
             this.recievedMessage(message)
         })
+        this.socket.on('OnlineUser',(message)=>{
+            //console.log('new messages conming..')
+            // for(let i=0;i<message.length;i++){
+            //     this.users[i]=message.name[i];
+            // }
+            this.user=[]
+            this.users=message
+        })
+        this.socket.on('ReadyUser',(message)=>{
+            this.readyUsers=message
+        })
+        this.socket.on('readyToPlay',(message)=>{
+            //console.log('readytoplay')
+            // this.orderUsers=[];
+            this.orderMessage(message)
+        })  
     
     }
 })
