@@ -1,3 +1,5 @@
+import { Identifier } from "@babel/types";
+
 export interface NameMessage{
     event: 'name'
     payload: string
@@ -29,6 +31,20 @@ export interface ScoreMessage{
 export interface RoundMessage{
     event: 'round'
     payload: number
+}
+
+export interface Player{
+    name: string;
+    avatar: string;
+    timer: number;
+    reset: boolean;
+    problem: number[];
+    answer: string;
+    score: number;
+    round: number;
+    ready: boolean;
+    clientID: string;
+    state: boolean;
 }
 
 // export interface msg{
