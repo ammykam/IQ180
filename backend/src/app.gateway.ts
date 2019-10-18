@@ -126,18 +126,22 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   // }
   @SubscribeMessage('answer')
   answer(client: Socket, payload: string): void {
-    // console.log('hi')
-    // console.log(eval(payload))
-    // console.log(isNaN(eval(payload)))
     if(isNaN(eval(payload))== false){
-      this.server.emit('answerToClient',eval(payload))
+      this.server.to(client.id).emit('answerToClient',eval(payload))
+      const player = this.Players.find(player=>player.clientID==client.id)
+      let correctAnswer = this.appService.check(payload,player);
+      this.server.to(client.id).emit('correctAnswer',correctAnswer);
     }
-    //this.server.emit('answerToClient',eval(payload))
   }
 
   @SubscribeMessage('problem')
   problem(client: Socket, payload: number[]): void {
     this.server.emit('problemToClient',payload);
+  }
+
+  @SubscribeMessage('checkTime') //check time taken for each player; the player with the fastest time is given 1 point 
+  checkTime(client: Socket, payload: Player[]){
+      
   }
 
   afterInit(server:Server){

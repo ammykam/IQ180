@@ -12,6 +12,7 @@ const app = new Vue({
         orderUsers:[],
         answers:0,
         checkAnswer:'',
+        correctAnswer:false,
         socket: null
     },
     methods: {
@@ -61,7 +62,7 @@ const app = new Vue({
         },
         answer(){
             //console.log('answer work')
-            this.socket.emit('answer','1+1')
+            this.socket.emit('answer',this.checkAnswer)
         }
     },
     created(){
@@ -88,7 +89,10 @@ const app = new Vue({
         this.socket.on('answerToClient',(message)=>{
             //console.log('reciveed answer')
             this.answers = message
-        })  
+        })
+        this.socket.on('correctAnswer',(message)=>{
+            this.correctAnswer=message
+        })
     
     }
 })
