@@ -9,12 +9,11 @@ export class AppService {
     //console.log('players before filter: '+Players.length)
 
     //random first player
-    const index: number = this.getRandomInt(0,Players.length-1);
+    const index: number = this.getRandomInt(0,Players.length);
     const firstPlayer: Player = Players[index];
-    firstPlayer.state = true;
+    // firstPlayer.state = true;
 
     //prepare sequence of player to play
-    //also set round to 1 for the first round
     const newPlayers: Player[] = [];
     // Players[index].round = 1;
     newPlayers.push(Players[index]);
@@ -42,7 +41,7 @@ export class AppService {
   }
 
   generate() : number[]{
-    console.log('generate')
+    //console.log('generate')
     let problem: number[]=[]
     let newProblem: Object[]=[]
     let operator: string[]=['+','-','*','/']
@@ -51,7 +50,7 @@ export class AppService {
     //answer % 1 !== 0 ||
     // if answer is not yet integer and must be between 100,-100
     while( answer % 1 !== 0 || answer>100 || answer<-100){
-      console.log('in the loop find int answer')
+      //console.log('in the loop find int answer')
       //generate new number
       problem=[]
       newProblem=[]
@@ -79,7 +78,7 @@ export class AppService {
       }
       //answer is string?
       answer = eval(problemString)
-      console.log(answer)
+      //console.log(answer)
     }
     console.log("The complete and correct question "+problemString+" = "+answer)
     problem.push(answer);

@@ -94,26 +94,30 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
       //console.log('hi')
       //readyPlayers.push(this.Players.find(player=>player.ready));
       //ready Player here is not same as this.readyPlayers?
-      let readyPlayers: Player[] = [];
-      for(let i =0;i<this.Players.length;i++){
+      // let readyPlayers: Player[] = [];
+      for(let i =0;i<this.readyPlayer.length;i++){
         if(this.Players[i].ready == true){
-          this.Players[i].problem=problem;
-          readyPlayers.push(this.Players[i])
+          //this.Players[i].problem=problem;
+          this.readyPlayer[i].problem=problem;
+          // readyPlayers.push(this.Players[i])
         }
       }
-      readyPlayers = this.appService.start(readyPlayers);
+      this.server.emit('ReadyUser',this.readyPlayer)
+      this.readyPlayer = this.appService.start(this.readyPlayer);
+      this.server.emit('readyToPlay',this.readyPlayer)
+
 
       //state of first player set to true
       //loop with number of ready players
 
-      for(let i = 0;i< readyPlayers.length; i++){
-        //console.log(readyPlayers)
-        this.server.emit('readyToPlay', readyPlayers);
-        readyPlayers[i].state = false;
-        if(i != readyPlayers.length-1){
-          readyPlayers[i+1].state = true;
-        }
-      }
+      // for(let i = 0;i< readyPlayers.length; i++){
+      //   //console.log(readyPlayers)
+      //   this.server.emit('readyToPlay', readyPlayers);
+      //   readyPlayers[i].state = false;
+      //   if(i != readyPlayers.length-1){
+      //     readyPlayers[i+1].state = true;
+      //   }
+      // }
     }
     problem=[]
   }
@@ -150,8 +154,8 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   handleConnection(client:Socket){
     this.numberOfClient+=1;
     //this.logger.log('number of client connected :'+this.numberOfClient);
-    this.logger.log('number of client connected [connect]:'+this.numberOfClient);
-    this.logger.log(`Client Connected : ${client.id}`);
+    //this.logger.log('number of client connected [connect]:'+this.numberOfClient);
+    //this.logger.log(`Client Connected : ${client.id}`);
 
     const player: Player = {
       clientID: client.id,
@@ -163,8 +167,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
       answer: '',
       score: 0,
       round: 1,
-      ready: false,
-      state: false
+      ready: false
     }
 
     //this.logger.log(player.clientID);
@@ -179,7 +182,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     this.numberOfClient-=1;
 
     //this.logger.log('clientid of disconnected: '+ client.id)
-    this.logger.log('number of client connected [disconnect]:'+this.numberOfClient);
+    //this.logger.log('number of client connected [disconnect]:'+this.numberOfClient);
 
     this.Players = this.Players.filter(player => player.clientID !== client.id);
     this.readyPlayer = this.readyPlayer.filter(player=>player.clientID !== client.id);
@@ -190,7 +193,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
 
     //readyPlayers.push(this.Players.find(player=>player.ready));
     //this.Players = this.Players.filter(obj => obj !== this.Players[client.id]);
-    this.logger.log(`Client Disconnected : ${client.id}`);
+    //this.logger.log(`Client Disconnected : ${client.id}`);
   }
 
 

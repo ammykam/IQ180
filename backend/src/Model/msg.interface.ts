@@ -44,7 +44,6 @@ export interface Player{
     round: number;
     ready: boolean;
     clientID: string;
-    state: boolean;
 }
 
 // export interface msg{
