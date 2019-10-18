@@ -13,6 +13,8 @@ const app = new Vue({
         answers:0,
         checkAnswer:'',
         correctAnswer:false,
+        timer:'',
+        roundWinner:'',
         socket: null
     },
     methods: {
@@ -62,7 +64,11 @@ const app = new Vue({
         },
         answer(){
             //console.log('answer work')
-            this.socket.emit('answer',this.checkAnswer)
+            this.socket.emit('answer',{checkAns: this.checkAnswer, time: this.timer});
+        },
+        checkTime(){
+            console.log('timer work ka')
+            this.socket.emit('checkTime')
         }
     },
     created(){
@@ -92,6 +98,9 @@ const app = new Vue({
         })
         this.socket.on('correctAnswer',(message)=>{
             this.correctAnswer=message
+        })
+        this.socket.on('roundWinner', (message)=>{
+            this.roundWinner = message
         })
     
     }
