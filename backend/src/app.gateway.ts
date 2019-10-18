@@ -26,6 +26,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     //this.logger.log(player.avatar);
 
     this.server.emit('OnlineUser',this.Players)
+    //this.server.emit('ReadyUser',this.readyPlayer)
 
     //update player info from given input 
   }
@@ -72,7 +73,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
       this.readyPlayer[i].problem=[]
       this.readyPlayer[i].timer=9999
     }
-    this.logger.log('reset has been done')
+    //this.logger.log('reset has been done')
     this.server.emit('ReadyUser',this.readyPlayer);
 
   }
@@ -85,25 +86,28 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
       }
     }
     //console.log(readyUsers)
-
+    
     let problem:number[] = this.appService.generate();
     //this.logger.log("problem"+problem)
     //console.log("hi"+problem)
+    const checkPlayer: Player= this.Players.find(player=>player.clientID==client.id)
+    const checkReady: boolean= checkPlayer.ready
 
-    if(readyUsers >1){
+    if(readyUsers >1 && checkReady){
       //console.log('hi')
       //readyPlayers.push(this.Players.find(player=>player.ready));
       //ready Player here is not same as this.readyPlayers?
-      // let readyPlayers: Player[] = [];
+      //let readyPlayers: Player[] = [];
       for(let i =0;i<this.readyPlayer.length;i++){
         if(this.Players[i].ready == true){
           //this.Players[i].problem=problem;
           this.readyPlayer[i].problem=problem;
-          // readyPlayers.push(this.Players[i])
+          //readyPlayers.push(this.readyPlayer[i])
         }
       }
       this.server.emit('ReadyUser',this.readyPlayer)
       this.readyPlayer = this.appService.start(this.readyPlayer);
+      
       this.server.emit('readyToPlay',this.readyPlayer)
 
 

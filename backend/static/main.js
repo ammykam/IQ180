@@ -47,7 +47,7 @@ const app = new Vue({
             this.socket.emit('readyUser',true)
         },
         startMessage(){
-            console.log('start work')
+            //console.log('start work')
             this.orderUsers=[]
             this.socket.emit('start',true)
         },
@@ -55,7 +55,7 @@ const app = new Vue({
             this.orderUsers.push(message)
         },
         reset(){
-            console.log('reset activated')
+            //console.log('reset activated')
             this.socket.emit('reset',true)
             this.orderUsers=[]
             this.socket.emit('start',true)
@@ -83,7 +83,7 @@ const app = new Vue({
         })
         this.socket.on('readyToPlay',(message)=>{
             //console.log('readytoplay')
-            //this.orderUsers=[];
+            this.orderUsers=[];
             this.orderMessage(message)
         }) 
         this.socket.on('answerToClient',(message)=>{
