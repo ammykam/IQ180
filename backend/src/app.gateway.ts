@@ -16,7 +16,6 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   private readyPlayer: Player[] = [];
 
 
-
   @SubscribeMessage('createUser')
   createUser(client: Socket, payload:{name: string, avatar:string}):void{
     const player = this.Players.find(player=>player.clientID==client.id)
@@ -34,9 +33,8 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   @SubscribeMessage('readyUser')
   readyUser(client: Socket, payload: boolean):void{
     const player = this.Players.find(player=>player.clientID==client.id)
+    // player.score=100;
     //check if this person is in readyPlayer before or not
-
-
     if(player.ready){
       player.ready=false;
       this.server.emit('OnlineUser',this.Players)
@@ -65,7 +63,19 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     // }
     //this.logger.log(this.readyUsers);
   }
+  @SubscribeMessage('reset')
+  reset(client: Socket, payload: boolean):void{
+    //look every player
+    for(let i=0;i<this.readyPlayer.length;i++){
+      this.readyPlayer[i].round=1
+      this.readyPlayer[i].score=0
+      this.readyPlayer[i].problem=[]
+      this.readyPlayer[i].timer=9999
+    }
+    this.logger.log('reset has been done')
+    this.server.emit('ReadyUser',this.readyPlayer);
 
+  }
   @SubscribeMessage('start')
   start(client: Socket, payload: boolean):void{
     let readyUsers = 0;
@@ -74,12 +84,20 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
         readyUsers ++;
       }
     }
-    if(readyUsers >1){
-      //readyPlayers.push(this.Players.find(player=>player.ready));
+    //console.log(readyUsers)
 
+    let problem:number[] = this.appService.generate();
+    //this.logger.log("problem"+problem)
+    //console.log("hi"+problem)
+
+    if(readyUsers >1){
+      //console.log('hi')
+      //readyPlayers.push(this.Players.find(player=>player.ready));
+      //ready Player here is not same as this.readyPlayers?
       let readyPlayers: Player[] = [];
       for(let i =0;i<this.Players.length;i++){
         if(this.Players[i].ready == true){
+          this.Players[i].problem=problem;
           readyPlayers.push(this.Players[i])
         }
       }
@@ -97,10 +115,8 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
         }
       }
     }
+    problem=[]
   }
-
-
-
   // should we detect the new User to update in online user?
   
   // @SubscribeMessage('answer')
@@ -108,6 +124,21 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   //   let newPayload: msg = this.appService.smart(payload);
   //   this.server.emit('serverToClient',newPayload);
   // }
+  @SubscribeMessage('answer')
+  answer(client: Socket, payload: string): void {
+    // console.log('hi')
+    // console.log(eval(payload))
+    // console.log(isNaN(eval(payload)))
+    if(isNaN(eval(payload))== false){
+      this.server.emit('answerToClient',eval(payload))
+    }
+    //this.server.emit('answerToClient',eval(payload))
+  }
+
+  @SubscribeMessage('problem')
+  problem(client: Socket, payload: number[]): void {
+    this.server.emit('problemToClient',payload);
+  }
 
   afterInit(server:Server){
     this.logger.log('Server IQ180 initiates');
@@ -127,7 +158,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
       problem: [],
       answer: '',
       score: 0,
-      round: 0,
+      round: 1,
       ready: false,
       state: false
     }
@@ -173,21 +204,11 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     let newPayload: string = this.appService.timeCheck(payload);
     this.server.emit('timeToClient',newPayload);
   }
-  @SubscribeMessage('reset')
-  reset(client: Socket, payload: boolean): void {
-    let newPayload: boolean = this.appService.reset(payload);
-    this.server.emit('resetToClient',newPayload);
-  }
-  @SubscribeMessage('problem')
-  problem(client: Socket, payload: number[]): void {
-    let newPayload: number[] = this.appService.generate(payload);
-    this.server.emit('problemToClient',newPayload);
-  }
-  @SubscribeMessage('answer')
-  answer(client: Socket, payload: string): void {
-    let newPayload: string = this.appService.check(payload);
-    this.server.emit('answerToClient',newPayload);
-  }
+  // @SubscribeMessage('reset')
+  // reset(client: Socket, payload: boolean): void {
+  //   let newPayload: boolean = this.appService.reset(payload);
+  //   this.server.emit('resetToClient',newPayload);
+  // }
   @SubscribeMessage('score')
   score(client: Socket, payload: number): void {
     let newPayload: number = this.appService.score(payload);

@@ -16,12 +16,12 @@ export class AppService {
     //prepare sequence of player to play
     //also set round to 1 for the first round
     const newPlayers: Player[] = [];
-    Players[index].round = 1;
+    // Players[index].round = 1;
     newPlayers.push(Players[index]);
     Players = Players.filter(obj => obj != Players[index]);
     //console.log('players old array:' + Players.length)
     for(let i = 0;i<Players.length; i++){
-      Players[i].round = 1;
+      // Players[i].round = 1;
       newPlayers.push(Players[i]);
     }
 
@@ -35,21 +35,61 @@ export class AppService {
     return Math.floor(Math.random()* (max-min))+min;
   }
   
-  reset(msg: boolean): boolean{
-    console.log('reset')
-
-    if(msg){
-      //reset
-      //reset? : change question?, reset time?, back to round1?
-    }else{
-      //do nothing
-    }
-    return ;
-  }
   round(players: Player[]): void{
     for(let i=0; i++; i <players.length-1){
       players[i].round += 1;
     }
+  }
+
+  generate() : number[]{
+    console.log('generate')
+    let problem: number[]=[]
+    let newProblem: Object[]=[]
+    let operator: string[]=['+','-','*','/']
+    let answer: number= 99999.99
+    let problemString: string= ''
+    //answer % 1 !== 0 ||
+    // if answer is not yet integer and must be between 100,-100
+    while( answer % 1 !== 0 || answer>100 || answer<-100){
+      console.log('in the loop find int answer')
+      //generate new number
+      problem=[]
+      newProblem=[]
+      problemString=''
+      answer=0;
+      for(let i=0;i<5;i++){
+        let random: number = this.getRandomInt(1,10)
+        problem.push(random)
+      }
+
+      //push the operator in
+      for(let i =0;i<5;i++){
+        newProblem.push(problem[i])
+        //console.log(i+' '+ newProblem.length)
+        if(i!=4){
+          let randomOperator:number = this.getRandomInt(0,4)
+          //console.log('number of operator'+randomOperator)
+          newProblem.push(operator[randomOperator])
+        }
+      }
+      //turn array into string and evel() it
+      problemString = newProblem.join(',')
+      for(let i=0;i<8;i++){
+        problemString = problemString.replace(',','')
+      }
+      //answer is string?
+      answer = eval(problemString)
+      console.log(answer)
+    }
+    console.log("The complete and correct question "+problemString+" = "+answer)
+    problem.push(answer);
+
+    //console.log(newProblem)
+    // for(let i=0; i<newProblem.length;i++){
+    //   problemString.concat(newProblem[i].toString())
+    // }
+    //console.log(problemString)
+    return problem
   }
   check(msg: string): string{
     console.log('check')
@@ -75,11 +115,6 @@ export class AppService {
     //else if msg2>ms1
     //  then, player 1 gets point
     //  score()
-    return
-  }
-  generate(msg: number[]): number[]{
-    console.log('generate')
-    
     return
   }
   score(msg:number): number{

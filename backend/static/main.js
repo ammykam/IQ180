@@ -3,13 +3,15 @@
 const app = new Vue({
     el: '#app',
     data: {
-        title: 'Nestjs Websockets Chat',
+        title: 'IQ180',
         name: '',
         text: '',
         messages: [],
         users:[],
         readyUsers:[],
         orderUsers:[],
+        answers:0,
+        checkAnswer:'',
         socket: null
     },
     methods: {
@@ -44,11 +46,22 @@ const app = new Vue({
             this.socket.emit('readyUser',true)
         },
         startMessage(){
-            //console.log('start work')
+            console.log('start work')
+            this.orderUsers=[]
             this.socket.emit('start',true)
         },
         orderMessage(message){
             this.orderUsers.push(message)
+        },
+        reset(){
+            console.log('reset activated')
+            this.socket.emit('reset',true)
+            this.orderUsers=[]
+            this.socket.emit('start',true)
+        },
+        answer(){
+            //console.log('answer work')
+            this.socket.emit('answer','1+1')
         }
     },
     created(){
@@ -69,8 +82,12 @@ const app = new Vue({
         })
         this.socket.on('readyToPlay',(message)=>{
             //console.log('readytoplay')
-            // this.orderUsers=[];
+            //this.orderUsers=[];
             this.orderMessage(message)
+        }) 
+        this.socket.on('answerToClient',(message)=>{
+            //console.log('reciveed answer')
+            this.answers = message
         })  
     
     }

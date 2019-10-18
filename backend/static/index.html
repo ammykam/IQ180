@@ -19,7 +19,9 @@
                     <div id="status"></div>
                     <div id="chat">
                         <input type="text" v-model="name" id="username" class="form-control" placeholder="Enter name...">
-                        <br>
+                        <textarea id="textarea" class="form-control" v-model="checkAnswer" placeholder="Enter your answer..."></textarea>
+                        <p>{{answers}}</p>
+                        <!-- <br>
                         <div class="card">
                             <div id="messages" class="card-block">
                                 <ul>
@@ -27,12 +29,14 @@
                                 </ul>
                             </div>
                         </div>
-                        <br>
-                        <textarea id="textarea" class="form-control" v-model="text" placeholder="Enter message..."></textarea>
+                        <br> -->
+                        <textarea id="textarea" class="form-control" v-model="text" placeholder="Enter avatar..."></textarea>
                         <br>
                         <button id="send" class="btn" @click.prevent="sendProfile">Send</button>
                         <button id="ready" class="btn" @click.prevent="readyMessage">Ready</button>
                         <button id ="start" class="btn" @click.prevent="startMessage">Start</button>
+                        <button id="reset" class="btn" @click.prevent="reset">Reset</button>
+                        <button id="answer" class= "btn" @click.prevent="answer" >Submit</button>
                         <!-- onclick="style.display='none'" -->
                     </div>
                 </div>
@@ -45,13 +49,16 @@
                 </ul>
                 <h1>READY USER</h1>
                 <ul>
-                    <li v-for="readyUser in readyUsers">{{readyUser.name}} : {{readyUser.avatar}}</li>
+                    <li v-for="readyUser in readyUsers">{{readyUser.name}} : {{readyUser.avatar}} : {{readyUser.score}}</li>
                 </ul>
                 <h1>WHO PLAYS FIRST</h1>
                 <ul>
                     <li v-for="orderUser in orderUsers">
-                        <p v-for="user in orderUser">{{user.name}} : {{user.state}}</p>
+                        <p v-for="user in orderUser">{{user.name}} : {{user.state}} : {{user.problem}}</p>
                     </li>
+                    <!-- <li v-for ="displayOrderUser in displayOrderUsers">
+                        <p v-for="user in displayOrderUser">{{user.name}} : {{user.state}}</p>
+                    </li> -->
                 </ul>
             </div>
     </div>
