@@ -39,13 +39,12 @@ function App() {
   }; 
   const handleWelcomeWelcome = () =>{
     console.log("From APP CONSOLE: first Button in welcomeDialog Clicked!");
-    setShowWelcomeDialog(false);
   }; 
 
   const [showWelcome, setShowWelcome] = useState(true);
   const [showLogin, setShowLogin] = useState(false);
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
-  const [showWhosReady, setShowWhosReady] = useState(true);
+  const [showWhosReady, setShowWhosReady] = useState(false);
 
   return (
     <>
