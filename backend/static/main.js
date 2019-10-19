@@ -10,15 +10,16 @@ const app = new Vue({
         messages: [],
         users:[],
         readyUsers:[],
-        orderUsers:[],
         answers:0,
         checkAnswer:'',
         correctAnswer:false,
         timer:'',
         roundWinner:'',
-        gameWinner:'',
+        gameWinner:{},
+        orderUsers:[],
         round: 0,
-        socket: null
+        allPlayers:[],
+        socket: null,
     },
     methods: {
         sendMessage() {
@@ -73,7 +74,7 @@ const app = new Vue({
         },
 
         nextRound(){
-            console.log('nextRound work ka')
+            //console.log('nextRound work ka')
             this.socket.emit('nextRound')
             this.orderUsers =[]
         }
@@ -99,9 +100,10 @@ const app = new Vue({
             this.readyUsers=message
         })
         this.socket.on('readyToPlay',(message)=>{
-            //console.log('readytoplay')
+            // //console.log('readytoplay')
             this.orderUsers=[];
-            this.orderMessage(message)
+            // this.orderMessage(message)
+            this.orderUsers=message;
         }) 
         this.socket.on('answerToClient',(message)=>{
             //console.log('reciveed answer')
@@ -115,7 +117,10 @@ const app = new Vue({
             this.round = message.round;
         })
         this.socket.on('gameWinner', (message)=>{
-            this.gameWinner = message
+            console.log('this is winner')
+            this.gameWinner = message.Player;
+            this.allPlayers = message.allPlayers;
+
         })
     
     }
