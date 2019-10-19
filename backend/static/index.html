@@ -58,9 +58,10 @@
                 </ul>
                 <h1>WHO PLAYS FIRST</h1>
                 <ul>
-                    <li v-for="orderUser in orderUsers">
+                    <!-- <li v-for="orderUser in orderUsers">
                         <p v-for="user in orderUser">{{user.name}} : {{user.problem}} : {{user.score}}</p>
-                    </li>
+                    </li> -->
+                    <li v-for="orderUser in orderUsers">{{orderUser.name}} : {{orderUser.problem}} : {{orderUser.score}} </li>
                     <!-- <li v-for ="displayOrderUser in displayOrderUsers">
                         <p v-for="user in displayOrderUser">{{user.name}} : {{user.state}}</p>
                     </li> -->
@@ -70,7 +71,13 @@
                 <p>{{round}}</p>
 
                 <h1>This game Winner</h1>
-                <p>{{gameWinner}}</p>
+                <p>{{gameWinner.name}}</p>
+                <p>{{gameWinner.score}}</p>
+                <ul v-for="winner in allPlayers">
+                    {{winner.name}}{{winner.score}}
+                </ul>
+                <!-- <p></p> -->
+                
 
             </div>
     </div>
