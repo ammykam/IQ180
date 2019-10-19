@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {  MatTableModule, MatDialogModule } from '@angular/material';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -35,7 +36,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
     ModalModule.forRoot(),
     NgbModule,
     MainModule,
-
+    MatDialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

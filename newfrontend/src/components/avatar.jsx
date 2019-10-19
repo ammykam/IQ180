@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import "./css/avatar.css";
 import avatar1 from "./images/avatar/avatar1.svg";
 import avatar2 from "./images/avatar/avatar2.svg";
 import avatar3 from "./images/avatar/avatar3.svg";
