@@ -13,21 +13,19 @@ const app = new Vue({
         answers:0,
         checkAnswer:'',
         correctAnswer:false,
+        timer:'',
+        roundWinner:'',
+        gameWinner:'',
         socket: null
     },
     methods: {
         sendMessage() {
             if(this.validateInput()){
-                // const message  = {
-                //     name: this.name,
-                //     text: this.text
-                // }
                 this.socket.emit('createUser',{name:this.name,avatar:this.text })
                 this.socket.emit('msgToServer',message)
                 this.text=''
             }
         },
-
         sendProfile() {
             this.socket.emit('createUser',{
                 name: this.name, 
@@ -35,7 +33,6 @@ const app = new Vue({
             })
             this.text=''
         },
-
         recievedMessage(message){
             this.messages.push(message)
         },
@@ -62,8 +59,16 @@ const app = new Vue({
         },
         answer(){
             //console.log('answer work')
-            this.socket.emit('answer',this.checkAnswer)
-        }
+            this.socket.emit('answer',{checkAns: this.checkAnswer, time: this.timer});
+        },
+        checkTime(){
+            //console.log('timer work ka')
+            this.socket.emit('checkTime')
+        },
+        gameEnd(){
+            //console.log('gameEnd')
+            this.socket.emit('checkWinner')
+        },
     },
     created(){
         this.socket = io('http://localhost:3000')
@@ -92,6 +97,12 @@ const app = new Vue({
         })
         this.socket.on('correctAnswer',(message)=>{
             this.correctAnswer=message
+        })
+        this.socket.on('roundWinner', (message)=>{
+            this.roundWinner = message
+        })
+        this.socket.on('gameWinner', (message)=>{
+            this.gameWinner = message
         })
     
     }

@@ -15,143 +15,6 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   // private readyUsers: number = 0;
   private readyPlayer: Player[] = [];
 
-
-  @SubscribeMessage('createUser')
-  createUser(client: Socket, payload:{name: string, avatar:string}):void{
-    const player = this.Players.find(player=>player.clientID==client.id)
-    player.name = payload.name;
-    player.avatar = payload.avatar;
-
-    //this.logger.log(player.name);
-    //this.logger.log(player.avatar);
-
-    this.server.emit('OnlineUser',this.Players)
-    //this.server.emit('ReadyUser',this.readyPlayer)
-
-    //update player info from given input 
-  }
-
-  @SubscribeMessage('readyUser')
-  readyUser(client: Socket, payload: boolean):void{
-    const player = this.Players.find(player=>player.clientID==client.id)
-    // player.score=100;
-    //check if this person is in readyPlayer before or not
-    if(player.ready){
-      player.ready=false;
-      this.server.emit('OnlineUser',this.Players)
-      this.readyPlayer = this.readyPlayer.filter(obj=>obj.clientID!==player.clientID)
-      this.server.emit('ReadyUser',this.readyPlayer)
-      // const existUser = player.clientID in this.readyPlayer
-      // console.log(existUser)
-      // //if the player exist in readyPlayer then delete it and emit again
-      // if(existUser==true){
-      //   //Players = Players.filter(obj => obj !== Players[index]);
-
-      //   console.log(this.readyPlayer.length)
-      // }
-
-    }else{
-      player.ready=true;
-      this.server.emit('OnlineUser',this.Players)
-      this.readyPlayer.push(player)
-      this.server.emit('ReadyUser',this.readyPlayer)
-    }
-    //this.logger.log(player.ready)
-
-    //console.log(player.ready)
-    // if(payload){
-    //   this.readyUsers += 1;
-    // }
-    //this.logger.log(this.readyUsers);
-  }
-  @SubscribeMessage('reset')
-  reset(client: Socket, payload: boolean):void{
-    //look every player
-    for(let i=0;i<this.readyPlayer.length;i++){
-      this.readyPlayer[i].round=1
-      this.readyPlayer[i].score=0
-      this.readyPlayer[i].problem=[]
-      this.readyPlayer[i].timer=9999
-    }
-    //this.logger.log('reset has been done')
-    this.server.emit('ReadyUser',this.readyPlayer);
-
-  }
-  @SubscribeMessage('start')
-  start(client: Socket, payload: boolean):void{
-    let readyUsers = 0;
-    for(let i=0;i<this.Players.length;i++){
-      if(this.Players[i].ready){
-        readyUsers ++;
-      }
-    }
-    //console.log(readyUsers)
-    
-    let problem:number[] = this.appService.generate();
-    //this.logger.log("problem"+problem)
-    //console.log("hi"+problem)
-    const checkPlayer: Player= this.Players.find(player=>player.clientID==client.id)
-    const checkReady: boolean= checkPlayer.ready
-
-    if(readyUsers >1 && checkReady){
-      //console.log('hi')
-      //readyPlayers.push(this.Players.find(player=>player.ready));
-      //ready Player here is not same as this.readyPlayers?
-      //let readyPlayers: Player[] = [];
-      for(let i =0;i<this.readyPlayer.length;i++){
-        if(this.Players[i].ready == true){
-          //this.Players[i].problem=problem;
-          this.readyPlayer[i].problem=problem;
-          //readyPlayers.push(this.readyPlayer[i])
-        }
-      }
-      this.server.emit('ReadyUser',this.readyPlayer)
-      this.readyPlayer = this.appService.start(this.readyPlayer);
-      
-      this.server.emit('readyToPlay',this.readyPlayer)
-
-
-      //state of first player set to true
-      //loop with number of ready players
-
-      // for(let i = 0;i< readyPlayers.length; i++){
-      //   //console.log(readyPlayers)
-      //   this.server.emit('readyToPlay', readyPlayers);
-      //   readyPlayers[i].state = false;
-      //   if(i != readyPlayers.length-1){
-      //     readyPlayers[i+1].state = true;
-      //   }
-      // }
-    }
-    problem=[]
-  }
-  // should we detect the new User to update in online user?
-  
-  // @SubscribeMessage('answer')
-  // answer(client: Socket, payload: AnswerMessage['payload']): void {
-  //   let newPayload: msg = this.appService.smart(payload);
-  //   this.server.emit('serverToClient',newPayload);
-  // }
-  @SubscribeMessage('answer')
-  answer(client: Socket, payload: string): void {
-    if(isNaN(eval(payload))== false){
-      this.server.to(client.id).emit('answerToClient',eval(payload))
-      const player = this.Players.find(player=>player.clientID==client.id)
-      let correctAnswer = this.appService.check(payload,player);
-      this.server.to(client.id).emit('correctAnswer',correctAnswer);
-    }
-  }
-
-  @SubscribeMessage('problem')
-  problem(client: Socket, payload: number[]): void {
-    this.server.emit('problemToClient',payload);
-  }
-
-  @SubscribeMessage('checkTime') //check time taken for each player; the player with the fastest time is given 1 point 
-  checkTime(client: Socket, payload: Player[]){
-      
-  }
-
   afterInit(server:Server){
     this.logger.log('Server IQ180 initiates');
   }
@@ -201,33 +64,165 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   }
 
 
+  @SubscribeMessage('createUser')
+  createUser(client: Socket, payload:{name: string, avatar:string}):void{
+    const player = this.Players.find(player=>player.clientID==client.id)
+    player.name = payload.name;
+    player.avatar = payload.avatar;
 
-  @SubscribeMessage('name')
-  name(client: Socket, payload: string): void {
-    this.server.emit('nameToClient',payload);
+    //this.logger.log(player.name);
+    //this.logger.log(player.avatar);
+
+    this.server.emit('OnlineUser',this.Players)
+    //this.server.emit('ReadyUser',this.readyPlayer)
+
+    //update player info from given input 
   }
-  @SubscribeMessage('avatar')
-  avatar(client: Socket, payload: string): void {
-    this.server.emit('avatarToClient',payload);
+
+  @SubscribeMessage('readyUser')
+  readyUser(client: Socket, payload: boolean):void{
+    const player = this.Players.find(player=>player.clientID==client.id)
+
+    if(player.ready){
+      player.ready=false;
+      this.server.emit('OnlineUser',this.Players)
+      this.readyPlayer = this.readyPlayer.filter(obj=>obj.clientID!==player.clientID)
+      this.server.emit('ReadyUser',this.readyPlayer)
+
+    }else{
+      player.ready=true;
+      this.server.emit('OnlineUser',this.Players)
+      this.readyPlayer.push(player)
+      this.server.emit('ReadyUser',this.readyPlayer)
+    }
   }
-  @SubscribeMessage('time')
-  time(client: Socket, payload: string): void {
-    let newPayload: string = this.appService.timeCheck(payload);
-    this.server.emit('timeToClient',newPayload);
+
+  @SubscribeMessage('reset')
+  reset(client: Socket, payload: boolean):void{
+    const checkPlayer: Player= this.Players.find(player=>player.clientID==client.id)
+    const checkReady: boolean= checkPlayer.ready
+    if(checkReady){
+      //look every player
+    for(let i=0;i<this.readyPlayer.length;i++){
+      this.readyPlayer[i].round=1
+      this.readyPlayer[i].score=0
+      this.readyPlayer[i].problem=[]
+      this.readyPlayer[i].timer=9999
+    }
+    //this.logger.log('reset has been done')
+    this.server.emit('ReadyUser',this.readyPlayer);
+    }
+
   }
-  // @SubscribeMessage('reset')
-  // reset(client: Socket, payload: boolean): void {
-  //   let newPayload: boolean = this.appService.reset(payload);
-  //   this.server.emit('resetToClient',newPayload);
-  // }
-  @SubscribeMessage('score')
-  score(client: Socket, payload: number): void {
-    let newPayload: number = this.appService.score(payload);
-    this.server.emit('scoreToClient',newPayload);
+  @SubscribeMessage('start')
+  start(client: Socket, payload: boolean):void{
+    let readyUsers = 0;
+    for(let i=0;i<this.Players.length;i++){
+      if(this.Players[i].ready){
+        readyUsers ++;
+      }
+    }
+    //console.log(readyUsers)
+    
+    let problem:number[] = this.appService.generate();
+    //this.logger.log("problem"+problem)
+    //console.log("hi"+problem)
+    const checkPlayer: Player= this.Players.find(player=>player.clientID==client.id)
+    const checkReady: boolean= checkPlayer.ready
+
+    if(readyUsers >1 && checkReady){
+      //console.log('hi')
+      //readyPlayers.push(this.Players.find(player=>player.ready));
+      //ready Player here is not same as this.readyPlayers?
+      //let readyPlayers: Player[] = [];
+      for(let i =0;i<this.readyPlayer.length;i++){
+        if(this.Players[i].ready == true){
+          //this.Players[i].problem=problem;
+          this.readyPlayer[i].problem=problem;
+          //readyPlayers.push(this.readyPlayer[i])
+        }
+      }
+      this.server.emit('ReadyUser',this.readyPlayer)
+      this.readyPlayer = this.appService.start(this.readyPlayer);
+      
+      this.server.emit('readyToPlay',this.readyPlayer)
+
+
+      //state of first player set to true
+      //loop with number of ready players
+      // for(let i = 0;i< readyPlayers.length; i++){
+      //   //console.log(readyPlayers)
+      //   this.server.emit('readyToPlay', readyPlayers);
+      //   readyPlayers[i].state = false;
+      //   if(i != readyPlayers.length-1){
+      //     readyPlayers[i+1].state = true;
+      //   }
+      // }
+    }
+      problem=[]
   }
-  @SubscribeMessage('round')
-  round(client: Socket, payload: string): void {
-    let newPayload: string = this.appService.timeCheck(payload);
-    this.server.emit('roundToClient',newPayload);
+  
+  @SubscribeMessage('answer')
+  answer(client: Socket, payload: {checkAns: string, time: string}): void {
+    const checkPlayer: Player= this.Players.find(player=>player.clientID==client.id)
+    const checkReady: boolean= checkPlayer.ready
+    if(checkReady){
+      if(isNaN(eval(payload.checkAns))== false){
+        this.server.to(client.id).emit('answerToClient',eval(payload.checkAns))
+        const player = this.Players.find(player=>player.clientID==client.id)
+        let correctAnswer = this.appService.check(payload.checkAns,player);
+        this.server.to(client.id).emit('correctAnswer',correctAnswer);
+        if(correctAnswer){
+          player.timer = parseInt(payload.time);
+        }
+      }
+    }
+  }
+
+  @SubscribeMessage('checkTime') //check time taken for each player; the player with the fastest time is given 1 point 
+  checkTime(client: Socket): void {
+    //console.log('checktime in')
+    const checkPlayer: Player= this.Players.find(player=>player.clientID==client.id)
+    const checkReady: boolean= checkPlayer.ready
+    if(checkReady){
+      let winner: Player = this.readyPlayer[0];
+    for(let i =1;i<this.readyPlayer.length ;i++){
+      //console.log(this.readyPlayer[i].name, '  ', this.readyPlayer[i].score)
+      if(this.readyPlayer[i].timer<winner.timer){
+        winner = this.readyPlayer[i];
+      }
+    }
+    winner.score += 1;
+    // console.log(winner.name);
+    // console.log(winner.score);
+    this.server.emit('roundWinner',winner.name);
+    this.server.emit('ReadyUser',this.readyPlayer)
+    }
+    
+
+  }
+  @SubscribeMessage('checkWinner')
+  checkWinner(client: Socket): void{
+    const checkPlayer: Player= this.Players.find(player=>player.clientID==client.id)
+    const checkReady: boolean= checkPlayer.ready
+    if(checkReady){
+      let winner: Player= this.readyPlayer[0];
+    for(let i=0;i<this.readyPlayer.length;i++){
+      this.readyPlayer[i].round += 1;
+      if(this.readyPlayer[i].score>winner.score){
+        winner = this.readyPlayer[i];
+      }
+    }
+    console.log(winner.name)
+    this.server.emit('gameWinner',winner.name)
+    //reset game to next round
+    for(let i=0;i<this.readyPlayer.length;i++){
+      this.readyPlayer[i].score=0
+      this.readyPlayer[i].problem=[]
+      this.readyPlayer[i].answer=''
+    }
+    this.server.emit('ReadyUser',this.readyPlayer)
+    }
   }
 }
+
