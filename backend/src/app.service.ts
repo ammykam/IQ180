@@ -135,33 +135,7 @@ export class AppService {
     return players;
   }
 
-  timeCheck(msg: string): string{
-    console.log('timeCheck')
 
-    //if msg >= 60 (dont know what format)
-    //  then, start new round for the next player
-    //else if msg>0 and msg<60
-    // then, record the time to compare later
-    // compareTime()
-    return
-  }
-  compareTime(msg: string): string{
-    console.log('compareTime')
-    //should this be string[]?
-    //if msg1>msg2
-    //  then, player 2 gets points
-    //  score()
-    //else if msg2>ms1
-    //  then, player 1 gets point
-    //  score()
-    return
-  }
 
-  score(msg:number): number{
-    console.log('score')
-
-    msg++
-    return msg
-  }
-
+ 
 }

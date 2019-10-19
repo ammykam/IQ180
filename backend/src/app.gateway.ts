@@ -3,6 +3,8 @@ import { Logger } from '@nestjs/common';
 import { Socket,Server } from 'socket.io';
 import { AppService } from './app.service';
 import { Player } from './Model/msg.interface';
+import { timer } from 'rxjs';
+import { emit } from 'cluster';
 
 
 @WebSocketGateway()
@@ -172,7 +174,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   
   
   @SubscribeMessage('answer')
-  answer(client: Socket, payload: {checkAns: string, time: string}): void {
+  answer(client: Socket, payload: {checkAns: string, time: string}): void { //send queue also 
     const checkPlayer: Player= this.Players.find(player=>player.clientID==client.id)
     const checkReady: boolean= checkPlayer.ready
     if(checkReady){
@@ -181,8 +183,19 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
         const player = this.Players.find(player=>player.clientID==client.id)
         let correctAnswer = this.appService.check(payload.checkAns,player);
         this.server.to(client.id).emit('correctAnswer',correctAnswer);
-        if(correctAnswer){
-          player.timer = parseInt(payload.time);
+        if(correctAnswer || parseInt(payload.time) == 0){
+          //time = 60-time;
+          if(correctAnswer){
+            player.timer = parseInt(payload.time);
+          }
+          //queue++
+          //if(queue<this.readyplayer.length){
+              //emit.to(this.readyPlayer(queue))
+          // }
+          // if(queue == this.readyplayer.length){
+            //check time
+          //}
+
         }
       }
     }
@@ -225,12 +238,6 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     }
     this.server.emit('readyToPlay',this.readyPlayer)
   }
-
-  @SubscribeMessage('problem')
-  problem(client: Socket, payload: number[]): void {
-    this.server.emit('problemToClient',payload);
-  }
-
 
   @SubscribeMessage('checkWinner')
   checkWinner(client: Socket): void{
