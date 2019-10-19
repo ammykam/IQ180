@@ -16,6 +16,7 @@ const app = new Vue({
         timer:'',
         roundWinner:'',
         gameWinner:'',
+        round: 0,
         socket: null
     },
     methods: {
@@ -69,6 +70,13 @@ const app = new Vue({
             //console.log('gameEnd')
             this.socket.emit('checkWinner')
         },
+
+        nextRound(){
+            console.log('nextRound work ka')
+            this.socket.emit('nextRound')
+            this.orderUsers =[]
+        }
+
     },
     created(){
         this.socket = io('http://localhost:3000')
@@ -99,7 +107,8 @@ const app = new Vue({
             this.correctAnswer=message
         })
         this.socket.on('roundWinner', (message)=>{
-            this.roundWinner = message
+            this.roundWinner = message.name;
+            this.round = message.round;
         })
         this.socket.on('gameWinner', (message)=>{
             this.gameWinner = message

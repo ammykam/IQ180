@@ -24,7 +24,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     //this.logger.log('number of client connected [connect]:'+this.numberOfClient);
     //this.logger.log(`Client Connected : ${client.id}`);
 
-    const player: Player = {
+    let player: Player = {
       clientID: client.id,
       name: '',
       avatar: '',
@@ -116,6 +116,8 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   }
   @SubscribeMessage('start')
   start(client: Socket, payload: boolean):void{
+
+    // do we still have to do this? Can we just check the readyPlayer.length>1
     let readyUsers = 0;
     for(let i=0;i<this.Players.length;i++){
       if(this.Players[i].ready){
@@ -136,7 +138,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
       //ready Player here is not same as this.readyPlayers?
       //let readyPlayers: Player[] = [];
       for(let i =0;i<this.readyPlayer.length;i++){
-        if(this.Players[i].ready == true){
+        if(this.Players[i].ready == true){ // do we need this because ready player is already ready 
           //this.Players[i].problem=problem;
           this.readyPlayer[i].problem=problem;
           //readyPlayers.push(this.readyPlayer[i])
@@ -161,6 +163,12 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     }
       problem=[]
   }
+  
+
+
+  
+  // should we detect the new User to update in online user?
+  
   
   @SubscribeMessage('answer')
   answer(client: Socket, payload: {checkAns: string, time: string}): void {
@@ -193,14 +201,35 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
       }
     }
     winner.score += 1;
-    // console.log(winner.name);
-    // console.log(winner.score);
-    this.server.emit('roundWinner',winner.name);
+    console.log(winner.name);
+    console.log(winner.score, '  score');
+    console.log(this.readyPlayer[0].round, '  round')
+    this.server.emit('roundWinner',{name: winner.name, round: this.readyPlayer[0].round});
     this.server.emit('ReadyUser',this.readyPlayer)
     }
-    
-
   }
+
+  @SubscribeMessage('nextRound') // still need to check whether the round is updated or not
+  nextRound(client: Socket): void {
+    this.readyPlayer = this.appService.resetTimer(this.readyPlayer);
+    // console.log('round before  ', this.readyPlayer[0].round );
+    this.readyPlayer = this.appService.round(this.readyPlayer);
+    // console.log('round after  ', this.readyPlayer[0].round );
+    this.readyPlayer = this.appService.orderPlayerByScore(this.readyPlayer);
+    let problem:number[] = this.appService.generate();
+    for(let i =0;i<this.readyPlayer.length;i++){
+      // console.log(this.readyPlayer[i].name, '  ', this.readyPlayer[i].score)
+      this.readyPlayer[i].problem=problem;
+    }
+    this.server.emit('readyToPlay',this.readyPlayer)
+  }
+
+  @SubscribeMessage('problem')
+  problem(client: Socket, payload: number[]): void {
+    this.server.emit('problemToClient',payload);
+  }
+
+
   @SubscribeMessage('checkWinner')
   checkWinner(client: Socket): void{
     const checkPlayer: Player= this.Players.find(player=>player.clientID==client.id)

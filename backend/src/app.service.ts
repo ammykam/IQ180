@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {Player} from './Model/msg.interface';
+import { read } from 'fs';
 @Injectable()
 export class AppService {
 
@@ -34,10 +35,13 @@ export class AppService {
     return Math.floor(Math.random()* (max-min))+min;
   }
   
-  round(players: Player[]): void{
-    for(let i=0; i++; i <players.length-1){
-      players[i].round += 1;
+  round(players: Player[]): Player[]{
+    // console.log('player round before: ', players[0].round);
+    for(let i=0; i <players.length-1; i++){
+      players[i].round = players[i].round + 1;
     }
+    // console.log('player round after: ', players[0].round);
+    return players;
   }
 
   generate() : number[]{
@@ -104,6 +108,55 @@ export class AppService {
     //use eval()?
     return playerAns == problemAns && num ==5;
   }
+
+  orderPlayerByScore(players : Player[] ) : Player[]{
+    let orderPlayer : Player[] = [];
+    for(let i =0; i<players.length -1 ;i++){
+      let index = i;
+      for(let j = i+1; j < players.length; j++){
+        if(players[j].score > players[index].score){
+          index = j;
+        }
+      }
+      orderPlayer.push(players[index]);
+      let a = players[i];
+      players[i] = players[index];
+      players[index] = a;
+    }
+    orderPlayer.push(players[players.length-1]);
+    players = orderPlayer;
+    return players;
+  }
+
+  resetTimer(players: Player[]): Player[]{
+    for(let i=0;i< players.length;i++){
+      players[i].timer=9999
+    }
+    return players;
+  }
+
+  timeCheck(msg: string): string{
+    console.log('timeCheck')
+
+    //if msg >= 60 (dont know what format)
+    //  then, start new round for the next player
+    //else if msg>0 and msg<60
+    // then, record the time to compare later
+    // compareTime()
+    return
+  }
+  compareTime(msg: string): string{
+    console.log('compareTime')
+    //should this be string[]?
+    //if msg1>msg2
+    //  then, player 2 gets points
+    //  score()
+    //else if msg2>ms1
+    //  then, player 1 gets point
+    //  score()
+    return
+  }
+
   score(msg:number): number{
     console.log('score')
 

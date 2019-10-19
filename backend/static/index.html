@@ -41,6 +41,7 @@
                         <button id="answer" class= "btn" @click.prevent="answer" >Submit</button>
                         <button id="timer" class="btn" @click.prevent="checkTime">Timer</button>
                         <button id="GameEnd" class="btn" @click.prevent="gameEnd">End the game</button>
+                        <button id="nextRound" class="btn" @click.prevent="nextRound">Next</button>
                         <!-- onclick="style.display='none'" -->
                     </div>
                 </div>
@@ -66,8 +67,11 @@
                 </ul>
                 <h1>This round WINNER</h1>
                 <p>{{roundWinner}}</p>
+                <p>{{round}}</p>
+
                 <h1>This game Winner</h1>
                 <p>{{gameWinner}}</p>
+
             </div>
     </div>
 
