@@ -75,6 +75,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     this.logger.log(player.avatar);
     console.log(this.Players)
 
+    this.server.to(client.id).emit('WelcomeUser',player)
     this.server.emit('OnlineUser',this.Players)
     //this.server.emit('ReadyUser',this.readyPlayer)
 
@@ -120,12 +121,12 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   start(client: Socket, payload: boolean):void{
 
     // do we still have to do this? Can we just check the readyPlayer.length>1
-    let readyUsers = 0;
-    for(let i=0;i<this.Players.length;i++){
-      if(this.Players[i].ready){
-        readyUsers ++;
-      }
-    }
+    // let readyUsers = 0;
+    // for(let i=0;i<this.Players.length;i++){
+    //   if(this.Players[i].ready){
+    //     readyUsers ++;
+    //   }
+    // }
     //console.log(readyUsers)
     
     let problem:number[] = this.appService.generate();
@@ -134,7 +135,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     const checkPlayer: Player= this.Players.find(player=>player.clientID==client.id)
     const checkReady: boolean= checkPlayer.ready
 
-    if(readyUsers >1 && checkReady){
+    if(this.readyPlayer.length >1 && checkReady){
       //console.log('hi')
       //readyPlayers.push(this.Players.find(player=>player.ready));
       //ready Player here is not same as this.readyPlayers?
@@ -208,6 +209,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     console.log(this.readyPlayer[0].round, '  round')
     this.server.emit('roundWinner',{name: winner.name, round: this.readyPlayer[0].round});
     this.server.emit('ReadyUser',this.readyPlayer)
+    this.server.emit('readyToPlay',this.readyPlayer)
     }
   }
 
@@ -239,18 +241,19 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     if(checkReady){
       let winner: Player= this.readyPlayer[0];
     for(let i=0;i<this.readyPlayer.length;i++){
-      this.readyPlayer[i].round += 1;
       if(this.readyPlayer[i].score>winner.score){
         winner = this.readyPlayer[i];
       }
     }
     console.log(winner.name)
-    this.server.emit('gameWinner',winner.name)
+    this.server.emit('gameWinner', {Player: winner, allPlayers: this.readyPlayer})
     //reset game to next round
     for(let i=0;i<this.readyPlayer.length;i++){
       this.readyPlayer[i].score=0
       this.readyPlayer[i].problem=[]
       this.readyPlayer[i].answer=''
+      this.readyPlayer[i].round=1
+
     }
     this.server.emit('ReadyUser',this.readyPlayer)
     }
