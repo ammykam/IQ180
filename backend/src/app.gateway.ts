@@ -73,6 +73,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     //this.logger.log(player.name);
     //this.logger.log(player.avatar);
 
+    this.server.to(client.id).emit('WelcomeUser',player)
     this.server.emit('OnlineUser',this.Players)
     //this.server.emit('ReadyUser',this.readyPlayer)
 

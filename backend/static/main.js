@@ -5,6 +5,7 @@ const app = new Vue({
     data: {
         title: 'IQ180',
         name: '',
+        specificName:'',
         text: '',
         messages: [],
         users:[],
@@ -82,6 +83,9 @@ const app = new Vue({
         this.socket = io('http://localhost:3000')
         this.socket.on('msgToClient', (message)=>{
             this.recievedMessage(message)
+        })
+        this.socket.on('WelcomeUser',(message)=>{
+            this.specificName = message.name;
         })
         this.socket.on('OnlineUser',(message)=>{
             //console.log('new messages conming..')
