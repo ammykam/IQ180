@@ -1,46 +1,71 @@
-import React, { Component } from "react";
+import React from "react";
+import { useState } from 'react';
+import "./App.css";
 import NavBar from "./components/navbar";
 import Welcome from "./components/welcome";
 import Login from "./components/login";
+import WelcomeDialog from "./components/welcomeDialog";
+import WhosReady from "./components/whosReady";
+import socketIOClient from "socket.io-client";
 
-import "./App.css";
+export const socket = socketIOClient("http://localhost:3000");
 
-class App extends Component {
-  state = {};
+function App() {
+  socket.on("OnlineUser", res => {
+    console.log(res);
+  });
+  socket.on("ReadyUser", res => {
+    console.log(res);
+  });
+  socket.on("ReadyToPlay", res => {
+    console.log(res);
+  });
+  socket.on("CorrectAnswer", res => {
+    console.log(res);
+  });
+  socket.on("RoundWinner", res => {
+    console.log(res);
+  });
 
-  constructor() {
-    super();
-    console.log("App - Constructor");
-  }
-
-  handleWelcomeStart = () => {
+  const handleWelcomeStart = () =>{
     console.log("Welcome Start Clicked!");
-  };
-
-  handleLoginLogin = () => {
+    setShowWelcome(false);
+    setShowLogin(true);
+  }; 
+  const handleLoginLogin = (x) =>{
     console.log("From APP CONSOLE: Login Button in Login Clicked!");
-  };
+    setShowLogin(false);
+    setShowWelcomeDialog(true);
+  }; 
+  const handleWelcomeWelcome = () =>{
+    console.log("From APP CONSOLE: first Button in welcomeDialog Clicked!");
+  }; 
 
-  render() {
-    console.log("App  - Rendered");
-    return (
-      <React.Fragment>
-        <NavBar />
+  const [showWelcome, setShowWelcome] = useState(true);
+  const [showLogin, setShowLogin] = useState(false);
+  const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
+  const [showWhosReady, setShowWhosReady] = useState(false);
 
-        <main className="container">
+  return (
+    <>
+      <div className="App">
 
-          <div id="welcome" style={{ display: "none" }}>
-            <Welcome onWelcomeStart={this.handleWelcomeStart} />
-          </div>
+        <header className="App-header">
+         {<NavBar/>}
+        </header>
 
-          <div id="login" style={{ marginTop:"12%"}}>
-            <Login onLoginLogin={this.handleLoginLogin}/>
-          </div>
-
+        <main className="App-main">
+          {showWelcome && <Welcome onWelcomeStart={handleWelcomeStart}/>}
+          {showLogin && <Login onLoginLogin={handleLoginLogin}/>}
+          {showWelcomeDialog && <WelcomeDialog onWelcomeWelcome={handleWelcomeWelcome}/>}
+          <div>
+            {showWhosReady && <WhosReady/>}
+          </div> 
         </main>
-      </React.Fragment>
-    );
-  }
+
+      </div>
+    </>
+  );
 }
 
 export default App;

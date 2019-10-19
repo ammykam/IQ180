@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { socket } from "../App.js";
 import Avatar from "./avatar";
 
 const styleLogin = {
@@ -8,7 +9,6 @@ const styleLogin = {
   backgroundColor: "#fdf5ee",
   padding: "5%"
 };
-
 
 const styleAvatar ={
     marginLeft: "6%",
@@ -30,10 +30,22 @@ class Login extends Component {
     this.avatar = React.createRef();
   }
 
-  onAvatarToLogin = () => {
-    var inputVal = document.getElementById("inputUsername").value;
-    console.log("Name: " +inputVal);
-    this.avatar.current.chosenAvatar();
+  sendProfile = () => {
+    var username = document.getElementById("inputUsername").value;
+    var choosingAvatar = document.getElementsByName('avatarSet');
+    var avatarNum;
+    for(var i = 0; i < choosingAvatar.length; i++){
+        if(choosingAvatar[i].checked){
+            avatarNum = choosingAvatar[i].value;
+        }
+    }
+    console.log("name created" + username);
+    console.log("avatar created" + avatarNum);
+
+    socket.emit('createUser',{
+      name: username,
+      avatar: avatarNum,
+    })
   };
 
   render() {
@@ -52,11 +64,11 @@ class Login extends Component {
         </div>
         <br/>
         <div className="col-11" style={styleAvatar}> 
-            <Avatar ref={this.avatar} />
+            <Avatar/>
         </div>
         <br/>
         <div>
-            <button id="but1" name="but1" className="btn" onClick={() =>{this.onAvatarToLogin(); onLoginLogin();}} style={styleLoginButton}>Login</button>
+            <button className="btn" onClick={() =>{onLoginLogin(); this.sendProfile()}} style={styleLoginButton}>Login</button>
         </div>
       </div>
     );

@@ -44,6 +44,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     this.server.emit('OnlineUser',this.Players)
     this.server.emit('ReadyUser',this.readyPlayer)
     this.logger.log('Connected Player : '+this.Players.length)
+    console.log(this.Players)
     //create a new player which is identified by its clientID
   }
 
@@ -72,8 +73,9 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     player.name = payload.name;
     player.avatar = payload.avatar;
 
-    //this.logger.log(player.name);
-    //this.logger.log(player.avatar);
+    this.logger.log(player.name);
+    this.logger.log(player.avatar);
+    console.log(this.Players)
 
     this.server.to(client.id).emit('WelcomeUser',player)
     this.server.emit('OnlineUser',this.Players)
