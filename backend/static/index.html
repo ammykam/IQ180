@@ -70,14 +70,18 @@
                     </li> -->
                 </ul>
                 <h1>This round WINNER</h1>
-                <p>{{roundWinner}}</p>
+                <p>{{warn}}</p>
+                <p v-for="winner in roundWinner">{{winner.name}}</p>
                 <p>{{round}}</p>
 
                 <h1>This game Winner</h1>
-                <p>{{gameWinner.name}}</p>
-                <p>{{gameWinner.score}}</p>
+                <p>{{gameWarn}}</p>
+                <ul>
+                    <li v-for="gWinner in gameWinner"> winner : {{gWinner.name}} : {{gWinner.score}}</li>
+                </ul>
                 <ul v-for="winner in allPlayers">
-                    {{winner.name}}{{winner.score}}
+                    <li>{{winner.name}} : {{winner.score}}</li>
+                    
                 </ul>
                 <!-- <p></p> -->
                 

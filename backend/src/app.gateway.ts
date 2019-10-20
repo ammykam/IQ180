@@ -12,7 +12,6 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   constructor(private appService: AppService){};
   public numberOfClient: number = 0;
   private Players: Player[] = [];
-  // private readyUsers: number = 0;
   private readyPlayer: Player[] = [];
   private queue:number=0;
 
@@ -150,9 +149,12 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   answer(client: Socket, payload: {checkAns: string, time: string}): void { //send queue also 
     const checkPlayer: Player= this.Players.find(player=>player.clientID==client.id)
     const checkReady: boolean= checkPlayer.ready
-    let correctAnswer
-    let player
-    let time = 60-parseInt(payload.time);
+    let correctAnswer: boolean=false;
+    let player = this.Players.find(player=>player.clientID==client.id)
+    //time used to solve
+    //example: send 50s means player uses 10s to solve
+    let time:number = 60-parseInt(payload.time);
+    //console.log(time)
     
     if(checkReady){
       if(isNaN(eval(payload.checkAns))== false){
@@ -162,34 +164,89 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
         correctAnswer = this.appService.check(payload.checkAns,player);
         this.server.to(client.id).emit('correctAnswer',correctAnswer);
       }
+      //if there are none in payload
       //if player answer right or the time run out --> Go to the next person
-      if(correctAnswer || time == 0){
+      if(correctAnswer || time == 60){
         this.server.to(this.readyPlayer[this.queue].clientID).emit('readyToPlay',{Player: {}, queue:0})
         this.server.to(this.readyPlayer[this.queue].clientID).emit('notReadyToPlay',"it's not your turn")
+        //console.log("next question")
         //if the player answer correct --> keep time to compare later
-        if(correctAnswer){
+
+        if(correctAnswer == true){
           player.timer = time;
+          //console.log("answer correctly"+ player.timer +" by: "+player.name)
+        }else{
+          player.timer=60;
+          //console.log("answer not correct"+ player.timer +" by: "+player.name)
         }
         this.queue = this.queue +1;
+
         //if all the player has play this then check time to see the winner
         if(this.queue == this.readyPlayer.length){
           //check Time
           this.server.emit('notReadyToPlay',"")
           this.queue=0;
+          let allLose:number=0;
           let winner: Player = this.readyPlayer[0];
-          //what if nobody can answer? 
-          for(let i =1;i<this.readyPlayer.length ;i++){
-            if(this.readyPlayer[i].timer<winner.timer){
-              winner = this.readyPlayer[i];
-            }
-          }
-          winner.score += 1;
-          this.server.emit('roundWinner',{name: winner.name, round: this.readyPlayer[0].round});
-          this.server.emit('ReadyUser',this.readyPlayer)
 
-          this.readyPlayer = this.appService.resetTimer(this.readyPlayer);
-          this.readyPlayer = this.appService.round(this.readyPlayer);
-          this.server.emit('readyToPlay',this.readyPlayer)
+          let allWinner: Player[] = [];
+
+          let check:boolean = true
+          //console.log("the player left time:"+player.timer)
+
+          while(check){
+            for(let i =0; i< this.readyPlayer.length;i++){
+              if(this.readyPlayer[i].timer==60){
+                //console.log(allLose)
+                allLose++;
+              }
+              //We got new winner
+              //console.log("winner: "+winner.name+" "+winner.timer+"compete with: "+this.readyPlayer[i].name+" "+this.readyPlayer[i].timer)
+              if(winner.timer >= this.readyPlayer[i].timer){
+                //console.log("newwinner"+winner.name)
+                if(winner.clientID==this.readyPlayer[i].clientID){
+                  allWinner.push(this.readyPlayer[i])
+                }else if(this.readyPlayer[i].timer == winner.timer){
+                  allWinner.push(this.readyPlayer[i])
+                }else{
+                  //console.log("flush")
+                  allWinner=[];
+                  allWinner.push(this.readyPlayer[i])
+                }
+                winner = this.readyPlayer[i];
+              }
+            }
+            
+            //console.log(allLose)
+            //console.log(this.readyPlayer.length)
+            // if alll check for winner is finished then check
+            // 1. all lose
+            // 2. more than 1 wins, 1 win
+            if(allLose == this.readyPlayer.length){
+              //console.log('all just  lose')
+              this.server.emit('roundWinner',{text: ["Nobody wins"], round: this.readyPlayer[0].round})
+              this.server.emit('ReadyUser',this.readyPlayer)
+
+              this.readyPlayer = this.appService.resetTimer(this.readyPlayer);
+              this.readyPlayer = this.appService.round(this.readyPlayer);
+              this.server.emit('readyToPlay',this.readyPlayer)
+              break;
+            }
+
+            //console.log('just out of loop')
+            for(let i =0;i<allWinner.length;i++){
+              allWinner[i].score += 1;
+            }
+            this.server.emit('roundWinner',{name: allWinner, round: this.readyPlayer[0].round});
+            this.server.emit('ReadyUser',this.readyPlayer)
+
+            this.readyPlayer = this.appService.resetTimer(this.readyPlayer);
+            this.readyPlayer = this.appService.round(this.readyPlayer);
+            this.server.emit('readyToPlay',this.readyPlayer)
+            break;
+          }
+          
+          
         }
         //if all player doesn't play then keep playing
         if(this.queue<this.readyPlayer.length){
@@ -220,15 +277,30 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   checkWinner(client: Socket): void{
     const checkPlayer: Player= this.Players.find(player=>player.clientID==client.id)
     const checkReady: boolean= checkPlayer.ready
-    if(checkReady){
-      let winner: Player= this.readyPlayer[0];
-    for(let i=0;i<this.readyPlayer.length;i++){
-      if(this.readyPlayer[i].score>winner.score){
-        winner = this.readyPlayer[i];
-      }
+    let allWinner: Player[]=[]
+    let winner: Player= this.readyPlayer[0];
+    let allLose:number=0;
+    while(true){
+      if(checkReady){
+        for(let i=0;i<this.readyPlayer.length;i++){
+          if(this.readyPlayer[i].score==0){
+            allLose++;
+          }
+          if(this.readyPlayer[i].score==winner.score){
+            allWinner.push(this.readyPlayer[i])       
+          }
+          if(this.readyPlayer[i].score>winner.score){
+            allWinner=[]
+            allWinner.push(this.readyPlayer[i])
+          }
+          winner = this.readyPlayer[i];
+        }
+        if(allLose==this.readyPlayer.length){
+          this.server.emit('gameWinner',{text: "nobody wins", allPlayers: this.readyPlayer})
+          break;
+        }
+      this.server.emit('gameWinner', {Player: allWinner, allPlayers: this.readyPlayer})
     }
-    console.log(winner.name)
-    this.server.emit('gameWinner', {Player: winner, allPlayers: this.readyPlayer})
     //reset game to next round
     for(let i=0;i<this.readyPlayer.length;i++){
       this.readyPlayer[i].score=0
@@ -242,25 +314,3 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   }
 }
 
- // @SubscribeMessage('checkTime') //check time taken for each player; the player with the fastest time is given 1 point 
-  // checkTime(client: Socket): void {
-  //   //console.log('checktime in')
-  //   const checkPlayer: Player= this.Players.find(player=>player.clientID==client.id)
-  //   const checkReady: boolean= checkPlayer.ready
-  //   if(checkReady){
-  //     let winner: Player = this.readyPlayer[0];
-  //   for(let i =1;i<this.readyPlayer.length ;i++){
-  //     //console.log(this.readyPlayer[i].name, '  ', this.readyPlayer[i].score)
-  //     if(this.readyPlayer[i].timer<winner.timer){
-  //       winner = this.readyPlayer[i];
-  //     }
-  //   }
-  //   winner.score += 1;
-  //   console.log(winner.name);
-  //   console.log(winner.score, '  score');
-  //   console.log(this.readyPlayer[0].round, '  round')
-  //   this.server.emit('roundWinner',{name: winner.name, round: this.readyPlayer[0].round});
-  //   this.server.emit('ReadyUser',this.readyPlayer)
-  //   this.server.emit('readyToPlay',this.readyPlayer)
-  //   }
-  // }

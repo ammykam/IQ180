@@ -1,5 +1,3 @@
-
-
 const app = new Vue({
     el: '#app',
     data: {
@@ -20,6 +18,8 @@ const app = new Vue({
         round: 0,
         allPlayers:[],
         waitText:'',
+        warn:'',
+        gameWarn:'',
         socket: null,
     },
     methods: {
@@ -68,10 +68,6 @@ const app = new Vue({
             
             this.socket.emit('answer',{checkAns: this.checkAnswer, time: this.timer});
         },
-        // checkTime(){
-        //     //console.log('timer work ka')
-        //     this.socket.emit('checkTime')
-        // },
         gameEnd(){
             //console.log('gameEnd')
             this.socket.emit('checkWinner')
@@ -83,6 +79,8 @@ const app = new Vue({
             this.roundWinner=''
             this.socket.emit('nextRound')
             this.orderUsers =[]
+            this.warn=""
+            this.gameWarn=""
         }
 
     },
@@ -124,6 +122,7 @@ const app = new Vue({
             this.correctAnswer=message
         })
         this.socket.on('roundWinner', (message)=>{
+            this.warn = message.text;
             this.roundWinner = message.name;
             this.round = message.round;
         })
@@ -133,6 +132,7 @@ const app = new Vue({
             this.round=0
             
             //console.log('this is winner')
+            this.gameWarn = message.text;
             this.gameWinner = message.Player;
             this.allPlayers = message.allPlayers;
 

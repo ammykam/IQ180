@@ -90,20 +90,19 @@ export class AppService {
     return problem
   }
   check(payload: string, player: Player ) : boolean{
-    //console.log('check')
-    let playerAns : number = eval(payload);
-    let problemAns = player.problem[5];
-    let correctAns : boolean = true;
-    let num: number = 0;
-    let numArray: string[] = ['0','1','2','3','4','5','6','7','8','9']
-    while(payload.length>0){
-      let a: string = payload;
-      a = a.slice(0,1)
-      payload = payload.slice(1)
-      if(numArray.includes(a)){
-        num++;
+      let playerAns : number = eval(payload);
+      let problemAns = player.problem[5];
+      let correctAns : boolean = true;
+      let num: number = 0;
+      let numArray: string[] = ['0','1','2','3','4','5','6','7','8','9']
+      while(payload.length>0){
+        let a: string = payload;
+        a = a.slice(0,1)
+        payload = payload.slice(1)
+        if(numArray.includes(a)){
+          num++;
+        }
       }
-    }
     // correctAns && (playerAns == problemAns)
     //use eval()?
     return playerAns == problemAns && num ==5;
