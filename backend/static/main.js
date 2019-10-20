@@ -20,6 +20,8 @@ const app = new Vue({
         waitText:'',
         warn:'',
         gameWarn:'',
+        chatText:'',
+        chatMessages:[],
         socket: null,
     },
     methods: {
@@ -81,6 +83,10 @@ const app = new Vue({
             this.orderUsers =[]
             this.warn=""
             this.gameWarn=""
+        },
+        sendMessage(){
+            this.socket.emit('chatMessage',{text: this.chatText})
+            this.chatText='';
         }
 
     },
@@ -136,6 +142,11 @@ const app = new Vue({
             this.gameWinner = message.Player;
             this.allPlayers = message.allPlayers;
 
+        })
+        this.socket.on('messageToClient',(message)=>{
+            this.chatMessages.push(message)
+            //this.chatMessages = message
+            console.log(message)
         })
     
     }

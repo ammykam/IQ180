@@ -100,6 +100,14 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     }
   }
 
+  @SubscribeMessage('chatMessage')
+  chatMessgae(client:Socket, payload: {text: string}):void{
+    const player = this.Players.find(player=>player.clientID==client.id)
+    //console.log(client)
+    this.server.emit('messageToClient',{name: player.name, text: payload.text})
+  } 
+  
+
   @SubscribeMessage('reset')
   reset(client: Socket, payload: boolean):void{
     const checkPlayer: Player= this.Players.find(player=>player.clientID==client.id)
