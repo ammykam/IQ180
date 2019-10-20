@@ -19,6 +19,7 @@ const app = new Vue({
         orderUsers:[],
         round: 0,
         allPlayers:[],
+        waitText:'',
         socket: null,
     },
     methods: {
@@ -59,15 +60,18 @@ const app = new Vue({
             this.socket.emit('reset',true)
             this.orderUsers=[]
             this.socket.emit('start',true)
+            this.gameWinner={}
+            this.allPlayers=[]
         },
         answer(){
             //console.log('answer work')
+            
             this.socket.emit('answer',{checkAns: this.checkAnswer, time: this.timer});
         },
-        checkTime(){
-            //console.log('timer work ka')
-            this.socket.emit('checkTime')
-        },
+        // checkTime(){
+        //     //console.log('timer work ka')
+        //     this.socket.emit('checkTime')
+        // },
         gameEnd(){
             //console.log('gameEnd')
             this.socket.emit('checkWinner')
@@ -75,13 +79,15 @@ const app = new Vue({
 
         nextRound(){
             //console.log('nextRound work ka')
+            this.round=0
+            this.roundWinner=''
             this.socket.emit('nextRound')
             this.orderUsers =[]
         }
 
     },
     created(){
-        this.socket = io('http://localhost:3200')
+        this.socket = io('http://localhost:3000')
         this.socket.on('msgToClient', (message)=>{
             this.recievedMessage(message)
         })
@@ -98,13 +104,18 @@ const app = new Vue({
         })
         this.socket.on('ReadyUser',(message)=>{
             this.readyUsers=message
+            //console.log('hi')
+            //console.log(this.readyUsers[0].round)
         })
         this.socket.on('readyToPlay',(message)=>{
-            // //console.log('readytoplay')
+            //console.log('readytoplay')
             this.orderUsers=[];
             // this.orderMessage(message)
-            this.orderUsers=message;
+            this.orderUsers=message.Player;
         }) 
+        this.socket.on('notReadyToPlay', (message)=>{
+            this.waitText=message
+        })
         this.socket.on('answerToClient',(message)=>{
             //console.log('reciveed answer')
             this.answers = message
@@ -117,7 +128,11 @@ const app = new Vue({
             this.round = message.round;
         })
         this.socket.on('gameWinner', (message)=>{
-            console.log('this is winner')
+            this.orderUsers=[]
+            this.roundWinner=''
+            this.round=0
+            
+            //console.log('this is winner')
             this.gameWinner = message.Player;
             this.allPlayers = message.allPlayers;
 

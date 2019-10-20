@@ -37,7 +37,7 @@ export class AppService {
   
   round(players: Player[]): Player[]{
     // console.log('player round before: ', players[0].round);
-    for(let i=0; i <players.length-1; i++){
+    for(let i=0; i <players.length; i++){
       players[i].round = players[i].round + 1;
     }
     // console.log('player round after: ', players[0].round);
