@@ -209,7 +209,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
                 }else if(this.readyPlayer[i].timer == winner.timer){
                   allWinner.push(this.readyPlayer[i])
                 }else{
-                  //console.log("flush")
+                //console.log("flush")
                   allWinner=[];
                   allWinner.push(this.readyPlayer[i])
                 }
@@ -286,22 +286,25 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
           if(this.readyPlayer[i].score==0){
             allLose++;
           }
-          if(this.readyPlayer[i].score==winner.score){
-            allWinner.push(this.readyPlayer[i])       
-          }
-          if(this.readyPlayer[i].score>winner.score){
-            allWinner=[]
-            allWinner.push(this.readyPlayer[i])
-          }
-          winner = this.readyPlayer[i];
+          if(winner.score<=this.readyPlayer[i].score){
+            if(this.readyPlayer[i].score==winner.score){
+              allWinner.push(this.readyPlayer[i])       
+            }
+            if(this.readyPlayer[i].score>winner.score){
+              allWinner=[]
+              allWinner.push(this.readyPlayer[i])
+            }
+            winner = this.readyPlayer[i];
+          }  
         }
         if(allLose==this.readyPlayer.length){
           this.server.emit('gameWinner',{text: "nobody wins", allPlayers: this.readyPlayer})
           break;
         }
       this.server.emit('gameWinner', {Player: allWinner, allPlayers: this.readyPlayer})
+      break;
     }
-    //reset game to next round
+    //reset game to next game
     for(let i=0;i<this.readyPlayer.length;i++){
       this.readyPlayer[i].score=0
       this.readyPlayer[i].problem=[]
