@@ -64,6 +64,11 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     //this.logger.log(`Client Disconnected : ${client.id}`);
   }
 
+  @SubscribeMessage('askInformation')
+  askInfo(client: Socket): void{
+    this.server.emit('OnlineUser',this.Players)
+    this.server.emit('ReadyUser',this.readyPlayer)
+  }
 
   @SubscribeMessage('createUser')
   createUser(client: Socket, payload:{name: string, avatar:string}):void{
