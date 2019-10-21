@@ -169,7 +169,8 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   
   
   @SubscribeMessage('answer')
-  answer(client: Socket, payload: {checkAns: string, time: string}): void { //send queue also 
+  answer(client: Socket, payload: {checkAns: string, time: string}): void { //send queue also
+    // console.log('in answer naja ') 
     const checkPlayer: Player= this.Players.find(player=>player.clientID==client.id)
     const checkReady: boolean= checkPlayer.ready
     let correctAnswer: boolean=false;
@@ -256,13 +257,21 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
               this.server.emit('readyToPlay',this.readyPlayer)
               break;
             }
-
+            let newReadyPlayer :Player[] = [];
             //console.log('just out of loop')
             for(let i =0;i<allWinner.length;i++){
               allWinner[i].score += 1;
+              newReadyPlayer.push(allWinner[i]);
+              this.readyPlayer = this.readyPlayer.filter(player=>player.clientID != allWinner[i].clientID);
+            }
+
+            for(let i=0; i<this.readyPlayer.length; i++){
+              newReadyPlayer.push(this.readyPlayer[i]);
             }
             this.server.emit('roundWinner',{name: allWinner, text:[],round: this.readyPlayer[0].round});
             this.server.emit('ReadyUser',this.readyPlayer)
+
+            
 
             this.readyPlayer = this.appService.resetTimer(this.readyPlayer);
             this.readyPlayer = this.appService.round(this.readyPlayer);
@@ -282,9 +291,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   }
   @SubscribeMessage('nextRound') // still need to check whether the round is updated or not
   nextRound(client: Socket): void {
-
-
-    this.readyPlayer = this.appService.orderPlayerByScore(this.readyPlayer);
+    // this.readyPlayer = this.appService.orderPlayerByScore(this.readyPlayer);
     let problem:number[] = this.appService.generate();
     for(let i =0;i<this.readyPlayer.length;i++){
       // console.log(this.readyPlayer[i].name, '  ', this.readyPlayer[i].score)
@@ -313,13 +320,13 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
 
   @SubscribeMessage('skip')
   skip(client: Socket): void {
-    //console.log('skippyy');
+    // console.log('skippyy');
     const player: Player= this.Players.find(player=>player.clientID==client.id)
     player.timer=60;
     this.queue = this.queue +1;
-    //console.log('queue: ',this.queue);
-    //console.log('length: ', this.readyPlayer.length);
-    //console.log(this.readyPlayer);
+    // console.log('queue: ',this.queue);
+    // console.log('length: ', this.readyPlayer.length);
+    // console.log(this.readyPlayer);
     if(this.queue == this.readyPlayer.length){
       this.server.emit('notReadyToPlay',"")
       let roundwinner = this.appService.checkRoundWinner(this.readyPlayer,this.queue);
