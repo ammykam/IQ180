@@ -138,7 +138,6 @@ export class AppService {
       //check Time
       let allLose:number=0;
       let winner: Player = players[0];
-
       let allWinner: Player[] = [];
 
       let check:boolean = true

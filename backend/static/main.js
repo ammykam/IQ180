@@ -77,12 +77,13 @@ const app = new Vue({
 
         nextRound(){
             //console.log('nextRound work ka')
-            this.round=0
-            this.roundWinner=''
+            //this.round=0
+            //this.roundWinner=''
+            
+            //this.orderUsers =[]
+            //this.warn=""
+            //this.gameWarn=""
             this.socket.emit('nextRound')
-            this.orderUsers =[]
-            this.warn=""
-            this.gameWarn=""
         },
         sendMessage(){
             this.socket.emit('chatMessage',{text: this.chatText})
@@ -90,7 +91,7 @@ const app = new Vue({
         },
         skip(){
             this.socket.emit('skip');
-            console.log('skippy')
+            //console.log('skippy')
         }
 
     },
@@ -119,10 +120,13 @@ const app = new Vue({
             //console.log('readytoplay')
             this.orderUsers=[];
             // this.orderMessage(message)
-            this.orderUsers=message.Player;
+            this.orderUsers=message;
+            //console.log(this.orderUsers);
         }) 
         this.socket.on('notReadyToPlay', (message)=>{
+            
             this.waitText=message
+            console.log(this.waitText)
         })
         this.socket.on('answerToClient',(message)=>{
             //console.log('reciveed answer')
@@ -135,6 +139,7 @@ const app = new Vue({
             this.warn = message.text;
             this.roundWinner = message.name;
             this.round = message.round;
+            console.log(this.warn+"  "+this.roundWinner+"  "+this.round)
         })
         this.socket.on('gameWinner', (message)=>{
             this.orderUsers=[]
