@@ -15,6 +15,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   private Players: Player[] = [];
   private readyPlayer: Player[] = [];
   private queue:number=0;
+  private range:number=0;
 
   afterInit(server:Server){
     this.logger.log('Server IQ180 initiates');
@@ -91,8 +92,9 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   }
 
   @SubscribeMessage('readyUser')
-  readyUser(client: Socket, payload: boolean):void{
+  readyUser(client: Socket):void{
     const player = this.Players.find(player=>player.clientID==client.id)
+    //console.log(player)
 
     if(player.ready){
       player.ready=false;
@@ -120,6 +122,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   reset(client: Socket, payload: boolean):void{
     const checkPlayer: Player= this.Players.find(player=>player.clientID==client.id)
     const checkReady: boolean= checkPlayer.ready
+    this.range=0;
     if(checkReady){
       //look every player
     for(let i=0;i<this.readyPlayer.length;i++){
@@ -135,9 +138,11 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   }
   //start will trigger as the round start
   @SubscribeMessage('start')
-  start(client: Socket, payload: boolean):void{
+  start(client: Socket, payload: number):void{
+    this.range=0;
 
-    let problem:number[] = this.appService.generate();
+    let problem:number[] = this.appService.generate(payload);
+    this.range=payload;
 
     const checkPlayer: Player= this.Players.find(player=>player.clientID==client.id)
     const checkReady: boolean= checkPlayer.ready
@@ -147,22 +152,29 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
       for(let i =0;i<this.readyPlayer.length;i++){
         this.readyPlayer[i].problem=problem;
       }
+      //console.log(this.readyPlayer)
+
       this.readyPlayer = this.appService.start(this.readyPlayer);
       //emit just to show the order?
       this.server.emit('ReadyUser',this.readyPlayer)
       //this.server.emit('readyToPlay',this.readyPlayer)
+      //console.log(this.readyPlayer[0])
 
-      this.server.to(this.readyPlayer[0].clientID).emit('readyToPlay',{Player: this.readyPlayer[0]})
+      this.server.to(this.readyPlayer[0].clientID).emit('readyToPlay',this.readyPlayer[0])
+      //this.server.to(this.readyPlayer[0].clientID).emit('notReadyToPlay',"")
       for(let i =1; i<this.readyPlayer.length;i++){
+        //this.server.to(this.readyPlayer[0].clientID).emit('readyToPlay',{})
         this.server.to(this.readyPlayer[i].clientID).emit('notReadyToPlay',"it's not your turn")
       }
     }
+    //console.log('finished')
       problem=[]
   }
   
   
   @SubscribeMessage('answer')
-  answer(client: Socket, payload: {checkAns: string, time: string}): void { //send queue also 
+  answer(client: Socket, payload: {checkAns: string, time: string}): void { //send queue also
+    // console.log('in answer naja ') 
     const checkPlayer: Player= this.Players.find(player=>player.clientID==client.id)
     const checkReady: boolean= checkPlayer.ready
     let correctAnswer: boolean=false;
@@ -184,7 +196,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
       //if there are none in payload
       //if player answer right or the time run out --> Go to the next person
       if(correctAnswer || time == 60){
-        this.server.to(this.readyPlayer[this.queue].clientID).emit('readyToPlay',{Player: {}, queue:0})
+        //this.server.to(this.readyPlayer[this.queue].clientID).emit('readyToPlay',{Player: {}, queue:0})
         this.server.to(this.readyPlayer[this.queue].clientID).emit('notReadyToPlay',"it's not your turn")
         //console.log("next question")
         //if the player answer correct --> keep time to compare later
@@ -240,8 +252,9 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
             // 1. all lose
             // 2. more than 1 wins, 1 win
             if(allLose == this.readyPlayer.length){
+              
               //console.log('all just  lose')
-              this.server.emit('roundWinner',{text: ["Nobody wins"], round: this.readyPlayer[0].round})
+              this.server.emit('roundWinner',{name:["Noone"],text: ["Nobody wins"], round: this.readyPlayer[0].round})
               this.server.emit('ReadyUser',this.readyPlayer)
 
               this.readyPlayer = this.appService.resetTimer(this.readyPlayer);
@@ -249,13 +262,22 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
               this.server.emit('readyToPlay',this.readyPlayer)
               break;
             }
-
+            let newReadyPlayer :Player[] = [];
             //console.log('just out of loop')
             for(let i =0;i<allWinner.length;i++){
               allWinner[i].score += 1;
+              newReadyPlayer.push(allWinner[i]);
+              this.readyPlayer = this.readyPlayer.filter(player=>player.clientID != allWinner[i].clientID);
             }
-            this.server.emit('roundWinner',{name: allWinner, round: this.readyPlayer[0].round});
+
+            for(let i=0; i<this.readyPlayer.length; i++){
+              newReadyPlayer.push(this.readyPlayer[i]);
+            }
+            this.readyPlayer=newReadyPlayer;
+            this.server.emit('roundWinner',{name: allWinner, text:[],round: this.readyPlayer[0].round});
             this.server.emit('ReadyUser',this.readyPlayer)
+
+            
 
             this.readyPlayer = this.appService.resetTimer(this.readyPlayer);
             this.readyPlayer = this.appService.round(this.readyPlayer);
@@ -268,37 +290,37 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
         //if all player doesn't play then keep playing
         if(this.queue<this.readyPlayer.length){
           this.server.to(this.readyPlayer[this.queue].clientID).emit('notReadyToPlay',"")
-          this.server.to(this.readyPlayer[this.queue].clientID).emit('readyToPlay',{Player: this.readyPlayer[this.queue]})
+          this.server.to(this.readyPlayer[this.queue].clientID).emit('readyToPlay',this.readyPlayer[this.queue])
         }
       }
     }
   }
   @SubscribeMessage('nextRound') // still need to check whether the round is updated or not
   nextRound(client: Socket): void {
-    this.readyPlayer = this.appService.orderPlayerByScore(this.readyPlayer);
-    let problem:number[] = this.appService.generate();
+    // this.readyPlayer = this.appService.orderPlayerByScore(this.readyPlayer);
+    let problem:number[] = this.appService.generate(this.range);
     for(let i =0;i<this.readyPlayer.length;i++){
       // console.log(this.readyPlayer[i].name, '  ', this.readyPlayer[i].score)
       this.readyPlayer[i].problem=problem;
     }
     this.server.emit('ReadyUser',this.readyPlayer)
 
-    this.server.to(this.readyPlayer[0].clientID).emit('readyToPlay',{Player: this.readyPlayer[0]})
+    this.server.to(this.readyPlayer[0].clientID).emit('readyToPlay',this.readyPlayer[0])
     for(let i =1; i<this.readyPlayer.length;i++){
-        this.server.to(this.readyPlayer[i].clientID).emit('notReadyToPlay',"it's not your turn")
+      this.server.to(this.readyPlayer[i].clientID).emit('notReadyToPlay',"it's not your turn")
     }
 
   }
 
   @SubscribeMessage('skip')
   skip(client: Socket): void {
-    console.log('skippyy');
+    // console.log('skippyy');
     const player: Player= this.Players.find(player=>player.clientID==client.id)
     player.timer=60;
     this.queue = this.queue +1;
-    console.log('queue: ',this.queue);
-    console.log('length: ', this.readyPlayer.length);
-    console.log(this.readyPlayer);
+    // console.log('queue: ',this.queue);
+    // console.log('length: ', this.readyPlayer.length);
+    // console.log(this.readyPlayer);
     if(this.queue == this.readyPlayer.length){
       this.server.emit('notReadyToPlay',"")
       let roundwinner = this.appService.checkRoundWinner(this.readyPlayer,this.queue);
@@ -320,9 +342,9 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
       }
     }else{
       this.server.to(this.readyPlayer[this.queue-1].clientID).emit('notReadyToPlay',"waiting for you're opponent")
-      console.log('hi')
+      //console.log('hi')
       this.server.to(this.readyPlayer[this.queue].clientID).emit('notReadyToPlay',"")
-      this.server.to(this.readyPlayer[this.queue].clientID).emit('readyToPlay',{Player: this.readyPlayer[this.queue]})
+      this.server.to(this.readyPlayer[this.queue].clientID).emit('readyToPlay',this.readyPlayer[this.queue])
     }
     
   }
