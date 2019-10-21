@@ -22,6 +22,7 @@ const app = new Vue({
         gameWarn:'',
         chatText:'',
         chatMessages:[],
+        difficulty:0,
         socket: null,
     },
     methods: {
@@ -52,7 +53,7 @@ const app = new Vue({
         startMessage(){
             //console.log('start work')
             this.orderUsers=[]
-            this.socket.emit('start',true)
+            this.socket.emit('start',this.difficulty)
         },
         orderMessage(message){
             this.orderUsers.push(message)
@@ -61,7 +62,7 @@ const app = new Vue({
             //console.log('reset activated')
             this.socket.emit('reset',true)
             this.orderUsers=[]
-            this.socket.emit('start',true)
+            this.socket.emit('start',this.difficulty)
             this.gameWinner={}
             this.allPlayers=[]
         },
