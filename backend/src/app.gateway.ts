@@ -66,6 +66,8 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
 
   @SubscribeMessage('askInformation')
   askInfo(client: Socket): void{
+    const player = this.Players.find(player=>player.clientID==client.id)
+    this.server.to(client.id).emit('WelcomeUser',player)
     this.server.emit('OnlineUser',this.Players)
     this.server.emit('ReadyUser',this.readyPlayer)
   }

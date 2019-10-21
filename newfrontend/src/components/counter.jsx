@@ -37,9 +37,6 @@ class Counter extends Component {
         >
           Delete
         </button>
-
-        {/* {this.state.tags.length === 0 && "Please create a tag!"}
-        {this.renderTags()} */}
       </div>
     );
   }

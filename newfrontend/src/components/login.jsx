@@ -5,6 +5,8 @@ import Avatar from "./avatar";
 const styleLogin = {
   marginLeft: "20%",
   marginRight: "20%",
+  marginTop: "100px",
+  height:"500px",
   width: "60%",
   backgroundColor: "#fdf5ee",
   padding: "5%"
@@ -19,6 +21,7 @@ const styleAvatar ={
 const styleLoginButton ={
     backgroundColor: "#67605f",
     color: "white",
+    marginTop: "80px",
     marginLeft: "88%",
     width: "12%",
 }
@@ -62,6 +65,7 @@ class Login extends Component {
             />
           </div>
         </div>
+        <br/>
         <br/>
         <div className="col-11" style={styleAvatar}> 
             <Avatar/>

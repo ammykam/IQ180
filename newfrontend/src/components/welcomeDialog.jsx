@@ -1,37 +1,57 @@
 import React, { Component } from 'react';
-import "./css/welcomeDialog.css";
+import { useState } from 'react';
 import { socket } from "../App.js";
-import Login from "./login";
+import FirstQues from "./firstQues";
 
+const styleButton = {
+    backgroundColor: "#fdf5ee",
+    marginRight: "-80%",
+    marginBottom: "-10%"
+}
+
+const styleDialog ={
+    backgroundColor: "#67605f",
+    marginLeft: "20%",
+    marginRight: "20%",
+    marginTop:"100px",
+    width:"60%",
+    height:"500px",
+}
 
 class WelcomeDialog extends Component {
     constructor(){
         super();
         this.state={
-            name: "",
+            name: "New Comer",
+            showFirstQues: true,
         }
     }
+
     componentDidMount(){
-        // const {name} = this.state;
         socket.on("WelcomeUser", data => this.setState({name: data.name}));
     }
-    render() { 
 
-        const styleDialog ={
-            backgroundColor: "#67605f",
-            marginLeft: "20%",
-            marginRight: "20%",
-            marginTop:"100px",
-            width:"60%",
-            height:"500px",
-        }
-        const { onWelcomeWelcome } = this.props;
+    skipBut(){
+        socket.emit('askInformation');
+    }
+    
+    handleClick(){
+        console.log("hi");
+        this.setState({showFirstQues: false});
+    }
+
+    render() { 
         const { name } = this.state;
+        const { showFirstQues } = this.state;
+        const { onWelcomeWelcome } = this.props;
+
         return ( 
             <div style={styleDialog}>
-                {this.welcomeUser}
-                <h1>Welcome {name}!</h1>
-                <button className="btn btn-primary" onClick={onWelcomeWelcome()}>Let's Start</button>
+                <h1 style={{color:"white"}}> Hello {name}!</h1>
+                <div style={{backgroundColor:"#f6c6a9", margin:"50px", height:"250px"}}>
+                    {showFirstQues && <FirstQues onClick={() => this.handleClick()}/>}
+                </div>
+                <button type="button" className="btn" onClick={() =>{onWelcomeWelcome(); this.skipBut()}} style={styleButton}>Next</button>
             </div>
          );
     }

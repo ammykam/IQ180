@@ -28,27 +28,27 @@ class Avatar extends Component {
       <div>
       <div style={ styleCon }>
         <div className="form-check form-check-inline">
-          <input className="form-check-input" type="radio" name="avatarSet" id="avatar_1" value="option1"/>
+          <input className="form-check-input" type="radio" name="avatarSet" id="avatar_1" value="avatar1"/>
             <img src={avatar1} alt="" style={styleAvatar}/>
         </div>
         
         <div className="form-check form-check-inline">
-          <input className="form-check-input" type="radio" name="avatarSet" id="avatar_2" value="option2"/>
+          <input className="form-check-input" type="radio" name="avatarSet" id="avatar_2" value="avatar2"/>
             <img src={avatar2} alt="" style={styleAvatar}/>
         </div>
 
         <div className="form-check form-check-inline">
-          <input className="form-check-input" type="radio" name="avatarSet" id="avatar_3" value="option3"/>
+          <input className="form-check-input" type="radio" name="avatarSet" id="avatar_3" value="avatar3"/>
             <img src={avatar3} alt="" style={styleAvatar}/>
         </div>
 
         <div className="form-check form-check-inline">
-          <input className="form-check-input" type="radio" name="avatarSet" id="avatar_4" value="option4"/>
+          <input className="form-check-input" type="radio" name="avatarSet" id="avatar_4" value="avatar4"/>
             <img src={avatar4} alt="" style={styleAvatar}/>
         </div>
 
         <div className="form-check form-check-inline">
-          <input className="form-check-input" type="radio" name="avatarSet" id="avatar_5" value="option5"/>
+          <input className="form-check-input" type="radio" name="avatarSet" id="avatar_5" value="avatar5"/>
             <img src={avatar5} alt="" style={styleAvatar}/>
         </div>
 
@@ -56,27 +56,27 @@ class Avatar extends Component {
         <br/>
 
         <div className="form-check form-check-inline">
-          <input className="form-check-input" type="radio" name="avatarSet" id="avatar_6" value="option6"/>
+          <input className="form-check-input" type="radio" name="avatarSet" id="avatar_6" value="avatar6"/>
             <img src={avatar6} alt="" style={styleAvatar}/>
         </div>
 
         <div className="form-check form-check-inline">
-          <input className="form-check-input" type="radio" name="avatarSet" id="avatar_7" value="option7"/>
+          <input className="form-check-input" type="radio" name="avatarSet" id="avatar_7" value="avatar7"/>
             <img src={avatar7} alt="" style={styleAvatar}/>
         </div>
 
         <div className="form-check form-check-inline">
-          <input className="form-check-input" type="radio" name="avatarSet" id="avatar_8" value="option8"/>
+          <input className="form-check-input" type="radio" name="avatarSet" id="avatar_8" value="avatar8"/>
             <img src={avatar8} alt="" style={styleAvatar}/>
         </div>
 
         <div className="form-check form-check-inline">
-          <input className="form-check-input" type="radio" name="avatarSet" id="avatar_9" value="option9"/>
+          <input className="form-check-input" type="radio" name="avatarSet" id="avatar_9" value="avatar9"/>
             <img src={avatar9} alt="" style={styleAvatar}/>
         </div>
 
         <div className="form-check form-check-inline">
-          <input className="form-check-input" type="radio" name="avatarSet" id="avatar_10" value="option10"/>
+          <input className="form-check-input" type="radio" name="avatarSet" id="avatar_10" value="avatar10"/>
             <img src={avatar10} alt="" style={styleAvatar}/>
         </div>
       </div>
