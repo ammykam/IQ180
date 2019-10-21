@@ -94,7 +94,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   @SubscribeMessage('readyUser')
   readyUser(client: Socket):void{
     const player = this.Players.find(player=>player.clientID==client.id)
-    //console.log(player)
+    
 
     if(player.ready){
       player.ready=false;
@@ -108,6 +108,9 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
       this.readyPlayer.push(player)
       this.server.emit('ReadyUser',this.readyPlayer)
     }
+    this.server.to(client.id).emit('WelcomeUser',player)
+    console.log(player)
+
   }
 
   @SubscribeMessage('chatMessage')
