@@ -134,6 +134,50 @@ export class AppService {
     return players;
   }
 
+  checkRoundWinner(players: Player[], queue: number): {loss:boolean, winner: Player[]}{
+      //check Time
+      let allLose:number=0;
+      let winner: Player = players[0];
+
+      let allWinner: Player[] = [];
+
+      let check:boolean = true
+      //console.log("the player left time:"+player.timer)
+
+      while(check){
+        for(let i =0; i< players.length;i++){
+          if(players[i].timer==60){
+            allLose++;
+          }
+          if(winner.timer >= players[i].timer){
+            if(winner.clientID==players[i].clientID){
+              allWinner.push(players[i])
+            }else if(players[i].timer == winner.timer){
+              allWinner.push(players[i])
+            }else{
+              allWinner=[];
+              allWinner.push(players[i])
+            }
+            winner = players[i];
+          }
+        }
+
+        if(allLose == players.length){
+          return {loss: true, winner: []};
+        }else{
+          for(let i =0;i<allWinner.length;i++){
+            allWinner[i].score += 1;
+          }
+          return {loss: false, winner: allWinner};
+        }
+        
+
+      }
+      
+      
+
+  }
+
 
 
  

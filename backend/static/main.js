@@ -87,6 +87,10 @@ const app = new Vue({
         sendMessage(){
             this.socket.emit('chatMessage',{text: this.chatText})
             this.chatText='';
+        },
+        skip(){
+            this.socket.emit('skip');
+            console.log('skippy')
         }
 
     },

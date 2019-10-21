@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { Player } from './Model/msg.interface';
 
 
+
 @WebSocketGateway()
 export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDisconnect{
   @WebSocketServer() server: Server;
@@ -174,7 +175,8 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     if(checkReady){
       if(isNaN(eval(payload.checkAns))== false){
         this.server.to(client.id).emit('answerToClient',eval(payload.checkAns))
-        player = this.Players.find(player=>player.clientID==client.id)
+        player = this.Players.find(player=>player.clientID==client.id) 
+        //Do we need to do this we already have above?
 
         correctAnswer = this.appService.check(payload.checkAns,player);
         this.server.to(client.id).emit('correctAnswer',correctAnswer);
@@ -286,6 +288,43 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
         this.server.to(this.readyPlayer[i].clientID).emit('notReadyToPlay',"it's not your turn")
     }
 
+  }
+
+  @SubscribeMessage('skip')
+  skip(client: Socket): void {
+    console.log('skippyy');
+    const player: Player= this.Players.find(player=>player.clientID==client.id)
+    player.timer=60;
+    this.queue = this.queue +1;
+    console.log('queue: ',this.queue);
+    console.log('length: ', this.readyPlayer.length);
+    console.log(this.readyPlayer);
+    if(this.queue == this.readyPlayer.length){
+      this.server.emit('notReadyToPlay',"")
+      let roundwinner = this.appService.checkRoundWinner(this.readyPlayer,this.queue);
+      this.queue = 0;
+      if(roundwinner.loss){
+        this.server.emit('roundWinner',{text: ["Nobody wins"], round: this.readyPlayer[0].round})
+        this.server.emit('ReadyUser',this.readyPlayer)
+
+        this.readyPlayer = this.appService.resetTimer(this.readyPlayer);
+        this.readyPlayer = this.appService.round(this.readyPlayer);
+        this.server.emit('readyToPlay',this.readyPlayer)
+      }else{
+        this.server.emit('roundWinner',{name: roundwinner.winner, round: this.readyPlayer[0].round});
+        this.server.emit('ReadyUser',this.readyPlayer)
+
+        this.readyPlayer = this.appService.resetTimer(this.readyPlayer);
+        this.readyPlayer = this.appService.round(this.readyPlayer);
+        this.server.emit('readyToPlay',this.readyPlayer)
+      }
+    }else{
+      this.server.to(this.readyPlayer[this.queue-1].clientID).emit('notReadyToPlay',"waiting for you're opponent")
+      console.log('hi')
+      this.server.to(this.readyPlayer[this.queue].clientID).emit('notReadyToPlay',"")
+      this.server.to(this.readyPlayer[this.queue].clientID).emit('readyToPlay',{Player: this.readyPlayer[this.queue]})
+    }
+    
   }
 
   @SubscribeMessage('checkWinner')
