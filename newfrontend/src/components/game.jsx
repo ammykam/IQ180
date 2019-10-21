@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { socket } from "../App.js";
 import DivideSign from "./images/sign/divideButton.png";
 import LeftSign from "./images/sign/leftButton.png";
 import MinusSign from "./images/sign/minusButton.png";
@@ -22,8 +23,21 @@ const buttonNumStyle ={
   }
 
 class Game extends Component {
-    state = {  }
+    constructor() {
+        super();
+        this.state = {
+          nameReady: [],
+        };
+      }
+
+    componentDidMount(){
+        console.log('hi');
+        socket.on("ReadyUser", data => this.setState({ nameReady: data }));
+        console.log('done');
+    }
+
     render() { 
+        const { nameReady } = this.state; 
         return ( 
             <div className="row" style={{margin:"30px"}}>
                 <div className="col-sm-8">
@@ -37,7 +51,7 @@ class Game extends Component {
                                     <p>TIMER</p>
                                 </div>
                             </div>
-                            <br/>
+                            <br/><br/>
                             <div className="row">
                                 <div className="col-sm-9" style={{backgroundColor:"#f6c6a9"}}>
                                     <p>show equation</p>
@@ -49,6 +63,10 @@ class Game extends Component {
                                     <p>RESULT</p>
                                 </div>
                             </div>
+                            <div style={{textAlign:"left", fontWeight:"bold", color:"pink"}}>
+                                <h4>expected result = </h4>
+                            </div>
+                            <br/>
                             <div>
                                 <button style={buttonNumStyle}></button>
                                 <button style={buttonNumStyle}></button>
@@ -72,7 +90,14 @@ class Game extends Component {
                     <div className="card">
                         <div className="card-body">
                             <h3 className="card-title">Players</h3>
-                            <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                            <div className="card-text">
+                            {nameReady.map(nameReady => <div key={Math.random()}>
+                            <li>{nameReady.name}</li>
+                            <li>{nameReady.score}</li>
+                            <li><img src={nameReady.avatar} alt=""/></li>
+                            </div>
+                            )}
+                            </div>
                         </div>
                     </div>
                 </div>

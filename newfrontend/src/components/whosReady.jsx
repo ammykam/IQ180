@@ -20,7 +20,7 @@ const buttonStyle ={
 }
 
 class WhosReady extends Component {
-
+    _isMounted = false;
     constructor() {
         super();
         this.state = {
@@ -29,45 +29,71 @@ class WhosReady extends Component {
           name: "",
           value: true,
         };
-
       }
 
     sendBoolean(){
-        console.log("sendBoolean called!");
+        //console.log("sendBoolean called!");
+        socket.emit('start');
     }
 
     componentDidMount(){
-        console.log('hi')
-        socket.on("WelcomeUser", data => this.setState({ 
-            name: data.name }
-            ));
+        this._isMounted=true;
+        //console.log('hi')
+        socket.on("WelcomeUser", data => this.setState({ name: data.name }));
         socket.on("OnlineUser", data => this.setState({ nameOnline: data }));
         socket.on("ReadyUser", data => this.setState({ nameReady: data }));
-        console.log(this.state.name)
-        console.log('done')
+        //console.log(this.state.nameOnline)
+        //console.log(this.state.nameReady)
+        //console.log('done')
     }
+
+    componentWillUnmount(){
+        this._isMounted=false;
+    }
+    
+    // componentDidUpdate(){
+    //     console.log("get in")
+    //     if(this.state.nameReady.length>1){
+    //         console.log("in for")
+    //         this.setState({value: true});
+    //     }else{
+
+    //     }
+    // }
 
     sendReady = () => {   
         socket.emit('readyUser');
-        this.setState({value: !this.state.value});
-      };
+        //console.log(this.state.nameReady.length)
+        
+    };
+
+    present = () =>{
+        socket.on('ReadyUser',data => this.setState(
+            { nameReady: data }
+        ));
+
+        return this.state.nameReady.length
+    }
 
     render() {
         const { nameOnline } = this.state; 
         const { nameReady } = this.state; 
         const { value } = this.state; 
         const { onWhosReadyStart } =this.props;
+        //const x = nameReady.length;
         return ( 
             <div className="row">
+                <p>The number of User: {this.present()}</p>
                 <div className="col-sm-5" style={{paddingRight:"50px", paddingLeft:"100px", marginTop:"60px"}}>
                     <div className="card" style={cardStyle}>
                         <div className="card-body">
                             <h3 className="card-title" style={cardTitleStyle} >Online Players</h3>
-                            <p className="card-text" style={{textAlign:"left", color:"white", fontWeight:"bold", fontSize:"20px"}}>
-                            {nameOnline.map(nameOnline => <div>
+                            <div className="card-text" style={{textAlign:"left", color:"white", fontWeight:"bold", fontSize:"20px"}}>
+                            {nameOnline.map(nameOnline =><div className="readyPlayers" key={Math.random()}>
                             <li>{nameOnline.name}</li>
-                            </div>)}
-                            </p>
+                            </div>
+                            )}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -82,11 +108,12 @@ class WhosReady extends Component {
                     <div className="card" style={cardStyle}>
                         <div className="card-body">
                             <h3 className="card-title" style={cardTitleStyle}>Who's Ready</h3>
-                            <p className="card-text" style={{textAlign:"left", color:"white", fontWeight:"bold", fontSize:"20px"}}>
-                            {nameReady.map(nameReady => <div>
+                            <div className="card-text" style={{textAlign:"left", color:"white", fontWeight:"bold", fontSize:"20px"}}>
+                            {nameReady.map(nameReady => <div key={Math.random()}>
                             <li>{nameReady.name}</li>
-                            </div>)}
-                            </p>
+                            </div>
+                            )}
+                            </div>
                         </div>
                     </div>
                 </div>

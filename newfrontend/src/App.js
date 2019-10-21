@@ -7,7 +7,7 @@ import Login from "./components/login";
 import WelcomeDialog from "./components/welcomeDialog";
 import WhosReady from "./components/whosReady";
 import Game from "./components/game";
-
+//import Song from "./components/Song.js";
 
 import socketIOClient from "socket.io-client";
 export const socket = socketIOClient("http://localhost:3000");
@@ -28,6 +28,7 @@ function App() {
   // socket.on("RoundWinner", res => {
   //   console.log(res);
   // });
+
   const handleWelcomeStart = () =>{
     console.log("Welcome Start Clicked!");
     setShowWelcome(false);
@@ -50,9 +51,9 @@ function App() {
     setShowGame(true); 
   }; 
 
-  const [showWelcome, setShowWelcome] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(true);
   const [showLogin, setShowLogin] = useState(false);
-  const [showWelcomeDialog, setShowWelcomeDialog] = useState(true);
+  const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
   const [showWhosReady, setShowWhosReady] = useState(false);
   const [showGame, setShowGame] = useState(false);
 
@@ -63,7 +64,7 @@ function App() {
         <header className="App-header">
          <NavBar/>
         </header>
-
+        
         <main className="App-main">
           {showWelcome && <Welcome onWelcomeStart={handleWelcomeStart}/>}
           {showLogin && <Login onLoginLogin={handleLoginLogin}/>}
