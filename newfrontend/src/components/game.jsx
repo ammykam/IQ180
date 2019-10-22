@@ -260,15 +260,17 @@ class Game extends Component {
                                 <div className="col-sm-3" style={{backgroundColor:"#f8e8cf"}}>
                                     <div>
                                         <h1>{this.getSecond()}</h1>
-                                        <button onClick={() => this.startTime()}>Start</button>
-                                        <button onClick={() => this.stopTime()}>Stop</button>
+                                        {/*<button onClick={() => this.startTime()}>Start</button>
+                                        <button onClick={() => this.stopTime()}>Stop</button>*/}
                                         
                                         {/* <div style={{color:"black", fontSize:"1px"}}>{(this.state.secondElapsed %60) === 0 ? this.stopTime(): null }</div> */}
                                         <div style={{color:"black", fontSize:"1px"}}>{stateAnswer === true ? this.stopTime(): null }</div>
                                     </div>
                                 </div>
                             </div>
-                            <br/><br/>
+                            <div>
+                                <p style={{fontWeight:"bold", fontSize:"30px", color:"#8b0000", textTransform: "uppercase", marginLeft:"-200px"}}> {warnText} </p>
+                            </div>
                             <div className="row" style={{height:"70px", fontWeight:"bold"}}>
                                 <div className="col-sm-9" style={{backgroundColor:"#f6c6a9"}}>
                                     <p style={{marginTop:"26px", fontSize: "25px"}}>{answer}</p>
@@ -298,7 +300,6 @@ class Game extends Component {
                             </div>
                             <br/>
                             <div style={{marginLeft:"-100px"}}>
-                                <p>{warnText}</p>
                                 <button style={buttonNumStyle} onClick={e => this.handleClick1(e,"value")} disabled={buttonValue1} value={problem[0]}>{problem[0]}</button>
                                 <button style={buttonNumStyle} onClick={e => this.handleClick2(e,"value")} disabled={buttonValue2} value={problem[1]}>{problem[1]}</button>
                                 <button style={buttonNumStyle} onClick={e => this.handleClick3(e,"value")} disabled={buttonValue3} value={problem[2]}>{problem[2]}</button>
