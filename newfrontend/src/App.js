@@ -9,8 +9,6 @@ import WhosReady from "./components/whosReady";
 import Game from "./components/game";
 import RoundWinner from "./components/roundWinner"
 
-import Countdown from "./components/countdown";
-
 import socketIOClient from "socket.io-client";
 export const socket = socketIOClient("http://localhost:3000");
 
@@ -58,6 +56,14 @@ function App() {
     setShowRoundWinner(true);
   }
 
+<<<<<<< HEAD
+=======
+  const handleBackToGame = () => {
+    setShowRoundWinner(false);
+    setShowGame(true);
+  }
+
+>>>>>>> master
   const [showWelcome, setShowWelcome] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
@@ -78,7 +84,7 @@ function App() {
           {showWelcomeDialog && <WelcomeDialog onWelcomeWelcome={handleWelcomeWelcome}/>}
           {showWhosReady && <WhosReady onWhosReadyStart={handleWhosReadyStart}/>}
           {showGame && <Game onChangeGameToWinner={handleChangeGameToWinner}/>}
-          {showRoundWinner && <RoundWinner/>}
+          {showRoundWinner && <RoundWinner onBackToGame={handleBackToGame}/>}
         </main>
 
       </div>

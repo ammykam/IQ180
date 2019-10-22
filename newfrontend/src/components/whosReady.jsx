@@ -28,7 +28,6 @@ class WhosReady extends Component {
           nameReady: [],
           user: [],
           numberUser:0,
-          value: true,
           number:0,
           difficulty:0,
           level:0,
@@ -120,23 +119,21 @@ class WhosReady extends Component {
         var e = document.getElementById("levelSelect");
         var a = e.options[e.selectedIndex].value;
         let l;
-        if(a=="Easy") {
+        if(a==="Easy") {
             l = 10;
         }
-        if(a=="Medium") {
+        if(a==="Medium") {
             l = 50
         }
-        if(a=="Hard") {
+        if(a==="Hard") {
             l = 100
         }
-        //console.log(l)
         socket.emit('start',l)
     }
 
     render() {
         const { nameOnline } = this.state; 
         const { nameReady } = this.state; 
-        const { value } = this.state; 
         const { onWhosReadyStart } =this.props;
         const x = nameReady.length;
         return ( 
@@ -160,7 +157,7 @@ class WhosReady extends Component {
                     <br/> <br/> <br/>
                     <div className="dropdown" style={{width:"110px", marginLeft:"52px"}}>
                         <div className="form-group">
-                            <label for="exampleFormControlSelect1">Select Level</label>
+                            <label forhtml="exampleFormControlSelect1">Select Level</label>
                             <select className="form-control" id="levelSelect">
                             <option>Easy</option>
                             <option>Medium</option>
@@ -169,7 +166,7 @@ class WhosReady extends Component {
                         </div>
                     </div>
                     <br/> <br/>
-                    <button className="btn" style={buttonStyle} disabled={false} onClick={() =>{this.sendLevel(); onWhosReadyStart();}}>Start</button>
+                    <button className="btn" style={buttonStyle} disabled={false} onClick={() =>{ onWhosReadyStart();this.sendLevel();}}>Start</button>
                 </div>
 
                 <div className="col-sm-5" style={{paddingRight:"100px", paddingLeft:"50px", marginTop:"60px"}}>
