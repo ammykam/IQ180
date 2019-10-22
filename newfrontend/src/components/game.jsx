@@ -52,9 +52,14 @@ class Game extends Component {
         socket.on("ReadyUser", data => {
             console.log('in ready user')
             console.log(data)
-            this.setState({ 
-                nameReady: data,
-                round: data[0].round})
+            if(data.length!=0){
+                this.setState({ 
+                    nameReady: data,
+                    round: data[0].round})
+            }
+            // this.setState({ 
+            //     nameReady: data,
+            //     round: data[0].round})
         })
     
         //console.log('done');
