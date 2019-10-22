@@ -61,6 +61,16 @@ function App() {
     setShowGame(true);
   }
 
+  const handleResetGame = () => {
+    setShowGame(false);
+    setShowWelcome(true);
+  }
+
+  const handleResetWinner = () => {
+    setShowRoundWinner(false);
+    setShowWelcome(true);
+  }
+
   const [showWelcome, setShowWelcome] = useState(true);
   const [showLogin, setShowLogin] = useState(false);
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
@@ -80,8 +90,9 @@ function App() {
           {showLogin && <Login onLoginLogin={handleLoginLogin}/>}
           {showWelcomeDialog && <WelcomeDialog onWelcomeWelcome={handleWelcomeWelcome}/>}
           {showWhosReady && <WhosReady onWhosReadyStart={handleWhosReadyStart}/>}
-          {showGame && <Game onChangeGameToWinner={handleChangeGameToWinner}/>}
-          {showRoundWinner && <RoundWinner onBackToGame={handleBackToGame}/>}
+          {showGame && <Game onChangeGameToWinner={handleChangeGameToWinner} onResetGame={handleResetGame}/>}
+          {showRoundWinner && <RoundWinner onBackToGame={handleBackToGame} onResetWinner={handleResetWinner}/>}
+          {/* {showRoundWinner && <RoundWinner onReset={handleReset}/>} */}
         </main>
 
       </div>

@@ -144,7 +144,8 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     //console.log(this.Players)
     //console.log(this.readyPlayer)
     this.server.emit('ReadyUser',this.readyPlayer);
-    this.server.emit('OnlineUser',this.Players)
+    this.server.emit('OnlineUser',this.Players);
+    this.server.emit('needReset', true);
 
   }
   //start will trigger as the round start
