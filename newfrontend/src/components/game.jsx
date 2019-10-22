@@ -36,6 +36,11 @@ class Game extends Component {
           stateAnswer:false,
           secondElapsed:60,
           changeWinner: false,
+          buttonValue1:false,
+          buttonValue2:false,
+          buttonValue3:false,
+          buttonValue4:false,
+          buttonValue5:false,
         };
       }
 
@@ -97,12 +102,43 @@ class Game extends Component {
 
         
     }
-    handleClick(e) {
+    handleClick1(e) {
+        this.state.answer.push(e.target.value)
+        this.setState(({
+            answer: this.state.answer,
+            buttonValue1: true
+        }))
+    }
+    handleClick2(e) {
         //console.log(e.target.value)
         this.state.answer.push(e.target.value)
-        console.log(this.state.answer)
         this.setState(({
-            answer: this.state.answer
+            answer: this.state.answer,
+            buttonValue2: true
+        }))
+    }
+    handleClick3(e) {
+        //console.log(e.target.value)
+        this.state.answer.push(e.target.value)
+        this.setState(({
+            answer: this.state.answer,
+            buttonValue3: true
+        }))
+    }
+    handleClick4(e) {
+        //console.log(e.target.value)
+        this.state.answer.push(e.target.value)
+        this.setState(({
+            answer: this.state.answer,
+            buttonValue4: true
+        }))
+    }
+    handleClick5(e) {
+        //console.log(e.target.value)
+        this.state.answer.push(e.target.value)
+        this.setState(({
+            answer: this.state.answer,
+            buttonValue5: true
         }))
     }
 
@@ -121,16 +157,10 @@ class Game extends Component {
                     checkAnswer: data
                 }
             ))
-        //let valueBoolean=true;
         socket.on('correctAnswer', data =>{
             this.setState({
                 stateAnswer: data
             })
-            // if(data==true){
-            //     this.setState({stateAnswer: true})
-            // }else if(data==false){
-            //     this.setState({stateAnswer: false})
-            // }
             
         })
 
@@ -164,7 +194,7 @@ class Game extends Component {
     }
 
     render() { 
-        const { nameReady,problem, warnText,round,answer,checkAnswer, stateAnswer} = this.state; 
+        const { nameReady,problem, warnText,round,answer,checkAnswer, stateAnswer, buttonValue1,buttonValue2,buttonValue3,buttonValue4,buttonValue5} = this.state; 
         const { onChangeGameToWinner } =this.props;
         return ( 
             <div className="row" style={{margin:"30px"}}>
@@ -200,21 +230,24 @@ class Game extends Component {
                                 </div>
                             </div><br/><br/>
                             <div className="row">
-                                <div className="col-sm-10">
+                                <div className="col-sm-8">
                                     <h4 style={{textAlign:"left", fontWeight:"bold", color:"pink"}}>expected result = {problem[5]}</h4>
                                 </div>
+                                <div className="col-sm-2" style={{marginLeft:"-30px"}}>
+                                    <button className="btn btn-outline-success" onClick={() =>{this.answerToServer()}}>HINT</button>
+                                </div>
                                 <div className="col-sm-2">
-                                    <button class="btn btn-outline-warning" onClick={() =>{this.answerToServer()}}>Submit</button>
+                                    <button className="btn btn-outline-warning" onClick={() =>{this.answerToServer()}}>Submit</button>
                                 </div>
                             </div>
                             <br/>
                             <div style={{marginLeft:"-100px"}}>
                                 <p>{warnText}</p>
-                                <button style={buttonNumStyle} onClick={e => this.handleClick(e,"value")} value={problem[0]}>{problem[0]}</button>
-                                <button style={buttonNumStyle} onClick={e => this.handleClick(e,"value")} value={problem[1]}>{problem[1]}</button>
-                                <button style={buttonNumStyle} onClick={e => this.handleClick(e,"value")} value={problem[2]}>{problem[2]}</button>
-                                <button style={buttonNumStyle} onClick={e => this.handleClick(e,"value")} value={problem[3]}>{problem[3]}</button>
-                                <button style={buttonNumStyle} onClick={e => this.handleClick(e,"value")} value={problem[4]}>{problem[4]}</button>
+                                <button style={buttonNumStyle} onClick={e => this.handleClick1(e,"value")} disabled={buttonValue1} value={problem[0]}>{problem[0]}</button>
+                                <button style={buttonNumStyle} onClick={e => this.handleClick2(e,"value")} disabled={buttonValue2} value={problem[1]}>{problem[1]}</button>
+                                <button style={buttonNumStyle} onClick={e => this.handleClick3(e,"value")} disabled={buttonValue3} value={problem[2]}>{problem[2]}</button>
+                                <button style={buttonNumStyle} onClick={e => this.handleClick4(e,"value")} disabled={buttonValue4} value={problem[3]}>{problem[3]}</button>
+                                <button style={buttonNumStyle} onClick={e => this.handleClick5(e,"value")} disabled={buttonValue5} value={problem[4]}>{problem[4]}</button>
                             </div>
                             <div>
                                 <button style={buttonStyle} onClick={()=>{
@@ -242,9 +275,9 @@ class Game extends Component {
                                     this.setState({answer: this.state.answer})
                                 }} ><img style={{width:"80px"}} src={RightSign} alt="" /></button>
                                 <button className="btn btn-danger m-3" onClick={()=>{
-                                    this.state.answer.splice(this.state.answer.length-1)
-                                    this.setState({answer: this.state.answer}
-                                        )}}>delete</button>
+                                    
+                                    this.setState({answer: [], buttonValue1:false, buttonValue2:false, buttonValue3:false, buttonValue4:false,  buttonValue5:false})
+                                }}>reset</button>
                             </div>
                         </div>
                     </div>
