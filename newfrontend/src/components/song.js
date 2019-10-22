@@ -15,19 +15,20 @@ export default class extends Component {
  
   render() {
     return (
-        <div>
-            <button onClick={this.playAudio}>
-                <span>Play music</span>
-            </button>
-            <button onClick ={this.pauseAudio}>
-                <span>
-                    pause
-                </span>
-            </button>
-            <audio className="audio-element">
-                <source src ="Yiruma.mp3"> </source>
-            </audio>
-        </div>
+      <div>
+        <button onClick={this.playAudio}>
+          <span>Play Music</span>
+        </button>
+        <button onClick={this.pauseAudio}>
+          <span>
+            Pause
+          </span>
+        </button>
+        <audio className="audio-element">
+          <source src="Yiruma.mp3"></source>
+          
+        </audio>
+      </div>
     )
   }
 }

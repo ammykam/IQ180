@@ -8,7 +8,7 @@ import WelcomeDialog from "./components/welcomeDialog";
 import WhosReady from "./components/whosReady";
 import Game from "./components/game";
 
-import Song from "./components/song";
+import Song from "./components/Song";
 import Countdown from "./components/countdown";
 
 import socketIOClient from "socket.io-client";
