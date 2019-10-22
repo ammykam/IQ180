@@ -120,16 +120,15 @@ class WhosReady extends Component {
         var e = document.getElementById("levelSelect");
         var a = e.options[e.selectedIndex].value;
         let l;
-        if(a=="Easy") {
+        if(a==="Easy") {
             l = 10;
         }
-        if(a=="Medium") {
+        if(a==="Medium") {
             l = 50
         }
-        if(a=="Hard") {
+        if(a==="Hard") {
             l = 100
         }
-        //console.log(l)
         socket.emit('start',l)
     }
 
@@ -160,7 +159,7 @@ class WhosReady extends Component {
                     <br/> <br/> <br/>
                     <div className="dropdown" style={{width:"110px", marginLeft:"52px"}}>
                         <div className="form-group">
-                            <label for="exampleFormControlSelect1">Select Level</label>
+                            <label forhtml="exampleFormControlSelect1">Select Level</label>
                             <select className="form-control" id="levelSelect">
                             <option>Easy</option>
                             <option>Medium</option>

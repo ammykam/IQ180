@@ -34,6 +34,7 @@ class Game extends Component {
           answer:[],
           checkAnswer:"0",
           stateAnswer:false,
+          secondElapsed:60,
           changeWinner: false,
         };
       }
@@ -53,15 +54,17 @@ class Game extends Component {
                 ,warnText:''
                 ,round:data.round
             })
+            this.startTime();
         })
         socket.on("notReadyToPlay", data =>{
             console.log("in not ready to play")
+
             this.setState(
                 {warnText:  data}
-        )
+        )})
 
-        })
         socket.on("changeToWinner", data => this.setState({changeWinner: data}));
+
         if(this.state.changeWinner){
             console.log('in toChangeWinner')
             this.props.onChangeGameToWinner();
@@ -108,8 +111,8 @@ class Game extends Component {
         for(let i =0;i<this.state.answer.length;i++){
             answerString=answerString.replace(',','')
         }
-        
-        let newObject = {checkAns: answerString, time: 10}
+        let x = this.stopTime();
+        let newObject = {checkAns: answerString, time: x}
         console.log(newObject)
         socket.emit('answer', newObject)
         socket.on('answerToClient', data =>
@@ -132,7 +135,31 @@ class Game extends Component {
         })
 
     }
-   
+
+    getSecond(){
+        return("00" + (this.state.secondElapsed % 60 )).slice(-2);
+    }
+
+    startTime = () =>{
+        var _this =this;
+        this.countdown = setInterval(function(){
+            _this.setState({ secondElapsed: _this.state.secondElapsed-1 });
+        }, 1000);
+
+    }
+
+    stopTime(){
+        clearInterval(this.countdown);
+        console.log("Stop Value"+ (this.state.secondElapsed %60))
+        let y = this.state.secondElapsed %60
+        return y
+    }
+
+    sendTimeout(){
+        let newObject = {checkAns: "", time: 0}
+        console.log(newObject)
+        socket.emit('answer', newObject)
+    }
 
     render() { 
         const { nameReady,problem, warnText,round,answer,checkAnswer, stateAnswer} = this.state; 
@@ -147,7 +174,14 @@ class Game extends Component {
                                     <h3 style={{color:"white", textAlign:"left"}}>Round {round}</h3>
                                 </div>
                                 <div className="col-sm-3" style={{backgroundColor:"#f8e8cf"}}>
-                                    <p>TIMER</p>
+                                    <div>
+                                        <h1>{this.getSecond()}</h1>
+                                        {/* <button onClick={() => this.startTime()}>Start</button>
+                                        <button onClick={() => this.stopTime()}>Stop</button> */}
+                                        
+                                        <div style={{color:"transparent"}}>{(this.state.secondElapsed %60) === 0 ? this.stopTime(): null }</div>
+                                        <div style={{color:"transparent"}}>{stateAnswer === true ? this.stopTime(): null }</div>
+                                    </div>
                                 </div>
                             </div>
                             <br/><br/>
@@ -179,8 +213,6 @@ class Game extends Component {
                                 <button style={buttonNumStyle} onClick={e => this.handleClick(e,"value")} value={problem[2]}>{problem[2]}</button>
                                 <button style={buttonNumStyle} onClick={e => this.handleClick(e,"value")} value={problem[3]}>{problem[3]}</button>
                                 <button style={buttonNumStyle} onClick={e => this.handleClick(e,"value")} value={problem[4]}>{problem[4]}</button>
-                                
-
                             </div>
                             <div>
                                 <button style={buttonStyle} onClick={()=>{
@@ -207,13 +239,10 @@ class Game extends Component {
                                     this.state.answer.push(")")
                                     this.setState({answer: this.state.answer})
                                 }} ><img style={{width:"80px"}} src={RightSign} alt="" /></button>
-                                <button class="btn btn-danger m-3" onClick={()=>{
+                                <button className="btn btn-danger m-3" onClick={()=>{
                                     this.state.answer.splice(this.state.answer.length-1)
                                     this.setState({answer: this.state.answer}
-                                        )}
-                                    
-                                    
-                                    }>delete</button>
+                                        )}}>delete</button>
                             </div>
                         </div>
                     </div>
@@ -227,14 +256,14 @@ class Game extends Component {
                             <div className="card-text">
                             {nameReady.map(nameReady => 
                             <div key={Math.random()}>
-                                <div class="card mb-3" style={{maxWidth: "540px", height:"120px", backgroundColor:"#fdf5ee"}}>
-                                    <div class="row no-gutters" style={{padding:"20px"}}>
-                                        <div class="col-md-3">
+                                <div className="card mb-3" style={{maxWidth: "540px", height:"120px", backgroundColor:"#fdf5ee"}}>
+                                    <div className="row no-gutters" style={{padding:"20px"}}>
+                                        <div className="col-md-3">
                                             <img src={nameReady.avatar} alt="" style={{width:"70px"}}/>
                                         </div>
-                                        <div class="col-md-9" style={{textAlign:"left", paddingLeft:"20px", fontWeight:"bold"}}>
-                                            <p class="card-text">Name: {nameReady.name}</p>
-                                            <p class="card-text">Score: {nameReady.score}</p>
+                                        <div className="col-md-9" style={{textAlign:"left", paddingLeft:"20px", fontWeight:"bold"}}>
+                                            <p className="card-text">Name: {nameReady.name}</p>
+                                            <p className="card-text">Score: {nameReady.score}</p>
                                         </div>
                                     </div>
                                 </div>

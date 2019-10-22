@@ -185,6 +185,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   @SubscribeMessage('answer')
   answer(client: Socket, payload: {checkAns: string, time: string}): void { //send queue also
     // console.log('in answer naja ') 
+    console.log(payload.time)
     const checkPlayer: Player= this.Players.find(player=>player.clientID==client.id)
     const checkReady: boolean= checkPlayer.ready
     let correctAnswer: boolean=false;

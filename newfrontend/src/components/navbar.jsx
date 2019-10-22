@@ -1,5 +1,6 @@
 import React from "react";
 import logo from "./images/IQLogo.jpg";
+import Song from "./Song";
 
 //Stateless Functional Component
 const NavBar = () => {
@@ -8,6 +9,7 @@ const NavBar = () => {
       <a className="navbar-brand" href="#">
         <img src={logo} width="96" height="52" alt="IQ180Logo" />
       </a>
+      <Song />
     </nav>
   );
 };

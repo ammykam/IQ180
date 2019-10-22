@@ -9,8 +9,6 @@ import WhosReady from "./components/whosReady";
 import Game from "./components/game";
 import RoundWinner from "./components/roundWinner"
 
-import Countdown from "./components/countdown";
-
 import socketIOClient from "socket.io-client";
 export const socket = socketIOClient("http://localhost:3000");
 

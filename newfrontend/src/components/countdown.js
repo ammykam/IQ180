@@ -28,7 +28,7 @@ class Countdown extends Component{
 
     render(){
         return (
-            <div className="App">
+            <div>
                 <h1>
                     {this.getSecond()}
                 </h1>
