@@ -51,10 +51,10 @@ function App() {
     setShowGame(true); 
   }; 
 
-  const [showWelcome, setShowWelcome] = useState(true);
+  const [showWelcome, setShowWelcome] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
-  const [showWhosReady, setShowWhosReady] = useState(false);
+  const [showWhosReady, setShowWhosReady] = useState(true);
   const [showGame, setShowGame] = useState(false);
 
   return (

@@ -41,7 +41,7 @@ class Game extends Component {
         return ( 
             <div className="row" style={{margin:"30px"}}>
                 <div className="col-sm-8">
-                    <div className="card" style={{backgroundColor:"#67605f"}}>
+                    <div className="card" style={{backgroundColor:"#67605f", padding:"20px"}} >
                         <div className="card-body">
                             <div className="row">
                                 <div className="col-sm-9">
@@ -52,7 +52,7 @@ class Game extends Component {
                                 </div>
                             </div>
                             <br/><br/>
-                            <div className="row">
+                            <div className="row" style={{height:"70px"}}>
                                 <div className="col-sm-9" style={{backgroundColor:"#f6c6a9"}}>
                                     <p>show equation</p>
                                 </div>
@@ -62,7 +62,7 @@ class Game extends Component {
                                 <div className="col-sm-2" style={{backgroundColor:"#fdf5ee"}}>
                                     <p>RESULT</p>
                                 </div>
-                            </div>
+                            </div><br/>
                             <div style={{textAlign:"left", fontWeight:"bold", color:"pink"}}>
                                 <h4>expected result = </h4>
                             </div>
@@ -91,10 +91,19 @@ class Game extends Component {
                         <div className="card-body">
                             <h3 className="card-title">Players</h3>
                             <div className="card-text">
-                            {nameReady.map(nameReady => <div key={Math.random()}>
-                            <li>{nameReady.name}</li>
-                            <li>{nameReady.score}</li>
-                            <li><img src={nameReady.avatar} alt=""/></li>
+                            {nameReady.map(nameReady => 
+                            <div key={Math.random()}>
+                                <div class="card mb-3" style={{maxWidth: "540px", height:"120px", backgroundColor:"#fdf5ee"}}>
+                                    <div class="row no-gutters" style={{padding:"20px"}}>
+                                        <div class="col-md-3">
+                                            <img src={nameReady.avatar} alt="" style={{width:"70px"}}/>
+                                        </div>
+                                        <div class="col-md-9" style={{textAlign:"left", paddingLeft:"20px", fontWeight:"bold"}}>
+                                            <p class="card-text">Name: {nameReady.name}</p>
+                                            <p class="card-text">Score: {nameReady.score}</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             )}
                             </div>

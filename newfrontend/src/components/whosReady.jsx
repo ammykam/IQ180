@@ -33,27 +33,16 @@ class WhosReady extends Component {
       }
 
     sendBoolean(){
-        //console.log("sendBoolean called!");
+        console.log("sendBoolean called!");
         socket.emit('start');
     }
 
     componentDidMount(){
         this._isMounted=true;
      
-        //console.log('hi')
-        const temp = this.state.checkName
-        let x=0;
-        socket.on("WelcomeUser", data => 
-      
-        this.setState({ user: data }),
-        console.log(this.state.user)
-        );
+        socket.on("WelcomeUser", data => this.setState({ user: data }));
         socket.on("OnlineUser", data => this.setState({ nameOnline: data }));
         socket.on("ReadyUser", data => this.setState({ nameReady: data }));
-
-        //console.log(this.state.nameOnline)
-        //console.log(this.state.nameReady)
-        //console.log('done')
     }
 
 
@@ -84,19 +73,14 @@ class WhosReady extends Component {
         }
     };
 
-    // present = () =>{
-    //     socket.on('ReadyUser',data => 
-
-    //     this.setState({ nameReady: data }),
-        
-    //     );
-
-    //     if(this.state.nameReady.length>1){
-    //         this.setState({value: true});
-    //     }
-        
-    //     //console.log(this.state.nameReady.length)
-    // }
+    sendLevel = () => {
+        var e = document.getElementById("levelSelect");
+        var a = e.options[e.selectedIndex].value;
+        let y;
+        if(a=="Easy") {y=10;}
+        if(a=="Medium") {y=50;}
+        if(a=="Hard") {y=100;}
+    }
 
     render() {
         const { nameOnline } = this.state; 
@@ -106,7 +90,6 @@ class WhosReady extends Component {
         const x = nameReady.length;
         return ( 
             <div className="row">
-                {/* {this.present()} */}
                 <div className="col-sm-5" style={{paddingRight:"50px", paddingLeft:"100px", marginTop:"60px"}}>
                     <div className="card" style={cardStyle}>
                         <div className="card-body">
@@ -121,10 +104,21 @@ class WhosReady extends Component {
                     </div>
                 </div>
 
-                <div className="col-sm-2" style={{marginTop:"18%"}}>
+                <div className="col-sm-2" style={{marginTop:"15%"}}>
                     <button className="btn" style={buttonStyle} onClick={() => this.sendReady(x)}>Ready</button>
                     <br/> <br/> <br/>
-                    <button className="btn" style={buttonStyle} disabled={value} onClick={() =>{onWhosReadyStart(); this.sendBoolean()}}>Start</button>
+                    <div className="dropdown" style={{width:"110px", marginLeft:"52px"}}>
+                        <div className="form-group">
+                            <label for="exampleFormControlSelect1">Select Level</label>
+                            <select className="form-control" id="levelSelect">
+                            <option>Easy</option>
+                            <option>Medium</option>
+                            <option>Hard</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br/> <br/>
+                    <button className="btn" style={buttonStyle} disabled={value} onClick={() =>{onWhosReadyStart(); this.sendBoolean(); this.sendLevel()}}>Start</button>
                 </div>
 
                 <div className="col-sm-5" style={{paddingRight:"100px", paddingLeft:"50px", marginTop:"60px"}}>
