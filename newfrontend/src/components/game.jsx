@@ -35,12 +35,17 @@ class Game extends Component {
           checkAnswer:"0",
           stateAnswer:false,
           secondElapsed:60,
+          changeWinner: false,
         };
       }
 
     componentDidMount(){
-        //console.log('hi');
-        socket.on("ReadyUser", data => this.setState({ nameReady: data }));
+        console.log('hi in mount');
+        socket.on("ReadyUser", data => {
+            console.log('in ready user')
+            this.setState({ nameReady: data })
+        })
+    
         //console.log('done');
         socket.on("readyToPlay" , (data) => {
             this.setState({problem: data.problem,warnText:'',round:data.round});
@@ -51,8 +56,23 @@ class Game extends Component {
             this.setState(
                 {warnText:  data}
         ))
+
+
+        socket.on("toChangeWinner", data => this.setState({changeWinner: data}));
+        if(this.state.changeWinner){
+            this.props.onChangeGameToWinner();
+        }
+
         
     }
+
+    // componentDidUpdate(){
+    //     console.log('hi in update');
+    //     socket.on("ReadyUser", data => {
+    //         console.log('')
+    //         this.setState({ nameReady: data })
+    //     })
+    // }
     handleClick(e) {
         //console.log(e.target.value)
         this.state.answer.push(e.target.value)
@@ -119,6 +139,7 @@ class Game extends Component {
 
     render() { 
         const { nameReady,problem, warnText,round,answer,checkAnswer, stateAnswer} = this.state; 
+        const { onChangeGameToWinner } =this.props;
         return ( 
             <div className="row" style={{margin:"30px"}}>
                 <div className="col-sm-8">
@@ -157,7 +178,7 @@ class Game extends Component {
                                     <h4 style={{textAlign:"left", fontWeight:"bold", color:"pink"}}>expected result = {problem[5]}</h4>
                                 </div>
                                 <div className="col-sm-2">
-                                    <button className="btn btn-outline-warning" onClick={this.answerToServer}>Submit</button>
+                                    <button class="btn btn-outline-warning" onClick={() =>{this.answerToServer()}}>Submit</button>
                                 </div>
                             </div>
                             <br/>
