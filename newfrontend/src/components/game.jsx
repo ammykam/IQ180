@@ -36,6 +36,7 @@ class Game extends Component {
           stateAnswer:false,
           secondElapsed:60,
           changeWinner: false,
+          firstTimeOut: true,
         };
       }
 
@@ -49,7 +50,9 @@ class Game extends Component {
         //console.log('done');
         socket.on("readyToPlay" , data => {
             console.log('in ready to play')
-            this.startTime();
+            if(this.state.firstTimeOut){
+                this.startTime();
+            }
             this.setState(
                 {problem: data.problem
                 ,warnText:''
@@ -69,6 +72,15 @@ class Game extends Component {
             console.log('in toChangeWinner')
             this.props.onChangeGameToWinner();
         }
+        socket.on('correctAnswer', data =>{
+            this.setState({
+                stateAnswer: data
+            })
+        })
+        if(this.state.stateAnswer){
+            console.log(this.state.stateAnswer, "bb")
+            this.stopTime();
+        }
 
         
     }
@@ -82,6 +94,23 @@ class Game extends Component {
         if(this.state.changeWinner){
             console.log('')
             this.props.onChangeGameToWinner();
+        }
+        console.log(this.state.stateAnswer, "aa")
+        if(this.state.stateAnswer){
+            this.stopTime();
+        }
+        if(this.state.secondElapsed < 0 && this.state.firstTimeOut){
+            this.stopTime();
+            this.state.firstTimeOut = false;
+            let answerString = this.state.answer.join(',')
+            for(let i =0;i<this.state.answer.length;i++){
+                answerString=answerString.replace(',','')
+            }
+            let newObject = {checkAns: answerString, time: 0}
+            console.log(newObject)
+            socket.emit('answer', newObject)
+            socket.on('answerToClient', data =>
+            this.setState({checkAnswer: data}))
         }
         // socket.on("readyToPlay" , data =>{
         //     console.log('hiiiiiiiiii')
@@ -111,8 +140,8 @@ class Game extends Component {
         for(let i =0;i<this.state.answer.length;i++){
             answerString=answerString.replace(',','')
         }
-        let x = this.stopTime();
-        let newObject = {checkAns: answerString, time: 10}
+        console.log(this.stateAnswer, "cc")
+        let newObject = {checkAns: answerString, time: this.state.secondElapsed %60}
         console.log(newObject)
         socket.emit('answer', newObject)
         socket.on('answerToClient', data =>
@@ -122,17 +151,20 @@ class Game extends Component {
                 }
             ))
         //let valueBoolean=true;
-        socket.on('correctAnswer', data =>{
-            this.setState({
-                stateAnswer: data
-            })
-            // if(data==true){
-            //     this.setState({stateAnswer: true})
-            // }else if(data==false){
-            //     this.setState({stateAnswer: false})
-            // }
+        // socket.on('correctAnswer', data =>{
+        //     this.setState({
+        //         stateAnswer: data
+        //     })
+        //     if(this.state.stateAnswer){
+        //         this.stopTime();
+        //     }
+        //     // if(data==true){
+        //     //     this.setState({stateAnswer: true})
+        //     // }else if(data==false){
+        //     //     this.setState({stateAnswer: false})
+        //     // }
             
-        })
+        // })
 
     }
 
@@ -146,7 +178,7 @@ class Game extends Component {
         this.countdown = setInterval(function(){
             _this.setState({ secondElapsed: _this.state.secondElapsed-1 });
         }, 1000);
-        console.log(this.state.secondElapsed)
+        console.log(this.countdown)
 
     }
 
@@ -178,11 +210,11 @@ class Game extends Component {
                                 <div className="col-sm-3" style={{backgroundColor:"#f8e8cf"}}>
                                     <div>
                                         <h1>{this.getSecond()}</h1>
-                                        {/* <button onClick={() => this.startTime()}>Start</button>
-                                        <button onClick={() => this.stopTime()}>Stop</button> */}
+                                        <button onClick={() => this.startTime()}>Start</button>
+                                        <button onClick={() => this.stopTime()}>Stop</button>
                                         
-                                        <div style={{color:"transparent", fontSize:"1px"}}>{(this.state.secondElapsed %60) === 0 ? this.stopTime(): null }</div>
-                                        <div style={{color:"transparent", fontSize:"1px"}}>{stateAnswer === true ? this.stopTime(): null }</div>
+                                        {/* <div style={{color:"black", fontSize:"1px"}}>{(this.state.secondElapsed %60) === 0 ? this.stopTime(): null }</div> */}
+                                        <div style={{color:"black", fontSize:"1px"}}>{stateAnswer === true ? this.stopTime(): null }</div>
                                     </div>
                                 </div>
                             </div>
