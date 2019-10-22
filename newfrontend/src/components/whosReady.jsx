@@ -79,9 +79,9 @@ class WhosReady extends Component {
         var e = document.getElementById("levelSelect");
         var a = e.options[e.selectedIndex].value;
         let y;
-        if(a=="Easy") {y=10;}
-        if(a=="Medium") {y=50;}
-        if(a=="Hard") {y=100;}
+        if(a==="Easy") {y=10;}
+        if(a==="Medium") {y=50;}
+        if(a==="Hard") {y=100;}
     }
 
     render() {

@@ -32,7 +32,7 @@ class Game extends Component {
           warnText:'',
           round:0,
           answer:[],
-          checkAnswer:'',
+          checkAnswer:"0",
           stateAnswer:false
         };
       }
@@ -109,24 +109,28 @@ class Game extends Component {
                                 </div>
                             </div>
                             <br/><br/>
-                            <div className="row" style={{height:"70px"}}>
+                            <div className="row" style={{height:"70px", fontWeight:"bold"}}>
                                 <div className="col-sm-9" style={{backgroundColor:"#f6c6a9"}}>
-                                    <p>{answer}</p>
+                                    <p style={{marginTop:"26px", fontSize: "25px"}}>{answer}</p>
                                 </div>
                                 <div className="col-sm-1">
-                                    <h3>=</h3>
+                                    <h3 style={{marginTop:"26px"}}>=</h3>
                                 </div>
-                                <div className="col-sm-2" style={{backgroundColor:"#fdf5ee"}}>
+                                <div className="col-sm-2" style={{backgroundColor:"#fdf5ee", fontWeight:"bold", paddingTop:"15px"}}>
                                     <p>{checkAnswer}</p>
                                     <p>{stateAnswer.toString()}</p>
                                 </div>
-                            </div><br/>
-                            <div style={{textAlign:"left", fontWeight:"bold", color:"pink"}}>
-                                <h4>expected result = {problem[5]}</h4>
-                                <button style={buttonStyle} onClick={this.answerToServer}>Submit</button>
+                            </div><br/><br/>
+                            <div className="row">
+                                <div className="col-sm-10">
+                                    <h4 style={{textAlign:"left", fontWeight:"bold", color:"pink"}}>expected result = {problem[5]}</h4>
+                                </div>
+                                <div className="col-sm-2">
+                                    <button class="btn btn-outline-warning" onClick={this.answerToServer}>Submit</button>
+                                </div>
                             </div>
                             <br/>
-                            <div>
+                            <div style={{marginLeft:"-100px"}}>
                                 <p>{warnText}</p>
                                 <button style={buttonNumStyle} onClick={e => this.handleClick(e,"value")} value={problem[0]}>{problem[0]}</button>
                                 <button style={buttonNumStyle} onClick={e => this.handleClick(e,"value")} value={problem[1]}>{problem[1]}</button>
@@ -161,13 +165,13 @@ class Game extends Component {
                                     this.state.answer.push(")")
                                     this.setState({answer: this.state.answer})
                                 }} ><img style={{width:"80px"}} src={RightSign} alt="" /></button>
-                                <button style={buttonStyle} onClick={()=>{
+                                <button class="btn btn-danger m-3" onClick={()=>{
                                     this.state.answer.splice(this.state.answer.length-1)
                                     this.setState({answer: this.state.answer}
                                         )}
                                     
                                     
-                                    }>C</button>
+                                    }>delete</button>
                             </div>
                         </div>
                     </div>
