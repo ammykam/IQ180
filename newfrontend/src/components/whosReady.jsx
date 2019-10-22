@@ -28,14 +28,22 @@ class WhosReady extends Component {
           nameReady: [],
           user: [],
           value: true,
-          number:0
+          number:0,
+          difficulty:0
         };
       }
 
     sendBoolean(){
+<<<<<<< HEAD
         console.log("sendBoolean called!");
         socket.emit('start');
+=======
+        //console.log("sendBoolean called!");
+        socket.emit('start',100);
+>>>>>>> e3b892921470e6705f4a40be8cae2ca930192b16
     }
+
+ 
 
     componentDidMount(){
         this._isMounted=true;
@@ -45,14 +53,13 @@ class WhosReady extends Component {
         socket.on("ReadyUser", data => this.setState({ nameReady: data }));
     }
 
-
     componentWillUnmount(){
         this._isMounted=false;
     }
     
     sendReady = (x) => {   
         socket.emit('readyUser');
-        console.log(x);
+        //console.log(x);
         socket.on("WelcomeUser", data => this.setState({ user: data }));
         let y;
         if(this.state.user.ready === false){
