@@ -174,7 +174,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
       problem=[]
   }
   
-  
+
   @SubscribeMessage('answer')
   answer(client: Socket, payload: {checkAns: string, time: string}): void { //send queue also
     // console.log('in answer naja ') 
@@ -185,8 +185,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     //time used to solve
     //example: send 50s means player uses 10s to solve
     let time:number = 60-parseInt(payload.time);
-    //console.log(time)
-    
+
     if(checkReady){
       if(isNaN(eval(payload.checkAns))== false){
         this.server.to(client.id).emit('answerToClient',eval(payload.checkAns))
@@ -195,21 +194,22 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
 
         correctAnswer = this.appService.check(payload.checkAns,player);
         this.server.to(client.id).emit('correctAnswer',correctAnswer);
+        console.log(correctAnswer)
+      
       }
       //if there are none in payload
       //if player answer right or the time run out --> Go to the next person
       if(correctAnswer || time == 60){
-        //this.server.to(this.readyPlayer[this.queue].clientID).emit('readyToPlay',{Player: {}, queue:0})
+        player.problem = []
+        this.server.to(this.readyPlayer[this.queue].clientID).emit('readyToPlay',player )
         this.server.to(this.readyPlayer[this.queue].clientID).emit('notReadyToPlay',"it's not your turn")
         //console.log("next question")
         //if the player answer correct --> keep time to compare later
 
         if(correctAnswer == true){
           player.timer = time;
-          //console.log("answer correctly"+ player.timer +" by: "+player.name)
         }else{
           player.timer=60;
-          //console.log("answer not correct"+ player.timer +" by: "+player.name)
         }
         this.queue = this.queue +1;
 
@@ -229,7 +229,6 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
           while(check){
             for(let i =0; i< this.readyPlayer.length;i++){
               if(this.readyPlayer[i].timer==60){
-                //console.log(allLose)
                 allLose++;
               }
               //We got new winner
@@ -248,6 +247,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
                 winner = this.readyPlayer[i];
               }
             }
+            console.log(winner)
             
             //console.log(allLose)
             //console.log(this.readyPlayer.length)
@@ -256,7 +256,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
             // 2. more than 1 wins, 1 win
             if(allLose == this.readyPlayer.length){
               
-              //console.log('all just  lose')
+              console.log('all just  lose')
               this.server.emit('roundWinner',{name:["Noone"],text: ["Nobody wins"], round: this.readyPlayer[0].round})
               this.server.emit('ReadyUser',this.readyPlayer)
 
@@ -266,7 +266,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
               break;
             }
             let newReadyPlayer :Player[] = [];
-            //console.log('just out of loop')
+            
             for(let i =0;i<allWinner.length;i++){
               allWinner[i].score += 1;
               newReadyPlayer.push(allWinner[i]);
@@ -276,15 +276,16 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
             for(let i=0; i<this.readyPlayer.length; i++){
               newReadyPlayer.push(this.readyPlayer[i]);
             }
+
             this.readyPlayer=newReadyPlayer;
             this.server.emit('roundWinner',{name: allWinner, text:[],round: this.readyPlayer[0].round});
-            this.server.emit('ReadyUser',this.readyPlayer)
+            //this.server.emit('ReadyUser',this.readyPlayer)
 
             
 
             this.readyPlayer = this.appService.resetTimer(this.readyPlayer);
             this.readyPlayer = this.appService.round(this.readyPlayer);
-            this.server.emit('readyToPlay',this.readyPlayer)
+            //this.server.emit('readyToPlay',this.readyPlayer)
             break;
           }
           
@@ -300,6 +301,8 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   }
   @SubscribeMessage('nextRound') // still need to check whether the round is updated or not
   nextRound(client: Socket): void {
+    this.server.emit('ReadyUser',this.readyPlayer)
+    this.server.emit('readyToPlay',this.readyPlayer)
     // this.readyPlayer = this.appService.orderPlayerByScore(this.readyPlayer);
     let problem:number[] = this.appService.generate(this.range);
     for(let i =0;i<this.readyPlayer.length;i++){

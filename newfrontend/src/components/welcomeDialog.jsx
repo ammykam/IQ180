@@ -35,7 +35,7 @@ class WelcomeDialog extends Component {
         this._isMounted=true;
         socket.on("WelcomeUser", data => this.setState(
             {name: data.name}
-            ));
+        ));
     }
 
     componentWillUnmount(){

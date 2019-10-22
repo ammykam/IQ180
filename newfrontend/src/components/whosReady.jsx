@@ -28,14 +28,17 @@ class WhosReady extends Component {
           nameReady: [],
           user: [],
           value: true,
-          number:0
+          number:0,
+          difficulty:0
         };
       }
 
     sendBoolean(){
         //console.log("sendBoolean called!");
-        socket.emit('start');
+        socket.emit('start',100);
     }
+
+ 
 
     componentDidMount(){
         this._isMounted=true;
@@ -56,14 +59,13 @@ class WhosReady extends Component {
         //console.log('done')
     }
 
-
     componentWillUnmount(){
         this._isMounted=false;
     }
     
     sendReady = (x) => {   
         socket.emit('readyUser');
-        console.log(x);
+        //console.log(x);
         socket.on("WelcomeUser", data => this.setState({ user: data }));
         let y;
         if(this.state.user.ready === false){
