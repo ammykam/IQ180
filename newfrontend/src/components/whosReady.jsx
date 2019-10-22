@@ -28,7 +28,6 @@ class WhosReady extends Component {
           nameReady: [],
           user: [],
           numberUser:0,
-          value: true,
           number:0,
           difficulty:0,
           level:0,
@@ -135,7 +134,6 @@ class WhosReady extends Component {
     render() {
         const { nameOnline } = this.state; 
         const { nameReady } = this.state; 
-        const { value } = this.state; 
         const { onWhosReadyStart } =this.props;
         const x = nameReady.length;
         return ( 

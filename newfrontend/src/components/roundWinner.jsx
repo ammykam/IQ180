@@ -2,7 +2,18 @@ import React, { Component } from 'react';
 // import { useState } from 'react';
 import { socket } from "../App.js";
 
-
+const styleBlock = {
+    backgroundColor:"#67605f",
+    height: "300px",
+    marginTop: "200px",
+    width:"40%",
+    marginLeft: "30%",
+    marginRight: "30%",
+    textTransform: "uppercase",
+    fontWeight: "bold",
+    color: "white",
+    fontSize: "40px",
+}
 class RoundWinner extends Component {
 
     constructor(){
@@ -45,20 +56,18 @@ class RoundWinner extends Component {
     }
 
     goBack = () => {
+        console.log('inGoback')
         socket.emit('nextRound');
     }
 
     render() {
         const { winnerName } = this.state; 
         const { round } = this.state; 
-        const { onBackToGame } =this.props;
 
         return ( 
-            <div>
-                <p>Round: </p>
-                <p>{round}</p>
-                <p>Winner: </p>
-                <p>{winnerName}</p>
+            <div style={styleBlock}>
+                <p style={{paddingTop:"70px"}} >Round-{round} Winner is </p>
+                <p>{winnerName} ! </p>
                 <button className="btn" onClick={() =>{ this.goBack()}}>next</button>
             </div>
          );

@@ -181,8 +181,8 @@ class Game extends Component {
                                         {/* <button onClick={() => this.startTime()}>Start</button>
                                         <button onClick={() => this.stopTime()}>Stop</button> */}
                                         
-                                        <div style={{color:"transparent"}}>{(this.state.secondElapsed %60) === 0 ? this.stopTime(): null }</div>
-                                        <div style={{color:"transparent"}}>{stateAnswer === true ? this.stopTime(): null }</div>
+                                        <div style={{color:"transparent", fontSize:"1px"}}>{(this.state.secondElapsed %60) === 0 ? this.stopTime(): null }</div>
+                                        <div style={{color:"transparent", fontSize:"1px"}}>{stateAnswer === true ? this.stopTime(): null }</div>
                                     </div>
                                 </div>
                             </div>
