@@ -312,8 +312,9 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   }
   @SubscribeMessage('nextRound') // still need to check whether the round is updated or not
   nextRound(client: Socket): void {
-    this.server.emit('ReadyUser',this.readyPlayer)
-    this.server.emit('readyToPlay',this.readyPlayer)
+    this.server.emit('goBackToGame',true)
+    // this.server.emit('ReadyUser',this.readyPlayer)
+    // this.server.emit('readyToPlay',this.readyPlayer[0])
     // this.readyPlayer = this.appService.orderPlayerByScore(this.readyPlayer);
     let problem:number[] = this.appService.generate(this.range);
     for(let i =0;i<this.readyPlayer.length;i++){

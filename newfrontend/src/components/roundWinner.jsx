@@ -10,20 +10,48 @@ class RoundWinner extends Component {
         this.state={
             round:0,
             text:[],
-            winnerName: [],
+            winnerName: '',
+            backGame: false,
+
         }
     }
 
     componentDidMount(){
         socket.on("roundWinner", data => this.setState({ 
             round: data.round,
-            winnerName: data.name,
+            winnerName: data.name[0].name,
         }));
+        socket.on("goBackToGame", data => {
+            console.log('in goBackToGame')
+            this.setState({backGame: data})
+        });
+
+        if(this.state.backGame){
+            console.log('in onBackToGame')
+            this.props.onBackToGame();
+        }
+    };
+
+    componentDidUpdate(){
+        socket.on("goBackToGame", data => {
+            console.log('in goBackToGame')
+            this.setState({backGame: data})
+        });
+
+        if(this.state.backGame){
+            console.log('in onBackToGame')
+            this.props.onBackToGame();
+        }
+    }
+
+    goBack = () => {
+        socket.emit('nextRound');
     }
 
     render() {
         const { winnerName } = this.state; 
         const { round } = this.state; 
+        const { onBackToGame } =this.props;
 
         return ( 
             <div>
@@ -31,6 +59,7 @@ class RoundWinner extends Component {
                 <p>{round}</p>
                 <p>Winner: </p>
                 <p>{winnerName}</p>
+                <button className="btn" disabled={false} onClick={() =>{ this.goBack()}}>next</button>
             </div>
          );
     }

@@ -49,12 +49,12 @@ class Game extends Component {
         //console.log('done');
         socket.on("readyToPlay" , data => {
             console.log('in ready to play')
+            this.startTime();
             this.setState(
                 {problem: data.problem
                 ,warnText:''
                 ,round:data.round
             })
-            this.startTime();
         })
         socket.on("notReadyToPlay", data =>{
             console.log("in not ready to play")
@@ -112,7 +112,7 @@ class Game extends Component {
             answerString=answerString.replace(',','')
         }
         let x = this.stopTime();
-        let newObject = {checkAns: answerString, time: x}
+        let newObject = {checkAns: answerString, time: 10}
         console.log(newObject)
         socket.emit('answer', newObject)
         socket.on('answerToClient', data =>
@@ -141,10 +141,12 @@ class Game extends Component {
     }
 
     startTime = () =>{
+        console.log('in startTime')
         var _this =this;
         this.countdown = setInterval(function(){
             _this.setState({ secondElapsed: _this.state.secondElapsed-1 });
         }, 1000);
+        console.log(this.state.secondElapsed)
 
     }
 
