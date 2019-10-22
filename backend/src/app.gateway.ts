@@ -193,6 +193,13 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
       problem=[]
 
   }
+
+  @SubscribeMessage('hint')
+  hint(client:Socket): void{
+    let hint:string= this.appService.hintNumber();
+    console.log(hint)
+    this.server.to(client.id).emit("hintToClient",hint)
+  }
   
 
   @SubscribeMessage('answer')
