@@ -245,6 +245,14 @@ class Game extends Component {
         console.log(this.state.hintString)
     }
 
+    skip=() =>{
+        // console.log('skip button work')
+        socket.emit("skip")
+        if(this.state.firstTimeOut){
+            this.stopTime();
+        }
+    }
+
     render() { 
         const { nameReady,problem, warnText,round,answer,checkAnswer, stateAnswer, buttonValue1,buttonValue2,buttonValue3,buttonValue4,buttonValue5, hintString} = this.state; 
         const { onChangeGameToWinner } =this.props;
@@ -290,7 +298,7 @@ class Game extends Component {
                                     <p>{hintString}</p>
                                 </div>
                                 <div className="col-sm-2" style={{marginLeft:"-30px"}}>
-                                    <button className="btn btn-outline-info" onClick={() =>{this.answerToServer()}}>SKIP</button>
+                                    <button className="btn btn-outline-info" onClick={() =>{this.skip()}}>SKIP</button>
                                 </div>
                                 <div className="col-sm-2">
                                     <button className="btn btn-outline-warning" onClick={() =>{this.answerToServer()}}>Submit</button>
