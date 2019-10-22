@@ -34,13 +34,8 @@ class WhosReady extends Component {
       }
 
     sendBoolean(){
-<<<<<<< HEAD
-        console.log("sendBoolean called!");
-        socket.emit('start');
-=======
         //console.log("sendBoolean called!");
         socket.emit('start',100);
->>>>>>> e3b892921470e6705f4a40be8cae2ca930192b16
     }
 
  
