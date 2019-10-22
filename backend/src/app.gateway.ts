@@ -205,7 +205,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   @SubscribeMessage('answer')
   answer(client: Socket, payload: {checkAns: string, time: string}): void { //send queue also
     // console.log('in answer naja ') 
-    console.log(payload.time)
+    console.log(payload.time, 'time na ka')
     const checkPlayer: Player= this.Players.find(player=>player.clientID==client.id)
     const checkReady: boolean= checkPlayer.ready
     let correctAnswer: boolean=false;
@@ -213,7 +213,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     //time used to solve
     //example: send 50s means player uses 10s to solve
     let time:number = 60-parseInt(payload.time);
-
+    console.log('the time is',time);
     if(checkReady){
       if(isNaN(eval(payload.checkAns))== false){
         this.server.to(client.id).emit('answerToClient',eval(payload.checkAns))
@@ -228,6 +228,8 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
       //if there are none in payload
       //if player answer right or the time run out --> Go to the next person
       if(correctAnswer || time == 60){
+        console.log('your in congrat')
+        console.log('the queue is this ',this.queue);
         player.problem = []
         this.server.to(this.readyPlayer[this.queue].clientID).emit('readyToPlay',player )
         this.server.to(this.readyPlayer[this.queue].clientID).emit('notReadyToPlay',"it's not your turn")
@@ -240,7 +242,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
           player.timer=60;
         }
         this.queue = this.queue +1;
-
+        console.log('the queue is this ',this.queue);
         //if all the player has play this then check time to see the winner
         if(this.queue == this.readyPlayer.length){
           console.log('ammy')
