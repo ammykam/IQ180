@@ -41,6 +41,7 @@ class Game extends Component {
           buttonValue3:false,
           buttonValue4:false,
           buttonValue5:false,
+          hintString:'',
         };
       }
 
@@ -192,9 +193,18 @@ class Game extends Component {
         console.log(newObject)
         socket.emit('answer', newObject)
     }
+    hint=()=>{
+        socket.emit("hint")
+        socket.on("hintToClient", (data) =>{
+           this.setState({
+               hintString: data
+           })
+        })
+        console.log(this.state.hintString)
+    }
 
     render() { 
-        const { nameReady,problem, warnText,round,answer,checkAnswer, stateAnswer, buttonValue1,buttonValue2,buttonValue3,buttonValue4,buttonValue5} = this.state; 
+        const { nameReady,problem, warnText,round,answer,checkAnswer, stateAnswer, buttonValue1,buttonValue2,buttonValue3,buttonValue4,buttonValue5, hintString} = this.state; 
         const { onChangeGameToWinner } =this.props;
         return ( 
             <div className="row" style={{margin:"30px"}}>
@@ -234,7 +244,8 @@ class Game extends Component {
                                     <h4 style={{textAlign:"left", fontWeight:"bold", color:"pink"}}>expected result = {problem[5]}</h4>
                                 </div>
                                 <div className="col-sm-2" style={{marginLeft:"-30px"}}>
-                                    <button className="btn btn-outline-success" onClick={() =>{this.answerToServer()}}>HINT</button>
+                                    <button className="btn btn-outline-success" onClick={() =>{this.hint()}}>HINT</button>
+                                    <p>{hintString}</p>
                                 </div>
                                 <div className="col-sm-2">
                                     <button className="btn btn-outline-warning" onClick={() =>{this.answerToServer()}}>Submit</button>

@@ -56,19 +56,16 @@ function App() {
     setShowRoundWinner(true);
   }
 
-<<<<<<< HEAD
-=======
   const handleBackToGame = () => {
     setShowRoundWinner(false);
     setShowGame(true);
   }
 
->>>>>>> master
-  const [showWelcome, setShowWelcome] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(true);
   const [showLogin, setShowLogin] = useState(false);
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
   const [showWhosReady, setShowWhosReady] = useState(false);
-  const [showGame, setShowGame] = useState(true);
+  const [showGame, setShowGame] = useState(false);
   const [showRoundWinner, setShowRoundWinner] = useState(false);
 
   return (
