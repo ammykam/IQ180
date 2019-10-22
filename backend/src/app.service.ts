@@ -4,6 +4,7 @@ import { read } from 'fs';
 @Injectable()
 export class AppService {
   private problemString: string=""
+  private hintString: string=""
 
   start(Players: Player[]): Player[] {
     const problem: number[] = [];
@@ -91,7 +92,12 @@ export class AppService {
     return problem
   }
   cheatNumber():string{
+    this.hintString=this.problemString.substring(0,3)
     return this.problemString
+  }
+  
+  hintNumber():string{
+    return this.hintString;
   }
   check(payload: string, player: Player ) : boolean{
       let playerAns : number = eval(payload);
