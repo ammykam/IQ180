@@ -59,7 +59,7 @@ class RoundWinner extends Component {
                 <p>{round}</p>
                 <p>Winner: </p>
                 <p>{winnerName}</p>
-                <button className="btn" disabled={false} onClick={() =>{ this.goBack()}}>next</button>
+                <button className="btn" onClick={() =>{ this.goBack()}}>next</button>
             </div>
          );
     }
