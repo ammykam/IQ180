@@ -3,6 +3,7 @@ import {Player} from './Model/msg.interface';
 import { read } from 'fs';
 @Injectable()
 export class AppService {
+  private problemString: string=""
 
   start(Players: Player[]): Player[] {
     const problem: number[] = [];
@@ -45,7 +46,6 @@ export class AppService {
   }
 
   generate(range:number) : number[]{
-    //console.log('generate')
     let problem: number[]=[]
     let newProblem: Object[]=[]
     let operator: string[]=['+','-','*','/']
@@ -85,9 +85,13 @@ export class AppService {
       //console.log(answer)
     }
     console.log("The complete and correct question "+problemString+" = "+answer)
+    this.problemString=problemString
     problem.push(answer);
 
     return problem
+  }
+  cheatNumber():string{
+    return this.problemString
   }
   check(payload: string, player: Player ) : boolean{
       let playerAns : number = eval(payload);
