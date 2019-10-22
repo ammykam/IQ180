@@ -8,8 +8,7 @@ import WelcomeDialog from "./components/welcomeDialog";
 import WhosReady from "./components/whosReady";
 import Game from "./components/game";
 
-import Song from "./components/song.js";
-import Countdown from "./components/countdown.js";
+import Countdown from "./components/countdown";
 
 import socketIOClient from "socket.io-client";
 export const socket = socketIOClient("http://localhost:3000");
@@ -66,7 +65,6 @@ function App() {
         <header className="App-header">
          <NavBar/>
         </header>
-         <Song/>
          <Countdown/>
         <main className="App-main">
           {showWelcome && <Welcome onWelcomeStart={handleWelcomeStart}/>}
