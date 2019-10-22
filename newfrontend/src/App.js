@@ -8,7 +8,6 @@ import WelcomeDialog from "./components/welcomeDialog";
 import WhosReady from "./components/whosReady";
 import Game from "./components/game";
 
-import Song from "./components/Song";
 import Countdown from "./components/countdown";
 
 import socketIOClient from "socket.io-client";
@@ -53,11 +52,11 @@ function App() {
     setShowGame(true); 
   }; 
 
-  const [showWelcome, setShowWelcome] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(true);
   const [showLogin, setShowLogin] = useState(false);
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
   const [showWhosReady, setShowWhosReady] = useState(false);
-  const [showGame, setShowGame] = useState(true);
+  const [showGame, setShowGame] = useState(false);
 
   return (
     <>
@@ -66,7 +65,6 @@ function App() {
         <header className="App-header">
          <NavBar/>
         </header>
-         <Song/>
          <Countdown/>
         <main className="App-main">
           {showWelcome && <Welcome onWelcomeStart={handleWelcomeStart}/>}

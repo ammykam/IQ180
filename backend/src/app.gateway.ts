@@ -142,6 +142,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   //start will trigger as the round start
   @SubscribeMessage('start')
   start(client: Socket, payload: number):void{
+    //console.log(payload)
     this.range=0;
 
     let problem:number[] = this.appService.generate(payload);
