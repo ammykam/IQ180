@@ -46,6 +46,7 @@ class RoundWinner extends Component {
     };
 
     componentDidUpdate(){
+
         socket.on("goBackToGame", data => {
             console.log('in goBackToGame')
             this.setState({backGame: data})
@@ -67,7 +68,7 @@ class RoundWinner extends Component {
     }
 
     goBack = () => {
-        console.log('inGoback')
+        //console.log('inGoback')
         socket.emit('nextRound');
     }
 
@@ -77,7 +78,7 @@ class RoundWinner extends Component {
 
         return ( 
             <div style={styleBlock}>
-                <p style={{paddingTop:"70px"}} >Round-{round} Winner is </p>
+                <p style={{paddingTop:"70px"}} >Round-{round} Result is </p>
                 <p>{winnerName} ! </p>
                 <button className="btn" onClick={() =>{ this.goBack()}}>next</button>
             </div>

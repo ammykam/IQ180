@@ -48,22 +48,25 @@ class Game extends Component {
       }
 
     componentDidMount(){
-        console.log('hi in mount');
+        //console.log('hi in mount');
         socket.on("ReadyUser", data => {
             console.log('in ready user')
-            this.setState({ nameReady: data })
+            console.log(data)
+            this.setState({ 
+                nameReady: data,
+                round: data[0].round})
         })
     
         //console.log('done');
         socket.on("readyToPlay" , data => {
             console.log('in ready to play')
+            // console.log(data[0].problem)
             if(this.state.firstTimeOut){
                 this.startTime();
             }
             this.setState(
                 {problem: data.problem
                 ,warnText:''
-                ,round:data.round
             })
         })
         socket.on("notReadyToPlay", data =>{
@@ -115,7 +118,7 @@ class Game extends Component {
             console.log('')
             this.props.onChangeGameToWinner();
         }
-        // console.log(this.state.stateAnswer, "aa")
+
         if(this.state.stateAnswer){
             this.stopTime();
         }
@@ -390,6 +393,7 @@ class Game extends Component {
                                         <div className="col-md-9" style={{textAlign:"left", paddingLeft:"20px", fontWeight:"bold"}}>
                                             <p className="card-text">Name: {nameReady.name}</p>
                                             <p className="card-text">Score: {nameReady.score}</p>
+                                            <p className="card=text">Round: {nameReady.round}</p>
                                         </div>
                                     </div>
                                 </div>
