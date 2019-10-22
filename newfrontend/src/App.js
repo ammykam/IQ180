@@ -7,6 +7,7 @@ import Login from "./components/login";
 import WelcomeDialog from "./components/welcomeDialog";
 import WhosReady from "./components/whosReady";
 import Game from "./components/game";
+import RoundWinner from "./components/roundWinner"
 
 import Countdown from "./components/countdown";
 
@@ -52,11 +53,17 @@ function App() {
     setShowGame(true); 
   }; 
 
+  const handleChangeGameToWinner = () => {
+    setShowGame(false);
+    setShowRoundWinner(true);
+  }
+
   const [showWelcome, setShowWelcome] = useState(true);
   const [showLogin, setShowLogin] = useState(false);
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
   const [showWhosReady, setShowWhosReady] = useState(false);
   const [showGame, setShowGame] = useState(false);
+  const [showRoundWinner, setShowRoundWinner] = useState(false);
 
   return (
     <>
@@ -65,13 +72,13 @@ function App() {
         <header className="App-header">
          <NavBar/>
         </header>
-         <Countdown/>
         <main className="App-main">
           {showWelcome && <Welcome onWelcomeStart={handleWelcomeStart}/>}
           {showLogin && <Login onLoginLogin={handleLoginLogin}/>}
           {showWelcomeDialog && <WelcomeDialog onWelcomeWelcome={handleWelcomeWelcome}/>}
           {showWhosReady && <WhosReady onWhosReadyStart={handleWhosReadyStart}/>}
-          {showGame && <Game/>}
+          {showGame && <Game onChangeGameToWinner={handleChangeGameToWinner}/>}
+          {showRoundWinner && <RoundWinner/>}
         </main>
 
       </div>

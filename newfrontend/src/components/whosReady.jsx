@@ -32,6 +32,7 @@ class WhosReady extends Component {
           number:0,
           difficulty:0,
           level:0,
+          toChangeGame: false,
         };
       }
 
@@ -43,19 +44,53 @@ class WhosReady extends Component {
         socket.on("WelcomeUser", data => this.setState({ user: data }));
         socket.on("OnlineUser", data => this.setState({ nameOnline: data }));
         socket.on("ReadyUser", data => this.setState({ nameReady: data }));
-    }
-
-    componentWillUnmount(){
-        this._isMounted=false;
-    }
-    
-    sendReady = (x) => {   
-        socket.emit('readyUser');
+        socket.on("toChangeGame", data => this.setState({toChangeGame: data}));
+        if(this.state.toChangeGame){
+            console.log('in change Game')
+            this.props.onWhosReadyStart();
+        }
 
         socket.on('ReadyUser', (message) => {
             this.setState({numberUser:message.length})
             //console.log(this.state.numberUser)
         })
+        if(this.state.numberUser>0){
+            this.setState({value: false});
+        }
+    }
+
+    componentWillUnmount(){
+        this._isMounted=false;
+    }
+
+    componentDidUpdate(){
+        socket.on("toChangeGame", data => this.setState({toChangeGame: data}));
+        if(this.state.toChangeGame){
+            this.props.onWhosReadyStart();
+        }
+        socket.on('ReadyUser', (message) => {
+            this.setState({numberUser:message.length})
+            //console.log(this.state.numberUser)
+        })
+        if(this.state.value){
+            if(this.state.numberUser>2){
+                this.setState({value: false});
+            }
+        }
+    }
+    
+    sendReady = (x) => {   
+        socket.emit('readyUser');
+
+
+        // socket.on('ReadyUser', (message) => {
+        //     this.setState({numberUser:message.length})
+        //     //console.log(this.state.numberUser)
+        // })
+
+        // if(this.state.numberUser>0){
+        //     this.setState({value: false});
+        // }
         //this.setBoolean()
 
         // socket.on("WelcomeUser", data => this.setState({ user: data }));
@@ -77,12 +112,8 @@ class WhosReady extends Component {
         //     this.setState({value: true});
         // }
     };
-    setBoolean = () =>{
-        let number= this.state.numberUser
-        if(number>1){
-            this.setState({value:false})
-        }
-    }
+
+
 
     sendLevel = () => {
         
@@ -125,7 +156,7 @@ class WhosReady extends Component {
                 </div>
 
                 <div className="col-sm-2" style={{marginTop:"15%"}}>
-                    <button className="btn" style={buttonStyle} onClick={() => this.sendReady(x)}>Ready</button>
+                    <button className="btn" style={buttonStyle} onClick={() => this.sendReady(x) }>Ready</button>
                     <br/> <br/> <br/>
                     <div className="dropdown" style={{width:"110px", marginLeft:"52px"}}>
                         <div className="form-group">
@@ -138,7 +169,7 @@ class WhosReady extends Component {
                         </div>
                     </div>
                     <br/> <br/>
-                    <button className="btn" style={buttonStyle} disabled={true} onClick={() =>{onWhosReadyStart(); this.sendLevel()}}>Start</button>
+                    <button className="btn" style={buttonStyle} disabled={false} onClick={() =>{this.sendLevel(); onWhosReadyStart();}}>Start</button>
                 </div>
 
                 <div className="col-sm-5" style={{paddingRight:"100px", paddingLeft:"50px", marginTop:"60px"}}>

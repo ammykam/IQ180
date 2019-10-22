@@ -165,10 +165,13 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
       //console.log(this.readyPlayer[0])
 
       this.server.to(this.readyPlayer[0].clientID).emit('readyToPlay',this.readyPlayer[0])
+      console.log(this.readyPlayer[0])
+      this.server.emit('toChangeGame', true);
       //this.server.to(this.readyPlayer[0].clientID).emit('notReadyToPlay',"")
       for(let i =1; i<this.readyPlayer.length;i++){
         //this.server.to(this.readyPlayer[0].clientID).emit('readyToPlay',{})
         this.server.to(this.readyPlayer[i].clientID).emit('notReadyToPlay',"it's not your turn")
+        this.server.to(this.readyPlayer[i].clientID).emit('ReadyUser',this.readyPlayer)
       }
     }
     //console.log('finished')
@@ -216,7 +219,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
 
         //if all the player has play this then check time to see the winner
         if(this.queue == this.readyPlayer.length){
-          //check Time
+          console.log('ammy')
           this.server.emit('notReadyToPlay',"")
           this.queue=0;
           let allLose:number=0;
@@ -248,7 +251,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
                 winner = this.readyPlayer[i];
               }
             }
-            console.log(winner)
+            //console.log(winner)
             
             //console.log(allLose)
             //console.log(this.readyPlayer.length)
@@ -258,6 +261,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
             if(allLose == this.readyPlayer.length){
               
               console.log('all just  lose')
+              this.server.emit('changeToWinner', true);
               this.server.emit('roundWinner',{name:["Noone"],text: ["Nobody wins"], round: this.readyPlayer[0].round})
               this.server.emit('ReadyUser',this.readyPlayer)
 
@@ -279,6 +283,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
             }
 
             this.readyPlayer=newReadyPlayer;
+            this.server.emit('changeToWinner',true);
             this.server.emit('roundWinner',{name: allWinner, text:[],round: this.readyPlayer[0].round});
             //this.server.emit('ReadyUser',this.readyPlayer)
 
