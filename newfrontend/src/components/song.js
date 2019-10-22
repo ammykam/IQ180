@@ -15,14 +15,12 @@ export default class extends Component {
  
   render() {
     return (
-      <div>
-        <button onClick={this.playAudio}>
-          <span>Play Music</span>
+      <div style={{marginTop:"10px"}}>
+        <button class="btn btn-light m-2"  style={{height:"30px"}} onClick={this.playAudio}>
+          <p style={{marginTop:"-5px", fontWeight:"bold"}}>Play Music</p>
         </button>
-        <button onClick={this.pauseAudio}>
-          <span>
-            Pause
-          </span>
+        <button class="btn btn-light" style={{height:"30px"}} onClick={this.pauseAudio}>
+        <p style={{marginTop:"-5px", fontWeight:"bold"}}>Pause</p>
         </button>
         <audio className="audio-element">
           <source src="Yiruma.mp3"></source>
