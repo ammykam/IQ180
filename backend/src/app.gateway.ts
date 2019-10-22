@@ -164,8 +164,8 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
       //this.server.emit('readyToPlay',this.readyPlayer)
       //console.log(this.readyPlayer[0])
 
-      this.server.to(this.readyPlayer[0].clientID).emit('readyToPlay',this.readyPlayer[0])
-      console.log(this.readyPlayer[0])
+      
+      console.log(this.readyPlayer[0].name)
       this.server.emit('toChangeGame', true);
       //this.server.to(this.readyPlayer[0].clientID).emit('notReadyToPlay',"")
       for(let i =1; i<this.readyPlayer.length;i++){
@@ -173,6 +173,9 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
         this.server.to(this.readyPlayer[i].clientID).emit('notReadyToPlay',"it's not your turn")
         this.server.to(this.readyPlayer[i].clientID).emit('ReadyUser',this.readyPlayer)
       }
+
+      this.server.to(this.readyPlayer[0].clientID).emit('readyToPlay',this.readyPlayer[0])
+      this.server.to(this.readyPlayer[0].clientID).emit('ReadyUser',this.readyPlayer)
     }
     //console.log('finished')
       problem=[]
@@ -284,6 +287,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
 
             this.readyPlayer=newReadyPlayer;
             this.server.emit('changeToWinner',true);
+            console.log('just emit changeToWinner');
             this.server.emit('roundWinner',{name: allWinner, text:[],round: this.readyPlayer[0].round});
             //this.server.emit('ReadyUser',this.readyPlayer)
 

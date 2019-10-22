@@ -169,7 +169,7 @@ class WhosReady extends Component {
                         </div>
                     </div>
                     <br/> <br/>
-                    <button className="btn" style={buttonStyle} disabled={false} onClick={() =>{this.sendLevel(); onWhosReadyStart();}}>Start</button>
+                    <button className="btn" style={buttonStyle} disabled={false} onClick={() =>{ onWhosReadyStart();this.sendLevel();}}>Start</button>
                 </div>
 
                 <div className="col-sm-5" style={{paddingRight:"100px", paddingLeft:"50px", marginTop:"60px"}}>

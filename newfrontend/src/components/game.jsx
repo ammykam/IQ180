@@ -46,12 +46,14 @@ class Game extends Component {
         })
     
         //console.log('done');
-        socket.on("readyToPlay" , data => this.setState(
-            {problem: data.problem
-            ,warnText:''
-            ,round:data.round
-        }
-        ))
+        socket.on("readyToPlay" , data => {
+            console.log('in ready to play')
+            this.setState(
+                {problem: data.problem
+                ,warnText:''
+                ,round:data.round
+            })
+        })
         socket.on("notReadyToPlay", data =>{
             console.log("in not ready to play")
             this.setState(
@@ -59,21 +61,39 @@ class Game extends Component {
         )
 
         })
-        socket.on("toChangeWinner", data => this.setState({changeWinner: data}));
+        socket.on("changeToWinner", data => this.setState({changeWinner: data}));
         if(this.state.changeWinner){
+            console.log('in toChangeWinner')
             this.props.onChangeGameToWinner();
         }
 
         
     }
 
-    // componentDidUpdate(){
-    //     console.log('hi in update');
-    //     socket.on("ReadyUser", data => {
-    //         console.log('')
-    //         this.setState({ nameReady: data })
-    //     })
-    // }
+    componentDidUpdate(){
+        socket.on("changeToWinner", data =>{
+            console.log('changeWinner:', this.state.changeWinner);
+            this.setState({changeWinner: data});
+        })
+        // console.log('changeWinner:', this.state.changeWinner);
+        if(this.state.changeWinner){
+            console.log('')
+            this.props.onChangeGameToWinner();
+        }
+        // socket.on("readyToPlay" , data =>{
+        //     console.log('hiiiiiiiiii')
+        //     console.log(data);
+        //     // if(data.problem != this.state.problem){
+        //     //     this.setState({
+        //     //         problem: data.problem
+        //     //         ,warnText:''
+        //     //         ,round:data.round
+        //     //     })
+        //     // }
+        // })
+
+        
+    }
     handleClick(e) {
         //console.log(e.target.value)
         this.state.answer.push(e.target.value)
