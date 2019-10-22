@@ -34,8 +34,8 @@ class Chat extends Component {
         const {input, messages} = this.state
         return ( 
             <div class="container" style={{width:"100%"}}>
-                <h4 style={{textAlign:"left"}}>CHAT</h4>
-                <div class="card" style={{height:"auto"}}>
+                <h4 style={{textAlign:"left"}}>Chat</h4>
+                <div class="card" style={{minHeight:"200px",height:"auto"}}>
                     <div class="card-block">
                         {
                             messages.map((message) => 
@@ -45,7 +45,7 @@ class Chat extends Component {
                         }
                     </div>
                 </div>
-                    <input type="text" value={input} onChange={this.changeInput} style={{width:"317px"}}/>
+                    <input type="text" value={input} onChange={this.changeInput} style={{width:"345px"}}/>
                     <button onClick={()=>this.sendChat()}>Send</button>
             </div>
          );
