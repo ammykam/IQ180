@@ -59,6 +59,7 @@ class Game extends Component {
         //console.log('done');
         socket.on("readyToPlay" , data => {
             console.log('in ready to play')
+            // console.log(data[0].problem)
             if(this.state.firstTimeOut){
                 this.startTime();
             }

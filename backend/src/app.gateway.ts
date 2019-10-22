@@ -373,21 +373,25 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     if(this.queue == this.readyPlayer.length){
       this.server.emit('notReadyToPlay',"")
       let roundwinner = this.appService.checkRoundWinner(this.readyPlayer,this.queue);
+      console.log(roundwinner)
       this.queue = 0;
       if(roundwinner.loss){
-        this.server.emit('roundWinner',{text: ["Nobody wins"], round: this.readyPlayer[0].round})
+        console.log(this.readyPlayer)
+        // this.server.emit('readyToPlay',this.readyPlayer)
+        this.server.emit('changeToWinner', true);
+        this.server.emit('roundWinner',{name: [{name:"Nobody wins"}], round: this.readyPlayer[0].round})
         this.server.emit('ReadyUser',this.readyPlayer)
 
-        this.readyPlayer = this.appService.resetTimer(this.readyPlayer);
-        this.readyPlayer = this.appService.round(this.readyPlayer);
-        this.server.emit('readyToPlay',this.readyPlayer)
+        // this.readyPlayer = this.appService.resetTimer(this.readyPlayer);
+        // this.readyPlayer = this.appService.round(this.readyPlayer);
       }else{
+        // this.server.emit('readyToPlay',this.readyPlayer)
+        this.server.emit('changeToWinner', true);
         this.server.emit('roundWinner',{name: roundwinner.winner, round: this.readyPlayer[0].round});
         this.server.emit('ReadyUser',this.readyPlayer)
 
-        this.readyPlayer = this.appService.resetTimer(this.readyPlayer);
-        this.readyPlayer = this.appService.round(this.readyPlayer);
-        this.server.emit('readyToPlay',this.readyPlayer)
+        // this.readyPlayer = this.appService.resetTimer(this.readyPlayer);
+        // this.readyPlayer = this.appService.round(this.readyPlayer);
       }
     }else{
       this.server.to(this.readyPlayer[this.queue-1].clientID).emit('notReadyToPlay',"waiting for you're opponent")
