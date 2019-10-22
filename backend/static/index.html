@@ -5,103 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-    <title>Login SocketIO</title>
+    <title>Server side:IQ180</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script type="text/javascript" src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
-<body>
-    <div id="app" class="container">
-            <div class="row">
-                <div class="col-md-6 offset-md-3 col-sm-12">
-                    <h1 class="text-center">{{ title }}</h1>
-                    <br>
-                    <div>
-                        <p>Hello, {{specificName}}</p>
-                        <p>{{waitText}}</p>
-                        <input type="number" placeholder="Difficulties..."  class="form-control" v-model="difficulty">
-                        <input type="text" v-model="name" id="username" class="form-control" placeholder="Enter name...">
-                        <textarea id="textarea" class="form-control" v-model="checkAnswer" placeholder="Enter your answer..."></textarea>
-                        <!-- v-on:change= "answer" -->
-                        <p>{{answers}}</p>
-                        <p>{{correctAnswer}}</p>
-                        <input type="text" v-model="timer" id ="timer" class="form-control" placeholder="Time Ja">
-                        <!-- <br>
-                        <div class="card">
-                            <div id="messages" class="card-block">
-                                <ul>
-                                    <li v-for="message of messages">{{ message.name }}: {{ message.text }}</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <br> -->
-                        <textarea id="textarea" class="form-control" v-model="text" placeholder="Enter avatar..."></textarea>
-                        <br>
-                        <button id="send" class="btn" @click.prevent="sendProfile">Send</button>
-                        <button id="ready" class="btn" @click.prevent="readyMessage">Ready</button>
-                        <button id ="start" class="btn" @click.prevent="startMessage">Start</button>
-                        <button id="reset" class="btn" @click.prevent="reset">Reset</button>
-                        <!-- <button id="answer" class= "btn" @click.prevent="answer" >Submit</button> -->
-                        <button id="answer" class= "btn" @click.prevent="answer" >Submit</button>
-                        <button id="timer" class="btn" @click.prevent="checkTime">Timer</button>
-                        <button id="GameEnd" class="btn" @click.prevent="gameEnd">End the game</button>
-                        <button id="nextRound" class="btn" @click.prevent="nextRound">Next</button>
-                        <button id="skip" class="btn" @click.prevent="skip">skip</button>
-                        <h2>Chat!</h2>
-                        <div class="card">
-                            <div class="card-block">
-                                <ul>
-                                    <li  v-for="msg in chatMessages">{{ msg.name }} : {{ msg.text }}</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <textarea name="chat" class="form-control" v-model="chatText" placeholder="Type your message..."></textarea>
-                        <button id = "sendChat" class="btn" @click.prevent="sendMessage">Send</button>
-                        <!-- onclick="style.display='none'" -->
-                    </div>
-                </div>
+<body style="background-color: #F8E8CF; font-family: 'Nunito', sans-serif;">
+    <div id="app" class=container style="padding: 20px">  
+        <h1 style="text-align: center">Server IQ 180</h1>
+        <div class="row">
+            <div class="col-6">
+                <p style="text-align: center">Online User : {{numberOnlineUser}}</p>
+                <ul>
+                    <li v-for="user in onlineUser">{{user.name}}</li>
+                </ul>
             </div>
-            <div >
-                <h1>ONLINE USER</h1>
-                <!-- <p>{{users}}</p> -->
+            <div class="col-6">
+                <p style="text-align: center">Ready User : {{numberReadyUser}}</p>
                 <ul>
-                    <li v-for="user in users">{{user.name}} : {{user.ready}}</li>
+                    <li v-for="user in readyUser">{{user.name}}</li>
                 </ul>
-                <h1>READY USER</h1>
-                <ul>
-                    <li v-for="readyUser in readyUsers">{{readyUser.name}} : {{readyUser.score}} : round {{readyUser.round}}</li>
-                </ul>
-                <h1>PROBLEM</h1>
-                <ul>
-                    <!-- <li v-for="orderUser in orderUsers">
-                        <p v-for="user in orderUser">{{user.name}} : {{user.problem}} : {{user.score}}</p>
-                    </li> -->
-                    <li>{{orderUsers.name}} : {{orderUsers.problem}} : score {{orderUsers.score}} </li>
-                    <!-- <li v-for ="displayOrderUser in displayOrderUsers">
-                        <p v-for="user in displayOrderUser">{{user.name}} : {{user.state}}</p>
-                    </li> -->
-                </ul>
-                <h1>This round WINNER</h1>
-                <p>{{warn}}</p>
-                <p v-for="winner in roundWinner">{{winner.name}}</p>
-                <p>{{round}}</p>
-
-                <h1>This game Winner</h1>
-                <p>{{gameWarn}}</p>
-                <ul>
-                    <li v-for="gWinner in gameWinner"> winner : {{gWinner.name}} : {{gWinner.score}}</li>
-                </ul>
-                <ul v-for="winner in allPlayers">
-                    <li>{{winner.name}} : {{winner.score}}</li>
-                    
-                </ul>
-                <!-- <p></p> -->
-                
-
             </div>
+        </div>
+        <div id="cheatsheet">
+            <h3>Cheat Answer</h3>
+            <p>Answer : {{problem}}</p>
+            <button class="btn-primary" @click.prevent="reset">RESET</button>
+        </div>
+       
+
     </div>
-
+    
     <script src="main.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 </body>
 </html>

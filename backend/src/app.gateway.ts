@@ -35,7 +35,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
       problem: [],
       answer: '',
       score: 0,
-      round: 1,
+      round: 100,
       ready: false
     }
 
@@ -47,7 +47,6 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     //console.log(this.Players)
     //create a new player which is identified by its clientID
   }
-
   handleDisconnect(client:Socket, ...args:any[]){
     this.numberOfClient-=1;
 
@@ -65,11 +64,16 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     //this.Players = this.Players.filter(obj => obj !== this.Players[client.id]);
     //this.logger.log(`Client Disconnected : ${client.id}`);
   }
+  @SubscribeMessage('serverClient')
+  serverClient(client: Socket) : void{
+    this.Players = this.Players.filter(player=>player.clientID !== client.id)
+  }
 
   @SubscribeMessage('askInformation')
   askInfo(client: Socket): void{
     const player = this.Players.find(player=>player.clientID==client.id)
-    this.server.to(client.id).emit('WelcomeUser',player)
+    //console.log('server')
+    //this.server.to(client.id).emit('WelcomeUser',player)
     this.server.emit('OnlineUser',this.Players)
     this.server.emit('ReadyUser',this.readyPlayer)
   }
@@ -109,34 +113,38 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
       this.server.emit('ReadyUser',this.readyPlayer)
     }
     this.server.to(client.id).emit('WelcomeUser',player)
-    console.log(player)
+    //console.log(player)
 
   }
 
   @SubscribeMessage('chatMessage')
-  chatMessgae(client:Socket, payload: {text: string}):void{
+  chatMessgae(client:Socket, payload: string):void{
     const player = this.Players.find(player=>player.clientID==client.id)
     //console.log(client)
-    this.server.emit('messageToClient',{name: player.name, text: payload.text})
+    //console.log(payload)
+    this.server.emit('messageToClient',{name: player.name, text: payload})
   } 
   
 
   @SubscribeMessage('reset')
   reset(client: Socket, payload: boolean):void{
-    const checkPlayer: Player= this.Players.find(player=>player.clientID==client.id)
-    const checkReady: boolean= checkPlayer.ready
+    //console.log('hi')
     this.range=0;
-    if(checkReady){
-      //look every player
-    for(let i=0;i<this.readyPlayer.length;i++){
-      this.readyPlayer[i].round=1
-      this.readyPlayer[i].score=0
-      this.readyPlayer[i].problem=[]
-      this.readyPlayer[i].timer=9999
+    this.readyPlayer=[]
+    //for(let i=0;i<this.readyPlayer.length;i++){
+    // this.readyPlayer[i].ready=false
+    //}
+    for(let i =0;i<this.Players.length;i++){
+      this.Players[i].round=1
+      this.Players[i].score=0
+      this.Players[i].problem=[]
+      this.Players[i].timer=9999
+      this.Players[i].ready=false
     }
-    //this.logger.log('reset has been done')
+    //console.log(this.Players)
+    //console.log(this.readyPlayer)
     this.server.emit('ReadyUser',this.readyPlayer);
-    }
+    this.server.emit('OnlineUser',this.Players)
 
   }
   //start will trigger as the round start
@@ -147,6 +155,10 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
 
     let problem:number[] = this.appService.generate(payload);
     this.range=payload;
+    
+    let problemString: string= this.appService.cheatNumber();
+    //console.log(problemString)
+    this.server.emit('problemToServer',problemString)
 
     const checkPlayer: Player= this.Players.find(player=>player.clientID==client.id)
     const checkReady: boolean= checkPlayer.ready
@@ -164,8 +176,8 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
       //this.server.emit('readyToPlay',this.readyPlayer)
       //console.log(this.readyPlayer[0])
 
-      this.server.to(this.readyPlayer[0].clientID).emit('readyToPlay',this.readyPlayer[0])
-      console.log(this.readyPlayer[0])
+      
+      //console.log(this.readyPlayer[0])
       this.server.emit('toChangeGame', true);
       //this.server.to(this.readyPlayer[0].clientID).emit('notReadyToPlay',"")
       for(let i =1; i<this.readyPlayer.length;i++){
@@ -173,9 +185,12 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
         this.server.to(this.readyPlayer[i].clientID).emit('notReadyToPlay',"it's not your turn")
         this.server.to(this.readyPlayer[i].clientID).emit('ReadyUser',this.readyPlayer)
       }
+      this.server.to(this.readyPlayer[0].clientID).emit('readyToPlay',this.readyPlayer[0])
+      this.server.to(this.readyPlayer[0].clientID).emit('ReadyUser',this.readyPlayer)
     }
     //console.log('finished')
       problem=[]
+
   }
   
 

@@ -6,7 +6,7 @@ import MinusSign from "./images/sign/minusButton.png";
 import PlusSign from "./images/sign/plusButton.png";
 import RightSign from "./images/sign/rightButton.png";
 import MultiplySign from "./images/sign/multiplyButton.png";
-
+import Chat from "./chat";
 const buttonStyle ={
     backgroundColor: "transparent",
     borderColor: "transparent",
@@ -223,6 +223,8 @@ class Game extends Component {
                             </div>
                         </div>
                     </div>
+                    <br/>
+                    <Chat/>
                 </div>
             </div>
          );
