@@ -7,6 +7,7 @@ import Login from "./components/login";
 import WelcomeDialog from "./components/welcomeDialog";
 import WhosReady from "./components/whosReady";
 import Game from "./components/game";
+
 import Song from "./components/song";
 import Countdown from "./components/countdown";
 
@@ -29,6 +30,7 @@ function App() {
   // socket.on("RoundWinner", res => {
   //   console.log(res);
   // });
+
   const handleWelcomeStart = () =>{
     console.log("Welcome Start Clicked!");
     setShowWelcome(false);
@@ -53,8 +55,8 @@ function App() {
 
   const [showWelcome, setShowWelcome] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
-  const [showWelcomeDialog, setShowWelcomeDialog] = useState(true);
-  const [showWhosReady, setShowWhosReady] = useState(false);
+  const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
+  const [showWhosReady, setShowWhosReady] = useState(true);
   const [showGame, setShowGame] = useState(false);
 
   return (
@@ -66,7 +68,6 @@ function App() {
         </header>
          <Song/>
          <Countdown/>
-
         <main className="App-main">
           {showWelcome && <Welcome onWelcomeStart={handleWelcomeStart}/>}
           {showLogin && <Login onLoginLogin={handleLoginLogin}/>}

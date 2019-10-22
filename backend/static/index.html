@@ -19,6 +19,7 @@
                     <div>
                         <p>Hello, {{specificName}}</p>
                         <p>{{waitText}}</p>
+                        <input type="number" placeholder="Difficulties..."  class="form-control" v-model="difficulty">
                         <input type="text" v-model="name" id="username" class="form-control" placeholder="Enter name...">
                         <textarea id="textarea" class="form-control" v-model="checkAnswer" placeholder="Enter your answer..."></textarea>
                         <!-- v-on:change= "answer" -->

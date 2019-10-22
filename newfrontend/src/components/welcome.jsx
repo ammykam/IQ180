@@ -26,7 +26,7 @@ class Welcome extends Component {
         <img
           src={logo}
           width="960"
-          height="520"
+          height="600"
           alt="IQ180Logo"
           style={styleLogo}
         />

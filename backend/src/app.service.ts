@@ -44,7 +44,7 @@ export class AppService {
     return players;
   }
 
-  generate() : number[]{
+  generate(range:number) : number[]{
     //console.log('generate')
     let problem: number[]=[]
     let newProblem: Object[]=[]
@@ -53,7 +53,7 @@ export class AppService {
     let problemString: string= ''
     //answer % 1 !== 0 ||
     // if answer is not yet integer and must be between 100,-100
-    while( answer % 1 !== 0 || answer>100 || answer<-100){
+    while( answer % 1 !== 0 || answer>range || answer<-range){
       //console.log('in the loop find int answer')
       //generate new number
       problem=[]
@@ -138,7 +138,6 @@ export class AppService {
       //check Time
       let allLose:number=0;
       let winner: Player = players[0];
-
       let allWinner: Player[] = [];
 
       let check:boolean = true
