@@ -95,6 +95,7 @@ export class AppService {
     this.hintString=this.problemString.substring(0,3)
     return this.problemString
   }
+  
   hintNumber():string{
     return this.hintString;
   }

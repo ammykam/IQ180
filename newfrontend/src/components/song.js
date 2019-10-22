@@ -15,7 +15,7 @@ export default class extends Component {
  
   render() {
     return (
-    <div style={{marginTop:"10px", marginRight:"-1025px"}}>
+    <div style={{marginTop:"10px", marginRight:"-1020px"}}>
       <button className="btn btn-light m-2"  style={{height:"30px"}} onClick={this.playAudio}>
         <p style={{marginTop:"-5px", fontWeight:"bold"}}>Play Music</p>
       </button>
