@@ -74,7 +74,7 @@ class WelcomeDialog extends Component {
                     {showFirstQues && <FirstQues onClick={() => this.handleClick()}/>}
                     {showSecondQues && <SecondQues onSecondClick={() => this.handleSecondClick()}/>}
                 </div>
-                <button type="button" className="btn" onClick={() =>{onWelcomeWelcome(); this.skipBut()}} style={styleButton}>Next</button>
+                <button type="button" className="btn" onClick={() =>{onWelcomeWelcome(); this.skipBut()}} style={styleButton}>Skip</button>
             </div>
          );
     }
