@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { socket } from "../App.js";
 import Avatar from "./avatar";
+import { withNamespaces } from 'react-i18next';
 
 const styleLogin = {
   marginLeft: "20%",
@@ -22,8 +23,8 @@ const styleLoginButton ={
     backgroundColor: "#67605f",
     color: "white",
     marginTop: "80px",
-    marginLeft: "88%",
-    width: "12%",
+    marginLeft: "80%",
+    width: "auto",
 }
 
 class Login extends Component {
@@ -53,15 +54,16 @@ class Login extends Component {
 
   render() {
     const { onLoginLogin } = this.props;
+    const { t } = this.props;
     return (
       <div style={styleLogin}>
         <div className="form-group row">
-          <label className="col-sm-2 col-form-label" style={{fontWeight:"bold"}}>Name</label>
+          <label className="col-sm-2 col-form-label" style={{fontWeight:"bold"}}>{t('Name')}</label>
           <div className="col-sm-10">
             <input
               className="form-control"
               id="inputUsername"
-              placeholder="name"
+              placeholder= {t('Name')}
             />
           </div>
         </div>
@@ -72,11 +74,11 @@ class Login extends Component {
         </div>
         <br/>
         <div>
-            <button className="btn" onClick={() =>{onLoginLogin(); this.sendProfile()}} style={styleLoginButton}>Login</button>
+            <button className="btn" onClick={() =>{onLoginLogin(); this.sendProfile()}} style={styleLoginButton}>{t('Login')}</button>
         </div>
       </div>
     );
   }
 }
 
-export default Login;
+export default withNamespaces()(Login);

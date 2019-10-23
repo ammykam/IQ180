@@ -15,9 +15,9 @@ class FirstQues extends Component {
         return ( 
             <div>
                 <br/><h3>{t('HowAreYou')}</h3><br/>
-                <button type="button" className="btn btn-outline-dark" style={styleChoice} onClick={onClick} >Hello!</button><br/>
-                <button type="button" className="btn btn-outline-dark" style={styleChoice} onClick={onClick}>Yo!</button><br/>
-                <button type="button" className="btn btn-outline-dark" style={styleChoice} onClick={onClick}>What's up</button>
+                <button type="button" className="btn btn-outline-dark" style={styleChoice} onClick={onClick} >{t('Hello')}!</button><br/>
+                <button type="button" className="btn btn-outline-dark" style={styleChoice} onClick={onClick}>{t('Yo')}!</button><br/>
+                <button type="button" className="btn btn-outline-dark" style={styleChoice} onClick={onClick}>{t('WhatUp')}</button>
             </div>
          );
     }

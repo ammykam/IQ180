@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import logo from "./images/IQ180Logo.png";
+import { Trans } from 'react-i18next';
+import { withNamespaces } from 'react-i18next';
+
 
 const styleLogo = {
   marginLeft: "10%",
@@ -35,11 +38,11 @@ class Welcome extends Component {
           className="btn btn-sm"
           style={styleStart}
         >
-          START
+          <Trans i18nKey="Start">START</Trans>
         </button>
       </div>
     );
   }
 }
 
-export default Welcome;
+export default withNamespaces()(Welcome);

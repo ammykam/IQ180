@@ -9,9 +9,7 @@ import Game from "./components/game";
 import RoundWinner from "./components/roundWinner";
 import NewWelcomeDialog from "./components/newWelcomeDialog"
 
-
 import socketIOClient from "socket.io-client";
-import newWelcomeDialog from "./components/newWelcomeDialog";
 export const socket = socketIOClient("http://localhost:3000");
 
 function App() {

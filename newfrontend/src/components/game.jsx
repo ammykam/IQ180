@@ -7,6 +7,8 @@ import PlusSign from "./images/sign/plusButton.png";
 import RightSign from "./images/sign/rightButton.png";
 import MultiplySign from "./images/sign/multiplyButton.png";
 import Chat from "./chat";
+import { withNamespaces } from 'react-i18next';
+
 const buttonStyle ={
     backgroundColor: "transparent",
     borderColor: "transparent",
@@ -291,6 +293,7 @@ class Game extends Component {
     render() { 
         const { nameReady,problem, warnText,round,answer,checkAnswer, stateAnswer, buttonValue1,buttonValue2,buttonValue3,buttonValue4,buttonValue5, hintString} = this.state; 
         const { onChangeGameToWinner } =this.props;
+        const { t } = this.props;
         return ( 
             <div className="row" style={{margin:"30px"}}>
                 <div className="col-sm-8">
@@ -298,7 +301,7 @@ class Game extends Component {
                         <div className="card-body">
                             <div className="row">
                                 <div className="col-sm-9">
-                                    <h3 style={{color:"white", textAlign:"left"}}>Round {round}</h3>
+                                    <h3 style={{color:"white", textAlign:"left"}}>{t('Round')} {round}</h3>
                                 </div>
                                 <div className="col-sm-3" style={{backgroundColor:"#f8e8cf"}}>
                                     <div>
@@ -326,17 +329,17 @@ class Game extends Component {
                             </div><br/><br/>
                             <div className="row">
                                 <div className="col-sm-6">
-                                    <h4 style={{textAlign:"left", fontWeight:"bold", color:"pink"}}>expected result = {problem[5]}</h4>
+                                    <h4 style={{textAlign:"left", fontWeight:"bold", color:"pink"}}>{t('Expected Result')} = {problem[5]}</h4>
                                 </div>
                                 <div className="col-sm-2">
-                                    <button className="btn btn-outline-success" onClick={() =>{this.hint()}}>HINT</button>
+                                    <button className="btn btn-outline-success" onClick={() =>{this.hint()}}>{t('Hint')}</button>
                                     <p>{hintString}</p>
                                 </div>
                                 <div className="col-sm-2" style={{marginLeft:"-30px"}}>
-                                    <button className="btn btn-outline-info" onClick={() =>{this.skip()}}>SKIP</button>
+                                    <button className="btn btn-outline-info" onClick={() =>{this.skip()}}>{t('Skip')}</button>
                                 </div>
                                 <div className="col-sm-2">
-                                    <button className="btn btn-outline-warning" onClick={() =>{this.answerToServer()}}>Submit</button>
+                                    <button className="btn btn-outline-warning" onClick={() =>{this.answerToServer()}}>{t('Submit')}</button>
                                 </div>
                             </div>
                             <br/>
@@ -376,7 +379,7 @@ class Game extends Component {
                                 <button className="btn btn-danger m-3" onClick={()=>{
                                     
                                     this.setState({answer: [], buttonValue1:false, buttonValue2:false, buttonValue3:false, buttonValue4:false,  buttonValue5:false})
-                                }}>reset</button>
+                                }}>{t('Reset')}</button>
                             </div>
                         </div>
                     </div>
@@ -385,7 +388,7 @@ class Game extends Component {
                 <div className="col-sm-4">
                     <div className="card">
                         <div className="card-body">
-                            <h3 className="card-title">Players</h3>
+                            <h3 className="card-title">{t('Players')}</h3>
 
                             <div className="card-text">
                             {nameReady.map(nameReady => 
@@ -396,9 +399,9 @@ class Game extends Component {
                                             <img src={nameReady.avatar} alt="" style={{width:"70px"}}/>
                                         </div>
                                         <div className="col-md-9" style={{textAlign:"left", paddingLeft:"20px", fontWeight:"bold"}}>
-                                            <p className="card-text">Name: {nameReady.name}</p>
-                                            <p className="card-text">Score: {nameReady.score}</p>
-                                            <p className="card=text">Round: {nameReady.round}</p>
+                                            <p className="card-text">{t('Name')}: {nameReady.name}</p>
+                                            <p className="card-text">{t('Score')}: {nameReady.score}</p>
+                                            <p className="card=text">{t('Round')}: {nameReady.round}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -415,4 +418,4 @@ class Game extends Component {
     }
 }
  
-export default Game;
+export default withNamespaces()(Game);

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { socket } from '../App';
+import { withNamespaces } from 'react-i18next';
+
 class Chat extends Component {
     constructor(){
         super();
@@ -32,9 +34,11 @@ class Chat extends Component {
     }
     render() { 
         const {input, messages} = this.state
+        const { t } = this.props;
+
         return ( 
             <div class="container" style={{width:"100%"}}>
-                <h4 style={{textAlign:"left"}}>Chat</h4>
+                <h4 style={{textAlign:"left"}}>{t('Chat')}</h4>
                 <div class="card" style={{minHeight:"200px",height:"auto"}}>
                     <div class="card-block">
                         {
@@ -46,10 +50,10 @@ class Chat extends Component {
                     </div>
                 </div>
                     <input type="text" value={input} onChange={this.changeInput} style={{width:"345px"}}/>
-                    <button onClick={()=>this.sendChat()}>Send</button>
+                    <button onClick={()=>this.sendChat()}>{t('Send')}</button>
             </div>
          );
     }
 }
  
-export default Chat;
+export default withNamespaces()(Chat);

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { socket } from "../App.js";
+import { withNamespaces } from 'react-i18next';
 
 const cardStyle ={
     backgroundColor: "#67605f",
@@ -136,12 +137,13 @@ class WhosReady extends Component {
         const { nameReady } = this.state; 
         const { onWhosReadyStart } =this.props;
         const x = nameReady.length;
+        const { t } = this.props;
         return ( 
             <div className="row">
                 <div className="col-sm-5" style={{paddingRight:"50px", paddingLeft:"100px", marginTop:"60px"}}>
                     <div className="card" style={cardStyle}>
                         <div className="card-body">
-                            <h3 className="card-title" style={cardTitleStyle} >Online Players</h3>
+                            <h3 className="card-title" style={cardTitleStyle} >{t('Online Players')}</h3>
                             <div className="card-text" style={{textAlign:"left", color:"white", fontWeight:"bold", fontSize:"20px"}}>
                             {nameOnline.map(nameOnline =><div className="readyPlayers" key={Math.random()}>
                             <li>{nameOnline.name}</li>
@@ -153,26 +155,26 @@ class WhosReady extends Component {
                 </div>
 
                 <div className="col-sm-2" style={{marginTop:"15%"}}>
-                    <button className="btn" style={buttonStyle} onClick={() => this.sendReady(x) }>Ready</button>
+                    <button className="btn" style={buttonStyle} onClick={() => this.sendReady(x) }>{t('Ready')}</button>
                     <br/> <br/> <br/>
                     <div className="dropdown" style={{width:"110px", marginLeft:"52px"}}>
                         <div className="form-group">
-                            <label forhtml="exampleFormControlSelect1">Select Level</label>
+                            <label forhtml="exampleFormControlSelect1">{t('Select Level')}</label>
                             <select className="form-control" id="levelSelect">
-                            <option>Easy</option>
-                            <option>Medium</option>
-                            <option>Hard</option>
+                            <option>{t('Easy')}</option>
+                            <option>{t('Medium')}</option>
+                            <option>{t('Hard')}</option>
                             </select>
                         </div>
                     </div>
                     <br/> <br/>
-                    <button className="btn" style={buttonStyle} disabled={false} onClick={() =>{ onWhosReadyStart();this.sendLevel();}}>Start</button>
+                    <button className="btn" style={buttonStyle} disabled={false} onClick={() =>{ onWhosReadyStart();this.sendLevel();}}>{t('Start')}</button>
                 </div>
 
                 <div className="col-sm-5" style={{paddingRight:"100px", paddingLeft:"50px", marginTop:"60px"}}>
                     <div className="card" style={cardStyle}>
                         <div className="card-body">
-                            <h3 className="card-title" style={cardTitleStyle}>Who's Ready</h3>
+                            <h3 className="card-title" style={cardTitleStyle}>{t('Whos Ready')}</h3>
                             <div className="card-text" style={{textAlign:"left", color:"white", fontWeight:"bold", fontSize:"20px"}}>
                             {nameReady.map(nameReady => <div key={Math.random()}>
                             <li>{nameReady.name}</li>
@@ -188,4 +190,4 @@ class WhosReady extends Component {
     }
 }
  
-export default WhosReady;
+export default withNamespaces()(WhosReady);
