@@ -336,6 +336,8 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     this.readyPlayer = this.appService.resetTimer(this.readyPlayer);
     this.readyPlayer = this.appService.round(this.readyPlayer);
     let problem:number[] = this.appService.generate(this.range);
+    let problemString: string= this.appService.cheatNumber();
+    this.server.emit('problemToServer',problemString)
 
 
     for(let i =0;i<this.readyPlayer.length;i++){
