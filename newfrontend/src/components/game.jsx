@@ -43,6 +43,7 @@ class Game extends Component {
           buttonValue4:false,
           buttonValue5:false,
           hintString:'',
+          reset: false,
         };
       }
 
@@ -51,14 +52,20 @@ class Game extends Component {
         socket.on("ReadyUser", data => {
             console.log('in ready user')
             console.log(data)
-            this.setState({ 
-                nameReady: data,
-                round: data[0].round})
+            if(data.length!=0){
+                this.setState({ 
+                    nameReady: data,
+                    round: data[0].round})
+            }
+            // this.setState({ 
+            //     nameReady: data,
+            //     round: data[0].round})
         })
     
         //console.log('done');
         socket.on("readyToPlay" , data => {
             console.log('in ready to play')
+            // console.log(data[0].problem)
             if(this.state.firstTimeOut){
                 this.startTime();
             }
@@ -80,7 +87,7 @@ class Game extends Component {
             console.log('in toChangeWinner')
             this.props.onChangeGameToWinner();
         }
-        socket.on('correctAnswer', data =>{
+        socket.on("correctAnswer", data =>{
             this.setState({
                 stateAnswer: data
             })
@@ -89,13 +96,26 @@ class Game extends Component {
             console.log(this.state.stateAnswer, "bb")
             this.stopTime();
         }
+        socket.on("needReset", data =>{
+            // console.log('the data is: ', this.state.reset)
+            if(this.state.reset){
+                this.setState({reset: data})
+            }
+            console.log('the data is D: ', this.state.reset)
+            // console.log('the data is: ', this.state.reset)
+        })
+
+        if(this.state.reset){
+            console.log('in needReset na ka: d')
+            this.props.onResetGame();
+        }
 
         
     }
 
     componentDidUpdate(){
         socket.on("changeToWinner", data =>{
-            console.log('changeWinner:', this.state.changeWinner);
+            // console.log('changeWinner:', this.state.changeWinner);
             this.setState({changeWinner: data});
         })
         // console.log('changeWinner:', this.state.changeWinner);
@@ -103,7 +123,7 @@ class Game extends Component {
             console.log('')
             this.props.onChangeGameToWinner();
         }
-        //console.log(this.state.stateAnswer, "aa")
+
         if(this.state.stateAnswer){
             this.stopTime();
         }
@@ -119,6 +139,19 @@ class Game extends Component {
             socket.emit('answer', newObject)
             socket.on('answerToClient', data =>
             this.setState({checkAnswer: data}))
+        }
+        socket.on("needReset", data =>{
+            console.log('the data is A: ', data)
+            console.log('the data is B: ', this.state.reset)
+            if(this.state.reset===false){
+                this.setState({reset: data})
+            }
+            // console.log('in needReset na ka: b')
+            // console.log('the data is: ', this.state.reset)
+        })
+        if(this.state.reset){
+            console.log('in needReset na ka: c')
+            this.props.onResetGame()
         }
         // socket.on("readyToPlay" , data =>{
         //     console.log('hiiiiiiiiii')

@@ -13,6 +13,7 @@ const styleBlock = {
     fontWeight: "bold",
     color: "white",
     fontSize: "40px",
+    reset: false,
 }
 class RoundWinner extends Component {
 
@@ -23,6 +24,7 @@ class RoundWinner extends Component {
             text:[],
             winnerName: '',
             backGame: false,
+            reset: false,
 
         }
     }
@@ -53,6 +55,15 @@ class RoundWinner extends Component {
         if(this.state.backGame){
             console.log('in onBackToGame')
             this.props.onBackToGame();
+        }
+        socket.on("needReset", data =>{
+            if(this.state.reset===false){
+                this.setState({reset: data})
+            }
+        })
+        if(this.state.reset){
+            console.log('in needReset na ka: c')
+            this.props.onResetWinner()
         }
     }
 
