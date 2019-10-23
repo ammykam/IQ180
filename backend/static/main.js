@@ -7,6 +7,8 @@ const app = new Vue({
         onlineUser:[],
         readyUser:[],
         problem:'',
+        singlePlayer:[],
+        numberSinglePlayer:0,
     },
     methods: {
         reset(){
@@ -32,6 +34,10 @@ const app = new Vue({
         })
         this.socket.on("problemToServer", (message)=>{
             this.problem = message
+        })
+        this.socket.on("allSinglePlayer",(message)=>{
+            this.numberSinglePlayer = message.length
+            this.singlePlayer = message
         })
     }
 })

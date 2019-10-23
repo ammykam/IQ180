@@ -63,7 +63,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     this.server.emit('ReadyUser',this.readyPlayer)
 
     this.singlePlayers = this.singlePlayers.filter(player => player.clientID !== client.id);
-    this.server.emit('SinglePlayer',this.singlePlayers)
+    this.server.emit('allSinglePlayer',this.singlePlayers)
     
 
     //readyPlayers.push(this.Players.find(player=>player.ready));
@@ -460,6 +460,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   singlePlayer(client: Socket): void{
     const player: Player= this.Players.find(player=>player.clientID==client.id)
     this.singlePlayers.push(player)
+    this.server.emit('allSinglePlayer',this.singlePlayers)
 
 
     let problem: number[] = this.appService.generateSinglePlayer(10)
@@ -480,7 +481,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
       //Do we need to do this we already have above?
 
       correctAnswer = this.appService.check(payload.checkAns,player);
-      this.server.to(client.id).emit('correctAnswer',correctAnswer);
+      this.server.to(client.id).emit('correctAnswerToPlayer',correctAnswer);
     }
     //next question event
     if(correctAnswer || time==60){
@@ -490,7 +491,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
         player.timer = 9999
         player.round = player.round + 1
         player.score = player.score + 1
-        let problem:number[] = this.appService.generate(10)
+        let problem:number[] = this.appService.generateSinglePlayer(10)
         player.problem = problem
         this.server.to(client.id).emit("singlePlayerInfo",player)
 
@@ -498,7 +499,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
         //not answer in time
         player.timer = 9999
         player.round = player.round +1
-        let problem:number[] = this.appService.generate(10)
+        let problem:number[] = this.appService.generateSinglePlayer(10)
         player.problem = problem
         this.server.to(client.id).emit("singlePlayerInfo",player)
       }

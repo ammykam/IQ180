@@ -15,16 +15,22 @@
     <div id="app" class=container style="padding: 20px">  
         <h1 style="text-align: center">Server IQ 180</h1>
         <div class="row">
-            <div class="col-6">
+            <div class="col-4">
                 <p style="text-align: center">Online User : {{numberOnlineUser}}</p>
                 <ul>
                     <li v-for="user in onlineUser">{{user.name}}</li>
                 </ul>
             </div>
-            <div class="col-6">
+            <div class="col-4">
                 <p style="text-align: center">Ready User : {{numberReadyUser}}</p>
                 <ul>
                     <li v-for="user in readyUser">{{user.name}}</li>
+                </ul>
+            </div>
+            <div class="col-4">
+                <p style="text-align: center">Single Player User : {{numberSinglePlayer}}</p>
+                <ul>
+                    <li v-for="user in singlePlayer">{{user.name}}</li>
                 </ul>
             </div>
         </div>
