@@ -97,6 +97,7 @@ export class AppService {
   }
   
   hintNumber():string{
+    // this.cheatNumber();
     return this.hintString;
   }
   check(payload: string, player: Player ) : boolean{

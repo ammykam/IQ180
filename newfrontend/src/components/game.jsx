@@ -155,6 +155,9 @@ class Game extends Component {
             console.log('in needReset na ka: c')
             this.props.onResetGame()
         }
+
+        
+        
         // socket.on("readyToPlay" , data =>{
         //     console.log('hiiiiiiiiii')
         //     console.log(data);

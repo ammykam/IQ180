@@ -181,13 +181,16 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
 
       this.readyPlayer = this.appService.start(this.readyPlayer);
       //emit just to show the order?
-      this.server.emit('ReadyUser',this.readyPlayer)
+      // this.server.emit('ReadyUser',this.readyPlayer)
       //this.server.emit('readyToPlay',this.readyPlayer)
       //console.log(this.readyPlayer[0])
 
       
       //console.log(this.readyPlayer[0].name)
-      this.server.emit('toChangeGame', true);
+      for(let i =0; i<this.readyPlayer.length;i++){
+        this.server.to(this.readyPlayer[i].clientID).emit('toChangeGame', true);
+      }
+      
       for(let i =1; i<this.readyPlayer.length;i++){
         //this.server.to(this.readyPlayer[0].clientID).emit('readyToPlay',{})
         this.server.to(this.readyPlayer[i].clientID).emit('notReadyToPlay',"it's not your turn")
