@@ -306,9 +306,9 @@ class Game extends Component {
                                 <div className="col-sm-3" style={{backgroundColor:"#f8e8cf"}}>
                                     <div>
                                         <h1>{this.getSecond()}</h1>
-                                        <button onClick={() => this.startTime()}>Start</button>
+                                        {/* <button onClick={() => this.startTime()}>Start</button>
                                         <button onClick={() => this.stopTime()}>Stop</button>
-                                        
+                                         */}
                                         {/* <div style={{color:"black", fontSize:"1px"}}>{(this.state.secondElapsed %60) === 0 ? this.stopTime(): null }</div> */}
                                         <div style={{color:"black", fontSize:"1px"}}>{stateAnswer === true ? this.stopTime(): null }</div>
                                     </div>
@@ -401,7 +401,6 @@ class Game extends Component {
                                         <div className="col-md-9" style={{textAlign:"left", paddingLeft:"20px", fontWeight:"bold"}}>
                                             <p className="card-text">{t('Name')}: {nameReady.name}</p>
                                             <p className="card-text">{t('Score')}: {nameReady.score}</p>
-                                            <p className="card=text">{t('Round')}: {nameReady.round}</p>
                                         </div>
                                     </div>
                                 </div>

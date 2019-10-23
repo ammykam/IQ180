@@ -78,7 +78,7 @@ class RoundWinner extends Component {
 
         return ( 
             <div style={styleBlock}>
-                <p style={{paddingTop:"70px"}} >Round-{round} Result is </p>
+                <p style={{paddingTop:"70px"}} >Round-{round} Winner is </p>
                 <p>{winnerName} ! </p>
                 <button className="btn" onClick={() =>{ this.goBack()}}>next</button>
             </div>

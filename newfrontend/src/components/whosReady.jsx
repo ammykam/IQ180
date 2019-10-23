@@ -20,6 +20,13 @@ const buttonStyle ={
     fontWeight: "bold",
 }
 
+const buttonSingleStyle ={
+    backgroundColor: "#d67573",
+    color:"white",
+    width: "160px",
+    fontWeight: "bold",
+}
+
 class WhosReady extends Component {
     _isMounted = false;
     constructor() {
@@ -135,7 +142,7 @@ class WhosReady extends Component {
     render() {
         const { nameOnline } = this.state; 
         const { nameReady } = this.state; 
-        const { onWhosReadyStart } =this.props;
+        const { onWhosReadyStart, onSingleStart } =this.props;
         const x = nameReady.length;
         const { t } = this.props;
         return ( 
@@ -154,12 +161,12 @@ class WhosReady extends Component {
                     </div>
                 </div>
 
-                <div className="col-sm-2" style={{marginTop:"15%"}}>
+                <div className="col-sm-2" style={{marginTop:"12%"}}>
                     <button className="btn" style={buttonStyle} onClick={() => this.sendReady(x) }>{t('Ready')}</button>
                     <br/> <br/> <br/>
                     <div className="dropdown" style={{width:"110px", marginLeft:"52px"}}>
                         <div className="form-group">
-                            <label forhtml="exampleFormControlSelect1">{t('Select Level')}</label>
+                            <label forhtml="exampleFormControlSelect1" style={{color:"brown"}}>{t('Select Level')}</label>
                             <select className="form-control" id="levelSelect">
                             <option>{t('Easy')}</option>
                             <option>{t('Medium')}</option>
@@ -169,6 +176,8 @@ class WhosReady extends Component {
                     </div>
                     <br/> <br/>
                     <button className="btn" style={buttonStyle} disabled={false} onClick={() =>{ onWhosReadyStart();this.sendLevel();}}>{t('Start')}</button>
+                    <br/><br/><br/>
+                    <button className="btn" style={buttonSingleStyle} disabled={false} onClick={() =>{ onSingleStart()}}>{t('Single Player Mode')}</button>
                 </div>
 
                 <div className="col-sm-5" style={{paddingRight:"100px", paddingLeft:"50px", marginTop:"60px"}}>

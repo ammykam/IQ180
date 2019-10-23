@@ -32,11 +32,12 @@
     "Hard": "ยาก",
     "Round": "รอบ",
     "Expected Result": "ผลลัพธ์ที่ต้องการ",
-    "Hint": "คำใบ",
+    "Hint": "คำใบ้",
     "Submit": "ส่ง",
     "Reset": "ล้าง",
     "Players": "ผู้เล่น",
     "Score": "คะแนน",
     "Send": "ส่ง",
-    "Chat": "แชท"
+    "Chat": "แชท",
+    "Single Player Mode": "โหมดเล่นคนเดียว"
   }

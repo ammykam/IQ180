@@ -14,7 +14,7 @@ class NewNavbar extends Component {
     render() { 
         const { t } = this.props;
         return (
-            <nav className="navbar navbar-light" style={{ backgroundColor: "#f6c6a9", marginTop:"-10px" }}>
+            <nav className="navbar navbar-light" style={{ backgroundColor: "#f6c6a9", marginTop:"-30px" }}>
                 <a className="navbar-brand" href="#">
                     <img src={logo} width="96" height="52" alt="IQ180Logo" />
                 </a>
