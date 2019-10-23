@@ -464,25 +464,47 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
 
     let problem: number[] = this.appService.generateSinglePlayer(10)
     player.problem = problem
-    let problemString: string = this.appService.cheatNumberSinglePlayer()
     //to player
-    this.server.emit('singlePlayerInfo',player)
-    //to server
-    this.server.emit('singlePlayerCheatQuestion',problemString)
+    this.server.to(client.id).emit('singlePlayerInfo',player)
   }
   @SubscribeMessage('singlePlayerCheck')
-  singlePlayerCheck(client: Socket):void{
+  singlePlayerCheck(client: Socket, payload: {checkAns: string, time: string}):void{
+    let player = this.Players.find(player=>player.clientID==client.id)
+    let correctAnswer: boolean=false;
+    let time:number = 60-parseInt(payload.time);
 
-  }
-  @SubscribeMessage('singlePlayerNext')
-  singlePlayerNest(client: Socket):void{
 
+    if(isNaN(eval(payload.checkAns))== false){
+      this.server.to(client.id).emit('answerToSinglePlayer',eval(payload.checkAns))
+      player = this.Players.find(player=>player.clientID==client.id) 
+      //Do we need to do this we already have above?
+
+      correctAnswer = this.appService.check(payload.checkAns,player);
+      this.server.to(client.id).emit('correctAnswer',correctAnswer);
+    }
+    //next question event
+    if(correctAnswer || time==60){
+      player.problem=[]
+      if(correctAnswer == true){
+        //answer right
+        player.timer = 9999
+        player.round = player.round + 1
+        player.score = player.score + 1
+        let problem:number[] = this.appService.generate(10)
+        player.problem = problem
+        this.server.to(client.id).emit("singlePlayerInfo",player)
+
+      }else{
+        //not answer in time
+        player.timer = 9999
+        player.round = player.round +1
+        let problem:number[] = this.appService.generate(10)
+        player.problem = problem
+        this.server.to(client.id).emit("singlePlayerInfo",player)
+      }
+    }
   }
-  @SubscribeMessage('hintSinglePlayer')
-  hintSinglePlayer(client: Socket): void{
-  let hint:string = this.appService.hintNumberSinglePlayer();
-  this.server.to(client.id).emit("hintSinglePlayerToClient",hint)
-  }
+
 
 }
 

@@ -5,8 +5,6 @@ import { read } from 'fs';
 export class AppService {
   private problemString: string=""
   private hintString: string=""
-  private problemStringSingle: string=""
-  private hintStringSingle: string=""
 
   start(Players: Player[]): Player[] {
     const problem: number[] = [];
@@ -217,18 +215,9 @@ export class AppService {
       answer = eval(problemString)
     }
     console.log("The singlePlayer mode question "+problemString+" = "+answer)
-    this.problemStringSingle = problemString
     problem.push(answer);
 
     return problem
-  }
-
-  cheatNumberSinglePlayer():string{
-    this.hintStringSingle=this.problemStringSingle.substring(0,3)
-    return this.problemString
-  }
-  hintNumberSinglePlayer():string{
-    return this.hintStringSingle;
   }
 
 
