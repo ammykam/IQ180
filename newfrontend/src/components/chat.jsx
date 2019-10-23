@@ -38,8 +38,8 @@ class Chat extends Component {
 
         return ( 
             <div class="container" style={{width:"100%"}}>
-                <h4 style={{textAlign:"left"}}>{t('Chat')}</h4>
-                <div class="card" style={{minHeight:"200px",height:"auto"}}>
+                <h4 style={{textAlign:"left" ,color:"brown"}}>{t('Chat')}</h4>
+                <div class="card" style={{minHeight:"150px",height:"auto"}}>
                     <div class="card-block">
                         {
                             messages.map((message) => 

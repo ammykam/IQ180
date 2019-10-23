@@ -8,6 +8,7 @@ import WhosReady from "./components/whosReady";
 import Game from "./components/game";
 import RoundWinner from "./components/roundWinner";
 import NewWelcomeDialog from "./components/newWelcomeDialog"
+import GameSingle from "./components/gameSingle"
 
 import socketIOClient from "socket.io-client";
 export const socket = socketIOClient("http://localhost:3000");
@@ -54,11 +55,19 @@ function App() {
     setShowRoundWinner(false);
     setShowWelcome(true);
   }
+  // const handleReset = () => {
+  // }
+
+  const handleSingleStart = () => {
+    setShowWhosReady(false);
+    setShowGameSingle(true);
+  }
 
   const [showWelcome, setShowWelcome] = useState(true);
   const [showLogin, setShowLogin] = useState(false);
   const [showNewWelcomeDialog, setShowNewWelcomeDialog] = useState(false);
   const [showWhosReady, setShowWhosReady] = useState(false);
+  const [showGameSingle, setShowGameSingle] = useState(false);
   const [showGame, setShowGame] = useState(false);
   const [showRoundWinner, setShowRoundWinner] = useState(false);
   
@@ -72,12 +81,12 @@ function App() {
           {showWelcome && <Welcome onWelcomeStart={handleWelcomeStart}/>}
           {showLogin && <Login onLoginLogin={handleLoginLogin}/>}
           {showNewWelcomeDialog && <NewWelcomeDialog onWelcomeWelcome={handleWelcomeWelcome}/>}
-          {showWhosReady && <WhosReady onWhosReadyStart={handleWhosReadyStart}/>}
+          {showWhosReady && <WhosReady onWhosReadyStart={handleWhosReadyStart} onSingleStart={handleSingleStart}/>}
           {showGame && <Game onChangeGameToWinner={handleChangeGameToWinner} onResetGame={handleResetGame}/>}
+          {showGameSingle && <GameSingle/>}
           {showRoundWinner && <RoundWinner onBackToGame={handleBackToGame} onResetWinner={handleResetWinner}/>}
-          {/* {showRoundWinner && <RoundWinner onReset={handleReset}/>} */}
+          {/* onReset={handleReset} */}
         </main>
-
       </div>
     </>
   );
