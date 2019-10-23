@@ -191,7 +191,7 @@ class WhosReady extends Component {
                             )}
                             </div>
                         </div>
-                    </div>
+                    </div>S
                 </div>
 
             </div>
