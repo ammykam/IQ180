@@ -1,7 +1,6 @@
 import React, { Component } from "react"
 
- 
-export default class extends Component {
+export default class extends (Component) {
   
   playAudio() {
     const audio = document.getElementsByClassName("audio-element")[0]
@@ -15,9 +14,9 @@ export default class extends Component {
  
   render() {
     return (
-    <div style={{marginTop:"10px", marginRight:"-1020px"}}>
+    <div style={{marginTop:"10px", marginRight:"-890px"}}>
       <button className="btn btn-light m-2"  style={{height:"30px"}} onClick={this.playAudio}>
-        <p style={{marginTop:"-5px", fontWeight:"bold"}}>Play Music</p>
+        <p style={{marginTop:"-5px", fontWeight:"bold"}}>Play</p>
       </button>
       <button className="btn btn-light" style={{height:"30px"}} onClick={this.pauseAudio}>
         <p style={{marginTop:"-5px", fontWeight:"bold"}}>Pause</p>

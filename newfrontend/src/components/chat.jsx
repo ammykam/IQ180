@@ -39,7 +39,7 @@ class Chat extends Component {
                     <div class="card-block">
                         {
                             messages.map((message) => 
-                            <div key={message.name} style={{textAlign:"left"}}>
+                            <div key={message.name} style={{textAlign:"left", paddingLeft:"10px"}}>
                                 <p style={{fontWeight:"bold", display:"inline"}}> {message.name} </p> : {message.text}
                             </div>)
                         }

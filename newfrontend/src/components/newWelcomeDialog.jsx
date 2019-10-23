@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-// import { useState } from 'react';
 import { socket } from "../App.js";
 import FirstQues from "./firstQues";
 import SecondQues from "./secondQues";
+import { withNamespaces } from 'react-i18next';
 
 const styleButton = {
     backgroundColor: "#fdf5ee",
     marginRight: "-80%",
-    marginBottom: "-10%"
+    marginBottom: "-5%"
 }
 
 const styleDialog ={
@@ -19,12 +19,12 @@ const styleDialog ={
     height:"500px",
 }
 
-class WelcomeDialog extends Component {
+class NewWelcomeDialog extends Component {
     _isMounted = false;
     constructor(){
         super();
         this.state={
-            name: "New Comer",
+            name: "",
             showFirstQues: true,
             showSecondQues: false,
         }
@@ -65,17 +65,20 @@ class WelcomeDialog extends Component {
         const { showFirstQues } = this.state;
         const { showSecondQues } = this.state;
         const { onWelcomeWelcome } = this.props;
-
+        const { t } = this.props;
         return ( 
             <div style={styleDialog}>
-                <h1 style={{color:"white"}}> Hello {name}!</h1>
-                <div style={{backgroundColor:"#f6c6a9", margin:"50px", height:"250px"}}>
+                <div style={{marginRight:"-750px", paddingTop:"10px", paddingRight:"80px"}}>
+                    
+                </div>
+                <h1 style={{color:"white"}}> {t('Hello')} {name}!</h1>
+                <div style={{backgroundColor:"#f6c6a9", margin:"50px", marginTop:"10px", height:"250px"}}>
                     {showFirstQues && <FirstQues onClick={() => this.handleClick()}/>}
                     {showSecondQues && <SecondQues onSecondClick={() => this.handleSecondClick()}/>}
                 </div>
-                <button type="button" className="btn" onClick={() =>{onWelcomeWelcome(); this.skipBut()}} style={styleButton}>Skip</button>
+                <button type="button" className="btn" onClick={() =>{onWelcomeWelcome(); this.skipBut()}} style={styleButton}>{t('Skip')}</button>
             </div>
          );
     }
 }
-export default WelcomeDialog;
+export default withNamespaces()(NewWelcomeDialog);
