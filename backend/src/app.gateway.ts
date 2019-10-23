@@ -16,6 +16,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   private readyPlayer: Player[] = [];
   private queue:number=0;
   private range:number=0;
+  private singlePlayers:Player[]=[];
 
   afterInit(server:Server){
     this.logger.log('Server IQ180 initiates');
@@ -44,6 +45,8 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     this.server.emit('OnlineUser',this.Players)
     this.server.emit('ReadyUser',this.readyPlayer)
     this.logger.log('Connected Player : '+this.Players.length)
+
+    this.server.emit('SinglePlayer',this.singlePlayers)
     //console.log(this.Players)
     //create a new player which is identified by its clientID
   }
@@ -58,6 +61,9 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     this.logger.log('Ramaining Player: '+this.Players.length)
     this.server.emit('OnlineUser',this.Players)
     this.server.emit('ReadyUser',this.readyPlayer)
+
+    this.singlePlayers = this.singlePlayers.filter(player => player.clientID !== client.id);
+    this.server.emit('SinglePlayer',this.singlePlayers)
     
 
     //readyPlayers.push(this.Players.find(player=>player.ready));
@@ -91,6 +97,8 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     this.server.to(client.id).emit('WelcomeUser',player)
     this.server.emit('OnlineUser',this.Players)
     this.server.emit('ReadyUser',this.readyPlayer)
+
+    this.server.emit('SinglePlayer',this.singlePlayers)
 
     //update player info from given input 
   }
@@ -447,5 +455,34 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     this.server.emit('ReadyUser',this.readyPlayer)
     }
   }
+
+  @SubscribeMessage('singlePlayerStart')
+  singlePlayer(client: Socket): void{
+    const player: Player= this.Players.find(player=>player.clientID==client.id)
+    this.singlePlayers.push(player)
+
+
+    let problem: number[] = this.appService.generateSinglePlayer(10)
+    player.problem = problem
+    let problemString: string = this.appService.cheatNumberSinglePlayer()
+    //to player
+    this.server.emit('singlePlayerInfo',player)
+    //to server
+    this.server.emit('singlePlayerCheatQuestion',problemString)
+  }
+  @SubscribeMessage('singlePlayerCheck')
+  singlePlayerCheck(client: Socket):void{
+
+  }
+  @SubscribeMessage('singlePlayerNext')
+  singlePlayerNest(client: Socket):void{
+
+  }
+  @SubscribeMessage('hintSinglePlayer')
+  hintSinglePlayer(client: Socket): void{
+  let hint:string = this.appService.hintNumberSinglePlayer();
+  this.server.to(client.id).emit("hintSinglePlayerToClient",hint)
+  }
+
 }
 
