@@ -1,6 +1,7 @@
 {
     "Welcome to React": "สวัสดีจ้ะ",
     "Hello": "สวัสดี",
+    "Hi": "จ้าาา",
     "Skip": "ข้าม",
     "th": "ไทย",
     "en": "อังกฤษ",
@@ -42,5 +43,16 @@
     "Single Player Mode": "โหมดเล่นคนเดียว",
     "Winner is": "ผู้ชนะคือ",
     "Next": "ถัดไป",
-    "Zen Mode": "โหมดชิว"
+    "Zen Mode": "โหมดชิว",
+    "Please Enjoy Our Game": "เล่นเกมให้สนุกนะ",
+    "Thanks": "ขอบคุณนะ",
+    "Im bad at this game.": "ฉันเล่นเกมนี้ไม่ค่อยเก่งนะ",
+    "I dont want to say hi": "ฉันไม่อยากสวัสดีเธอ",
+    "Really": "จริงเหรอ",
+    "Joking":"ล้อเล่นน้าาา",
+    "YES": "ใช่",
+    "Go On": "เล่นเลย",
+    "Dont worry, heres dog for you": "ไม่เป็นไร ฉันมีหมาหน้ายิ้มให้เธอ!",
+    "OK": "โอเค",
+    "Good Luck & Have Fun": "โชคดีนะ เล่นให้สนุก"
   }

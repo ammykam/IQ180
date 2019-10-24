@@ -8,14 +8,15 @@ const styleChoice ={
 class SecondQues extends Component {
     state = {  }
     render() { 
-        const { onSecondClick } = this.props;
+        const { onForthClick, onFifthClick} = this.props;
+
         const { t } = this.props;
         return ( 
             <div>
-                <br/><h3>{t('Glad')}</h3><br/>
-                <button type="button" className="btn btn-outline-dark" style={styleChoice} onClick={onSecondClick} >{t('Excited')}</button><br/>
-                <button type="button" className="btn btn-outline-dark" style={styleChoice} onClick={onSecondClick}>{t('Simple')}</button><br/>
-                <button type="button" className="btn btn-outline-dark" style={styleChoice} onClick={onSecondClick}>{t('CantWait')}</button>
+                <br/><h3>{t('Please Enjoy Our Game')}</h3><br/>
+                <button type="button" className="btn btn-outline-dark" style={styleChoice} onClick={onForthClick} >{t('Thanks')}</button><br/>
+                <br/>
+                <button type="button" className="btn btn-outline-dark" style={styleChoice} onClick={onFifthClick}>{t('Im bad at this game.')}</button><br/>
             </div>
          );
     }

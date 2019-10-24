@@ -1,6 +1,7 @@
 {
     "Welcome to React": "Welcome to React and react-i18next",
     "Hello": "Hello",
+    "Hi": "Hi",
     "Skip": "Skip",
     "th": "th",
     "en": "en",
@@ -42,5 +43,15 @@
     "Single Player Mode": "Single Player Mode",
     "Winner is": "Winner is",
     "Next":"Next",
-    "Zen Mode": "Zen Mode"
+    "Zen Mode": "Zen Mode",
+    "Please Enjoy Our Game": "Please Enjoy Our Game",
+    "I dont want to say hi": "I dont want to say hi!",
+    "Really": "Really",
+    "Joking":"Joking",
+    "YES": "YES",
+    "Thanks": "Thanks",
+    "Go On": "Go On",
+    "Dont worry, heres dog for you": "Don't worry, here's happy dog for you!",
+    "OK": "OK",
+    "Good Luck & Have Fun": "Good Luck & Have Fun"
   }
