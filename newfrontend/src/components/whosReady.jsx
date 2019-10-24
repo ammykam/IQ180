@@ -180,7 +180,7 @@ class WhosReady extends Component {
                     <br/> <br/>
                     <button className="btn" style={buttonStyle} disabled={false} onClick={() =>{ onWhosReadyStart();this.sendLevel();}}>{t('Start')}</button>
                     <br/><br/><br/>
-                    <button className="btn" style={buttonSingleStyle} disabled={false} onClick={() =>{ onSingleStart(); this.sendSinglePlayer();}}>{t('Single Player Mode')}</button>
+                    <button className="btn" style={buttonSingleStyle} disabled={false} onClick={() =>{ onSingleStart(); this.sendSinglePlayer();}}>{t('Zen Mode')}</button>
                 </div>
 
                 <div className="col-sm-5" style={{paddingRight:"100px", paddingLeft:"50px", marginTop:"60px"}}>
