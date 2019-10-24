@@ -18,7 +18,7 @@ const app = new Vue({
 
     },
     created(){
-        this.socket = io('http://localhost:3000')
+        this.socket = io(window.location.protocol + "//" + window.location.hostname + (window.location.port ? ":" + window.location.port : ""))
 
         this.socket.emit("serverClient")
         this.socket.emit("askInformation")

@@ -11,7 +11,7 @@ import NewWelcomeDialog from "./components/newWelcomeDialog"
 import GameSingle from "./components/gameSingle"
 
 import socketIOClient from "socket.io-client";
-export const socket = socketIOClient(process.env.REACT_APP_SERVER_URL || "http://localhost:3000");
+export const socket = socketIOClient(process.env.REACT_APP_SERVER_URL || "https://infinite-badlands-27112.herokuapp.com/");
 
 function App() {
   const handleWelcomeStart = () =>{

@@ -1,0 +1,7 @@
+{
+    "build": {
+      "env": {
+        "REACT_APP_SOCKET_URL": "https://infinite-badlands-27112.herokuapp.com/"
+      }
+    }
+  }
