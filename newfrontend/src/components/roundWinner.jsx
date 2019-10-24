@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 // import { useState } from 'react';
 import { socket } from "../App.js";
+import { withNamespaces } from 'react-i18next';
+
 
 const styleBlock = {
     backgroundColor:"#67605f",
@@ -75,14 +77,15 @@ class RoundWinner extends Component {
     render() {
         const { winnerName } = this.state; 
         const { round } = this.state; 
+        const { t } = this.props;
 
         return ( 
             <div style={styleBlock}>
-                <p style={{paddingTop:"70px"}} >Round-{round} Winner is </p>
+                <p style={{paddingTop:"70px"}} >{t('Round')}-{round} {t('Winner is')} </p>
                 <p>{winnerName} ! </p>
-                <button className="btn" onClick={() =>{ this.goBack()}}>next</button>
+                <button className="btn" onClick={() =>{ this.goBack()}}>{t('Next')}</button>
             </div>
          );
     }
 }
-export default RoundWinner;
+export default withNamespaces()(RoundWinner);
