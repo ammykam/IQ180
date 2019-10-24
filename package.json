@@ -1,0 +1,5 @@
+{
+    "scripts": {
+        "deploy-server": "git subtree --prefix backend heroku paster"
+    }
+}

@@ -16,6 +16,7 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
   private readyPlayer: Player[] = [];
   private queue:number=0;
   private range:number=0;
+  private singlePlayers:Player[]=[];
 
   afterInit(server:Server){
     this.logger.log('Server IQ180 initiates');
@@ -44,6 +45,8 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     this.server.emit('OnlineUser',this.Players)
     this.server.emit('ReadyUser',this.readyPlayer)
     this.logger.log('Connected Player : '+this.Players.length)
+
+    this.server.emit('SinglePlayer',this.singlePlayers)
     //console.log(this.Players)
     //create a new player which is identified by its clientID
   }
@@ -58,6 +61,9 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     this.logger.log('Ramaining Player: '+this.Players.length)
     this.server.emit('OnlineUser',this.Players)
     this.server.emit('ReadyUser',this.readyPlayer)
+
+    this.singlePlayers = this.singlePlayers.filter(player => player.clientID !== client.id);
+    this.server.emit('allSinglePlayer',this.singlePlayers)
     
 
     //readyPlayers.push(this.Players.find(player=>player.ready));
@@ -91,6 +97,8 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     this.server.to(client.id).emit('WelcomeUser',player)
     this.server.emit('OnlineUser',this.Players)
     this.server.emit('ReadyUser',this.readyPlayer)
+
+    this.server.emit('SinglePlayer',this.singlePlayers)
 
     //update player info from given input 
   }
@@ -173,13 +181,16 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
 
       this.readyPlayer = this.appService.start(this.readyPlayer);
       //emit just to show the order?
-      this.server.emit('ReadyUser',this.readyPlayer)
+      // this.server.emit('ReadyUser',this.readyPlayer)
       //this.server.emit('readyToPlay',this.readyPlayer)
       //console.log(this.readyPlayer[0])
 
       
       //console.log(this.readyPlayer[0].name)
-      this.server.emit('toChangeGame', true);
+      for(let i =0; i<this.readyPlayer.length;i++){
+        this.server.to(this.readyPlayer[i].clientID).emit('toChangeGame', true);
+      }
+      
       for(let i =1; i<this.readyPlayer.length;i++){
         //this.server.to(this.readyPlayer[0].clientID).emit('readyToPlay',{})
         this.server.to(this.readyPlayer[i].clientID).emit('notReadyToPlay',"it's not your turn")
@@ -447,5 +458,57 @@ export class AppGateway implements OnGatewayConnection,OnGatewayInit,OnGatewayDi
     this.server.emit('ReadyUser',this.readyPlayer)
     }
   }
+
+  @SubscribeMessage('singlePlayerStart')
+  singlePlayer(client: Socket): void{
+    const player: Player= this.Players.find(player=>player.clientID==client.id)
+    this.singlePlayers.push(player)
+    this.server.emit('allSinglePlayer',this.singlePlayers)
+
+
+    let problem: number[] = this.appService.generateSinglePlayer(10)
+    player.problem = problem
+    //to player
+    this.server.to(client.id).emit('singlePlayerInfo',player)
+  }
+  @SubscribeMessage('singlePlayerCheck')
+  singlePlayerCheck(client: Socket, payload: {checkAns: string, time: string}):void{
+    let player = this.Players.find(player=>player.clientID==client.id)
+    let correctAnswer: boolean=false;
+    let time:number = 60-parseInt(payload.time);
+
+
+    if(isNaN(eval(payload.checkAns))== false){
+      this.server.to(client.id).emit('answerToSinglePlayer',eval(payload.checkAns))
+      player = this.Players.find(player=>player.clientID==client.id) 
+      //Do we need to do this we already have above?
+
+      correctAnswer = this.appService.check(payload.checkAns,player);
+      this.server.to(client.id).emit('correctAnswerToPlayer',correctAnswer);
+    }
+    //next question event
+    if(correctAnswer || time==60){
+      player.problem=[]
+      if(correctAnswer == true){
+        //answer right
+        player.timer = 9999
+        player.round = player.round + 1
+        player.score = player.score + 1
+        let problem:number[] = this.appService.generateSinglePlayer(10)
+        player.problem = problem
+        this.server.to(client.id).emit("singlePlayerInfo",player)
+
+      }else{
+        //not answer in time
+        player.timer = 9999
+        player.round = player.round +1
+        let problem:number[] = this.appService.generateSinglePlayer(10)
+        player.problem = problem
+        this.server.to(client.id).emit("singlePlayerInfo",player)
+      }
+    }
+  }
+
+
 }
 

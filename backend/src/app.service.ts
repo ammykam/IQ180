@@ -97,6 +97,7 @@ export class AppService {
   }
   
   hintNumber():string{
+    // this.cheatNumber();
     return this.hintString;
   }
   check(payload: string, player: Player ) : boolean{
@@ -183,9 +184,44 @@ export class AppService {
 
       }
       
-      
-
   }
+  generateSinglePlayer(range:number):number[]{
+    let problem: number[]=[]
+    let newProblem: Object[]=[]
+    let operator: string[]=['+','-','*','/']
+    let answer: number= 99999.99
+    let problemString: string= ''
+
+    while( answer % 1 !== 0 || answer>range || answer<-range){
+      problem=[]
+      newProblem=[]
+      problemString=''
+      answer=0;
+      for(let i=0;i<5;i++){
+        let random: number = this.getRandomInt(1,10)
+        problem.push(random)
+      }
+
+      for(let i =0;i<5;i++){
+        newProblem.push(problem[i])
+        if(i!=4){
+          let randomOperator:number = this.getRandomInt(0,4)
+          newProblem.push(operator[randomOperator])
+        }
+      }
+      problemString = newProblem.join(',')
+      for(let i=0;i<8;i++){
+        problemString = problemString.replace(',','')
+      }
+      answer = eval(problemString)
+    }
+    console.log("The singlePlayer mode question "+problemString+" = "+answer)
+    problem.push(answer);
+
+    return problem
+  }
+
+
 
 
 

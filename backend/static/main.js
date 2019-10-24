@@ -7,16 +7,19 @@ const app = new Vue({
         onlineUser:[],
         readyUser:[],
         problem:'',
+        singlePlayer:[],
+        numberSinglePlayer:0,
     },
     methods: {
         reset(){
+            this.problem=''
             this.socket.emit("reset",true)
             console.log('game has been reset')
         }
 
     },
     created(){
-        this.socket = io('http://localhost:3000')
+        this.socket = io(window.location.protocol + "//" + window.location.hostname + (window.location.port ? ":" + window.location.port : ""))
 
         this.socket.emit("serverClient")
         this.socket.emit("askInformation")
@@ -32,6 +35,10 @@ const app = new Vue({
         })
         this.socket.on("problemToServer", (message)=>{
             this.problem = message
+        })
+        this.socket.on("allSinglePlayer",(message)=>{
+            this.numberSinglePlayer = message.length
+            this.singlePlayer = message
         })
     }
 })
