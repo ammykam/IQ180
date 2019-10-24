@@ -12,6 +12,7 @@ const app = new Vue({
     },
     methods: {
         reset(){
+            this.problem=''
             this.socket.emit("reset",true)
             console.log('game has been reset')
         }

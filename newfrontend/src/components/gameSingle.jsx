@@ -50,6 +50,8 @@ class GameSingle extends Component {
         socket.on("singlePlayerInfo",(data)=>{
         
           this.setState({
+            checkAnswer:"0",
+            stateAnswer:false,
             answer:[],
             problem:[],
             buttonValue1:false,
@@ -128,7 +130,7 @@ class GameSingle extends Component {
 
       render() { 
         const { t } = this.props;
-        const {problem,round,answer,checkAnswer, stateAnswer, buttonValue1,buttonValue2,buttonValue3,buttonValue4,buttonValue5} = this.state; 
+        const {problem,round,answer,checkAnswer, stateAnswer, buttonValue1,buttonValue2,buttonValue3,buttonValue4,buttonValue5,player} = this.state; 
 
         return ( 
             <div className="row" style={{margin:"30px"}}>
@@ -139,11 +141,7 @@ class GameSingle extends Component {
                                 <div className="col-sm-9">
                                     <h3 style={{color:"white", textAlign:"left"}}>{t('Round')} {round}</h3>
                                 </div>
-                                <div className="col-sm-3" style={{backgroundColor:"#f8e8cf"}}>
-                                    <div>
-                                        {/* <h1>{this.getSecond()}</h1> */}
-                                        {/* <div style={{color:"black", fontSize:"1px"}}>{stateAnswer === true ? this.stopTime(): null }</div> */}
-                                    </div>
+                                <div className="col-sm-3">
                                 </div>
                             </div>
                             <br/><br/>
@@ -214,21 +212,17 @@ class GameSingle extends Component {
                         <div className="card-body">
                             <h3 className="card-title">{t('Players')}</h3>
                             <div className="card-text">
-                            {/* {nameReady.map(nameReady => 
-                            <div key={Math.random()}>
-                                <div className="card mb-3" style={{maxWidth: "540px", height:"120px", backgroundColor:"#fdf5ee"}}>
+                            <div className="card mb-3" style={{maxWidth: "540px", height:"120px", backgroundColor:"#fdf5ee"}}>
                                     <div className="row no-gutters" style={{padding:"20px"}}>
                                         <div className="col-md-3">
-                                            <img src={nameReady.avatar} alt="" style={{width:"70px"}}/>
+                                            <img src={player.avatar} alt="" style={{width:"70px"}}/>
                                         </div>
                                         <div className="col-md-9" style={{textAlign:"left", paddingLeft:"20px", fontWeight:"bold"}}>
-                                            <p className="card-text">{t('Name')}: {nameReady.name}</p>
-                                            <p className="card-text">{t('Score')}: {nameReady.score}</p>
+                                            <p className="card-text">{t('Name')}: {player.name}</p>
+                                            <p className="card-text">{t('Score')}: {player.score}</p>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            )} */}
                             </div>
                         </div>
                     </div>
