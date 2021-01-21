@@ -24,7 +24,7 @@
     "react-translate-component": "^0.15.1",
     "react-user-avatar": "^1.10.0",
     "reactstrap": "^8.1.1",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.4.0"
   },
   "scripts": {
     "start": "PORT=8080 react-scripts start",
