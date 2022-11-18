@@ -19,7 +19,7 @@
     "react-dom": "^16.10.2",
     "react-hooks": "^1.0.1",
     "react-i18next": "^9.0.10",
-    "react-scripts": "3.2.0",
+    "react-scripts": "5.0.1",
     "react-switch-lang": "^1.0.2",
     "react-translate-component": "^0.15.1",
     "react-user-avatar": "^1.10.0",
